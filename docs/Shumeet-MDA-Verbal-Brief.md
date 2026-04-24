@@ -1,7 +1,11 @@
-# Jio Arogya — Shumeet MDA Verbal Brief
+---
+title: "MDA Verbal Brief"
+subtitle: "Speaker prep for the 10–15 min MDA-2 pitch · Consumer lens · Data asset · CHW-led Health OS · 90-day ask"
+---
 
-Speaker prep for the 10–15 min MDA-2 pitch
-Consumer lens · Data asset · CHW-led Health OS · 90-day ask
+# Jio Arogya — MDA Verbal Brief
+
+Speaker prep for the 10–15 min MDA-2 pitch · Consumer lens · Data asset · CHW-led Health OS · 90-day ask
 
 23 Apr 2026
 Working document. Validate figures against source notes before investment approval.

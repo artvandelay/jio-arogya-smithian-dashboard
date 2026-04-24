@@ -1,8 +1,11 @@
-Jio Arogya Pre-Investment Validation - Data
+---
+title: "Data Strategy"
+subtitle: "Jio Arogya Pre-Investment Validation — Data"
+---
 
-Data Strategy
+# Jio Arogya — Data Strategy
 
-Section 1.1: Focus on Longitudinal Data
+## Section 1.1: Focus on Longitudinal Data
 
 This is not a shotgun data acquisition business. It does not believe that any and all data is equal. It
 believes that there is specific data, if captured systematically and continuously across cohorts, that can

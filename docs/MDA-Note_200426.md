@@ -1,3 +1,8 @@
+---
+title: "Jio-Bio-Care Proposal Memo"
+subtitle: "The master business plan — MDA Note, 20 April 2026"
+---
+
 # Jio-Bio-Care Proposal Memo
 
 # **The frame and the organizing idea**

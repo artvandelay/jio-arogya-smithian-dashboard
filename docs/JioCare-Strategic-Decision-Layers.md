@@ -1,4 +1,9 @@
-# **JioCare \- Strategic Decision Layers**
+---
+title: "Strategic Decision Layers"
+subtitle: "JioCare — For a 90-day sprint · 21 April 2026"
+---
+
+# JioCare — Strategic Decision Layers
 
 **For a 90-day sprint · 21 April 2026**
 

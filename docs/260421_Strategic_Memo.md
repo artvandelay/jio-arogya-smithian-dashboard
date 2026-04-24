@@ -1,8 +1,13 @@
-Jio Arogya - A Strategic View
+---
+title: "Strategic Memo"
+subtitle: "Jio Arogya — A Strategic View · 21 April 2026"
+---
+
+# Jio Arogya — A Strategic View
 
 21 April 2026
 
-The frame and the organizing idea
+## The frame and the organizing idea
 
 Three things have become true at once. Jio Allianz is months from a launch date that gives us a
 captive payer, go-to-market, and need to now manage this book of business. The largest block

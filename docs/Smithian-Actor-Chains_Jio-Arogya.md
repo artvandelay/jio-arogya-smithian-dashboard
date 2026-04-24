@@ -1,7 +1,11 @@
-Jio Arogya
+---
+title: "Smithian Actor-Chain Analysis"
+subtitle: "Self-Interest, Layer by Layer · Member · Technology · Care Delivery · External Counterparties"
+---
 
-Smithian Actor-Chain Analysis — Self-Interest, Layer by Layer
-Member · Technology · Care Delivery · External Counterparties
+# Jio Arogya — Smithian Actor-Chain Analysis
+
+Self-Interest, Layer by Layer · Member · Technology · Care Delivery · External Counterparties
 
 April 2026
 Working document. Validate with owners before circulation.

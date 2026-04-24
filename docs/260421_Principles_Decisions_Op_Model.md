@@ -1,4 +1,9 @@
-Jio Arogya - Principles
+---
+title: "Principles, Decisions & Operating Model"
+subtitle: "Jio Arogya — Pre-Investment Validation"
+---
+
+# Jio Arogya — Principles, Decisions & Operating Model
 
 We believe that key modalities of healthcare delivery and organization can, will and should
 change in the next 10 years. We are building the infrastructure that drives this change. A
