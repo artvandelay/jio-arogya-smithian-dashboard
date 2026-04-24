@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jio Arogya — Smithian Risk & Deal Dashboard</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — dense, structured, Bloomberg-terminal-adjacent
+═══════════════════════════════════════════════════════════════ */
+:root {
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --paper: #fbfaf7;
+  --rule: #1f2937;
+  --line: #cbd5e1;
+  --line-soft: #e2e8f0;
+  --r0: #b45309;    /* Ring 0 — Member & Family (amber) */
+  --r0-bg: #fffbeb;
+  --r1: #1e40af;    /* Ring 1 — Technology/AI (deep blue) */
+  --r1-bg: #eff6ff;
+  --r2: #334155;    /* Ring 2 — Reliance Human (slate) */
+  --r2-bg: #f1f5f9;
+  --r3: #6b21a8;    /* Ring 3 — External (purple) */
+  --r3-bg: #faf5ff;
+  --hi: #b91c1c;
+  --hi-bg: #fef2f2;
+  --md: #a16207;
+  --md-bg: #fefce8;
+  --lo: #166534;
+  --lo-bg: #f0fdf4;
+  --accent: #0f172a;
+  --data: #0369a1;
+  --data-bg: #f0f9ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: var(--paper); color: var(--ink); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; line-height: 1.4; }
+body { padding: 0; }
+
+.sheet { max-width: 1500px; margin: 0 auto; padding: 24px 28px 60px; }
+
+/* ─── Header ─── */
+.masthead { border-bottom: 2px solid var(--rule); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+.masthead h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+.masthead .subtitle { font-size: 11px; color: var(--ink-3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+.controls { display: flex; gap: 6px; flex-wrap: wrap; }
+.controls button { padding: 6px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: #fff; border: 1px solid var(--line); color: var(--ink); cursor: pointer; border-radius: 2px; font-family: inherit; }
+.controls button:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.controls button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* ─── Thesis + Ring Overview ─── */
+.overview { display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+
+.ring-diagram { display: flex; flex-direction: column; align-items: center; }
+.ring-diagram svg { width: 280px; height: 280px; }
+.ring-legend { font-size: 10px; margin-top: 6px; width: 100%; }
+.ring-legend .rrow { display: flex; gap: 8px; align-items: flex-start; padding: 2px 0; }
+.ring-legend .rdot { width: 10px; height: 10px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; border: 2px solid; }
+.ring-legend .rname { font-weight: 600; margin-right: 4px; }
+
+.thesis { font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+.thesis .q { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; font-style: italic; }
+.thesis .body { margin-bottom: 10px; }
+.thesis .key { background: #fef3c7; padding: 8px 10px; border-left: 3px solid #d97706; font-size: 12px; color: var(--ink); }
+
+/* ─── Filter strip ─── */
+.filters { display: flex; gap: 6px; align-items: center; font-size: 11px; margin-bottom: 12px; flex-wrap: wrap; }
+.filters .label { font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.chip { padding: 4px 10px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); cursor: pointer; border-radius: 12px; font-size: 11px; font-weight: 500; user-select: none; }
+.chip:hover { border-color: var(--ink); }
+.chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.chip.r0.active { background: var(--r0); border-color: var(--r0); }
+.chip.r1.active { background: var(--r1); border-color: var(--r1); }
+.chip.r2.active { background: var(--r2); border-color: var(--r2); }
+.chip.r3.active { background: var(--r3); border-color: var(--r3); }
+
+/* ─── Master table ─── */
+.table-wrap { border: 1px solid var(--rule); background: #fff; overflow-x: auto; }
+table.master { width: 100%; border-collapse: collapse; font-size: 11.5px; min-width: 1200px; }
+table.master thead th { background: var(--ink); color: #fff; font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; text-align: left; vertical-align: middle; border-right: 1px solid #334155; }
+table.master thead th:last-child { border-right: none; }
+table.master tbody td { padding: 10px; vertical-align: top; border-bottom: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
+table.master tbody tr { cursor: pointer; transition: background 0.1s; }
+table.master tbody tr:hover { background: #fafafa; }
+table.master tbody tr.selected { background: #fef3c7; }
+table.master tbody tr.hidden { display: none; }
+table.master td:last-child { border-right: none; }
+
+.col-id { width: 26px; text-align: center; font-weight: 700; color: var(--ink-3); font-size: 11px; font-feature-settings: 'tnum'; }
+.col-joint { width: 17%; font-weight: 600; line-height: 1.35; }
+.col-ring { width: 58px; }
+.col-keyrisk { width: 20%; font-size: 11px; color: var(--ink-2); line-height: 1.4; }
+.col-data { width: 14%; font-size: 10.5px; color: var(--data); line-height: 1.4; }
+.col-mit { width: 22%; }
+
+.ring-tag { display: inline-block; padding: 2px 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 2px; border: 1px solid; white-space: nowrap; }
+.ring-tag.r0 { color: var(--r0); background: var(--r0-bg); border-color: var(--r0); }
+.ring-tag.r1 { color: var(--r1); background: var(--r1-bg); border-color: var(--r1); }
+.ring-tag.r2 { color: var(--r2); background: var(--r2-bg); border-color: var(--r2); }
+.ring-tag.r3 { color: var(--r3); background: var(--r3-bg); border-color: var(--r3); }
+
+
+
+.data-stream { display: block; padding: 1px 0; font-family: 'Inter', sans-serif; color: var(--data); font-weight: 500; }
+.data-stream::before { content: '▸ '; color: #94a3b8; font-size: 9px; }
+
+.mit-input { width: 100%; min-height: 38px; padding: 5px 7px; font-size: 11px; border: 1px solid var(--line); background: #fafafa; font-family: inherit; resize: vertical; line-height: 1.35; color: var(--ink); }
+.mit-input:focus { outline: none; border-color: var(--ink); background: #fff; }
+.mit-input::placeholder { color: #94a3b8; font-style: italic; }
+
+
+
+.cat-badge { display: inline-block; font-size: 8.5px; font-weight: 700; padding: 1px 5px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 2px; margin-left: 6px; vertical-align: 1px; white-space: nowrap; }
+.cat-badge.load-bearing { background: var(--hi); color: #fff; }
+.cat-badge.implied { background: var(--md); color: #fff; }
+.cat-badge.in-plan { background: #475569; color: #fff; }
+.cat-badge.d-tag { background: #0369a1; color: #fff; font-size: 8.5px; }
+
+/* ─── Footer sections ─── */
+.footer { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.box { border: 1px solid var(--line); background: #fff; padding: 14px 16px; }
+.box h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.box p, .box li { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin-bottom: 6px; }
+.box ul { list-style: none; padding: 0; }
+.box li { padding-left: 12px; position: relative; }
+.box li::before { content: '▸'; position: absolute; left: 0; color: var(--ink-3); font-size: 9px; top: 3px; }
+.nn-textarea { width: 100%; min-height: 120px; padding: 8px; font-size: 12px; border: 1px solid var(--line); background: #fafafa; font-family: inherit; line-height: 1.5; resize: vertical; }
+.nn-textarea:focus { outline: none; border-color: var(--ink); background: #fff; }
+
+/* ─── Detail panel ─── */
+.detail-panel { position: fixed; top: 0; right: 0; width: 620px; max-width: 92vw; height: 100vh; background: #fff; border-left: 3px solid var(--ink); box-shadow: -8px 0 24px rgba(0,0,0,0.12); z-index: 200; transform: translateX(100%); transition: transform 0.2s ease-out; overflow-y: auto; }
+.detail-panel.open { transform: translateX(0); }
+.detail-panel .dp-header { padding: 18px 22px; border-bottom: 2px solid var(--rule); position: sticky; top: 0; background: #fff; z-index: 2; }
+.detail-panel .dp-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ink-3); font-family: inherit; padding: 2px 6px; line-height: 1; }
+.detail-panel .dp-close:hover { color: var(--ink); }
+.detail-panel .dp-id { font-size: 11px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.detail-panel .dp-title { font-size: 17px; font-weight: 700; color: var(--ink); margin: 4px 0 8px; line-height: 1.3; }
+.detail-panel .dp-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.detail-panel .dp-body { padding: 18px 22px 40px; }
+.detail-panel h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-bottom: 6px; margin-top: 16px; border-bottom: 1px solid var(--line-soft); padding-bottom: 4px; }
+.detail-panel h4:first-child { margin-top: 0; }
+.detail-panel .layer { font-size: 12.5px; color: var(--ink-2); line-height: 1.55; margin-bottom: 4px; }
+.detail-panel .ve-box { background: #f0fdf4; border-left: 3px solid var(--lo); padding: 10px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.55; }
+.detail-panel .risk-box { background: var(--hi-bg); border-left: 3px solid var(--hi); padding: 10px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.55; margin-bottom: 8px; }
+
+.ds-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+.ds-table th { background: var(--data-bg); color: var(--data); text-align: left; padding: 5px 7px; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--line); }
+.ds-table td { padding: 6px 7px; vertical-align: top; border-bottom: 1px solid var(--line-soft); }
+.ds-table td.name { font-weight: 600; color: var(--data); white-space: nowrap; }
+.ds-table td.desc { color: var(--ink-2); line-height: 1.4; }
+
+.dcat-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.dcat { padding: 3px 8px; font-size: 10px; border: 1px solid var(--data); color: var(--data); background: var(--data-bg); border-radius: 2px; font-weight: 600; white-space: nowrap; transition: background 0.15s, border-color 0.15s; }
+a.dcat:hover { background: var(--data); color: #fff; border-color: var(--data); }
+a.dcat:hover .num { opacity: 1; color: #fff; }
+.dcat .num { opacity: 0.6; margin-right: 3px; }
+
+.overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 150; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.overlay.open { opacity: 1; pointer-events: all; }
+
+/* ─── Collapsible guide sections ─── */
+.guide-strip { margin-bottom: 16px; display: flex; gap: 6px; flex-wrap: wrap; }
+.guide-toggle { padding: 5px 12px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: #fff; border: 1px solid var(--line); color: var(--ink-2); cursor: pointer; border-radius: 2px; font-family: inherit; transition: all 0.15s; }
+.guide-toggle:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.guide-toggle.open { background: var(--ink); color: #fff; border-color: var(--ink); }
+.guide-panel { display: none; border: 1px solid var(--line); background: #fff; padding: 18px 22px; margin-bottom: 14px; font-size: 12px; line-height: 1.55; color: var(--ink-2); }
+.guide-panel.visible { display: block; }
+.guide-panel h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); margin: 14px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--line-soft); }
+.guide-panel h4:first-child { margin-top: 0; }
+.guide-panel p { margin-bottom: 8px; }
+.guide-panel ul { padding-left: 16px; margin-bottom: 8px; }
+.guide-panel li { margin-bottom: 4px; }
+.guide-panel code { background: #f1f5f9; padding: 1px 4px; border-radius: 2px; font-size: 11px; font-family: 'SF Mono', Menlo, monospace; }
+.guide-panel .badge-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.guide-panel .badge-row .label { min-width: 140px; font-weight: 600; color: var(--ink); }
+
+.doc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 6px; }
+.doc-table th { text-align: left; padding: 6px 8px; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: #f8fafc; color: var(--ink-3); border-bottom: 1px solid var(--line); }
+.doc-table td { padding: 8px; vertical-align: top; border-bottom: 1px solid var(--line-soft); line-height: 1.45; }
+.doc-table td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.doc-table .role { color: var(--ink-2); }
+.doc-table .when { font-size: 10.5px; color: var(--ink-3); font-style: italic; }
+
+.glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 6px; }
+.glossary-item { padding: 6px 8px; border-bottom: 1px solid var(--line-soft); display: flex; gap: 8px; }
+.glossary-item dt { font-weight: 700; color: var(--ink); min-width: 100px; flex-shrink: 0; font-size: 11.5px; }
+.glossary-item dd { color: var(--ink-2); font-size: 11.5px; line-height: 1.4; }
+
+/* ═══════════════ PRINT ═══════════════════════════════════════ */
+@media print {
+  @page { size: A3 landscape; margin: 12mm; }
+  body { font-size: 9.5px; background: #fff; }
+  .sheet { max-width: 100%; padding: 0; }
+  .controls, .filters, .detail-panel, .overlay, .guide-strip { display: none !important; }
+  .guide-panel { display: block !important; page-break-inside: avoid; }
+  .masthead { page-break-after: avoid; }
+  .overview { page-break-after: avoid; grid-template-columns: 220px 1fr; gap: 16px; }
+  .ring-diagram svg { width: 200px; height: 200px; }
+  table.master { font-size: 9px; min-width: 0; }
+  table.master thead { display: table-header-group; }
+  table.master tbody tr { page-break-inside: avoid; }
+  table.master thead th { background: #1f2937 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .mit-input, .nn-textarea { background: #fff !important; border: 1px solid #cbd5e1 !important; }
+  .ring-tag, .cat-badge, .data-stream, .col-data { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .footer { page-break-before: auto; margin-top: 14px; }
+  .box { background: #fff !important; }
+}
+
+@media (max-width: 1100px) {
+  .overview { grid-template-columns: 1fr; }
+  .ring-diagram { margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- ═══════ HEADER ═══════ -->
+  <header class="masthead">
+    <div>
+      <h1>Jio Arogya — Smithian Risk &amp; Deal Dashboard</h1>
+      <div class="subtitle">15 Joints · 18 Actors · 4 Rings · Where to invest · Load-bearing risks · Deal mitigations · Data streams</div>
+    </div>
+    <div class="controls">
+      <button onclick="window.print()">Print / PDF</button>
+      <button onclick="resetAll()" style="color:#b91c1c;border-color:#fca5a5">Reset</button>
+    </div>
+  </header>
+
+  <!-- ═══════ OVERVIEW ═══════ -->
+  <section class="overview">
+    <div class="ring-diagram">
+      <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="150" r="140" fill="#faf5ff" stroke="#6b21a8" stroke-width="2" stroke-dasharray="4 3"/>
+        <circle cx="150" cy="150" r="108" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+        <circle cx="150" cy="150" r="72" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+        <circle cx="150" cy="150" r="34" fill="#fffbeb" stroke="#b45309" stroke-width="2.5"/>
+        <text x="150" y="146" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a" font-family="Inter, sans-serif">MEMBER</text>
+        <text x="150" y="158" text-anchor="middle" font-size="8" fill="#64748b" font-family="Inter, sans-serif">&amp; FAMILY</text>
+        <text x="150" y="92" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">TECHNOLOGY · AI</text>
+        <text x="150" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="#334155" font-family="Inter, sans-serif">RELIANCE HUMAN</text>
+        <text x="150" y="20" text-anchor="middle" font-size="9" font-weight="700" fill="#6b21a8" font-family="Inter, sans-serif">EXTERNAL</text>
+      </svg>
+      <div class="ring-legend">
+        <div class="rrow"><div class="rdot" style="border-color:#b45309;background:#fffbeb"></div><div><span class="rname">Ring 0</span>Member &amp; Family (2)</div></div>
+        <div class="rrow"><div class="rdot" style="border-color:#1e40af;background:#eff6ff"></div><div><span class="rname">Ring 1</span>Personal Agent · Clinical AI · AI Scientist (3)</div></div>
+        <div class="rrow"><div class="rdot" style="border-color:#334155;background:#f1f5f9"></div><div><span class="rname">Ring 2</span>CHW · Supervisor · Nav Doctor · Care Entity · Allianz · Netmeds (6)</div></div>
+        <div class="rrow"><div class="rdot" style="border-color:#6b21a8;background:#faf5ff;border-style:dashed"></div><div><span class="rname">Ring 3</span>Hospitals · BioPharma · Regulators · Trust · State Missions · Competitors (7)</div></div>
+      </div>
+    </div>
+
+    <div class="thesis">
+      <div class="q">Does the structure of Jio Arogya make selfish choices productive?</div>
+      <div class="body">Smith's insight: systems work when self-interest and collective benefit point the same way, and break when they don't. The butcher feeds you because feeding you pays him. The system works not because people are good but because the structure makes good behaviour profitable.</div>
+      <div class="body">Treating each stakeholder as a monolith misses the real dynamics. The CHW is not one person — she is herself, her supervisor, the ops CFO, three layers inside one "stakeholder" that do not always want the same thing. The AI is a fourth layer between the member and every human. And the member is not a solo actor — in India, health decisions are made by the family.</div>
+      <div class="key">
+        <strong>15 joints where rational self-interest pulls against alignment by default.</strong> At each joint, a specific designed value exchange — payment structure, indemnity, reputation signal, contractual term — converts the default conflict into productive behaviour. Every row carries a <strong>D-tag</strong> where it maps to one of the 8 named 90-day decisions (D1–D8). Every row names the <strong>data streams</strong> that the joint produces, consumes, or audits.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ GUIDE TOGGLES ═══════ -->
+  <div class="guide-strip">
+    <button class="guide-toggle" onclick="toggleGuide('how-to-read', this)">How to Read This</button>
+    <button class="guide-toggle" onclick="toggleGuide('doc-map', this)">Document Ecosystem</button>
+    <button class="guide-toggle" onclick="toggleGuide('glossary', this)">Glossary</button>
+  </div>
+
+  <!-- ═══════ HOW TO READ ═══════ -->
+  <div class="guide-panel" id="how-to-read">
+    <h4>What this dashboard is</h4>
+    <p>This is an operational risk-and-deal tracker for the Jio Arogya system. It maps <strong>15 joints</strong> — the specific points in the workflow where two or more rational actors' self-interest pulls against alignment by default — and the <strong>designed value exchange</strong> at each joint that converts the default conflict into productive behaviour.</p>
+    <p>The dashboard is the working surface for the team preparing mechanism-design interventions. The full analytical narrative is in the companion document <strong>Smithian-Actor-Chains_Jio-Arogya.md</strong>.</p>
+
+    <h4>How to read the table</h4>
+    <ul>
+      <li><strong>#</strong> — Joint number (1–15), matching the section numbering in the Smithian doc.</li>
+      <li><strong>Joint / Actor Chain</strong> — The named tension. Click any row to open a detail panel with the full six-layer Smithian analysis (individual, layer above, org objective, AI intersection, escalation boundary, designed value exchange).</li>
+      <li><strong>Ring</strong> — Which ring of the system the joint sits in. <span class="ring-tag r0">Ring 0</span> Member &amp; Family. <span class="ring-tag r1">R1 · AI</span> Technology quasi-actors. <span class="ring-tag r2">R2 · Rel</span> Reliance-controlled human actors. <span class="ring-tag r3">R3 · Ext</span> External counterparties.</li>
+      <li><strong>Key Risk</strong> — What happens if nobody designs the value exchange and rational actors follow their default incentives.</li>
+      <li><strong>Data Streams</strong> — The data the joint produces, consumes, or audits. From the <strong>Jio_Care_Dataset_Inventory.md</strong> seven-category taxonomy.</li>
+      <li><strong>Proposed Deal Mitigation</strong> — Editable. The specific mechanism (payment, indemnity, contract term, governance structure) that converts the conflict into alignment. Pre-seeded from the Smithian doc; edit to refine during deal execution. Changes persist in your browser.</li>
+    </ul>
+
+    <h4>What the badges mean</h4>
+    <div class="badge-row"><div class="label"><span class="cat-badge load-bearing">Load-Bearing</span></div><div>The mechanism is load-bearing and <strong>missing from the plan</strong>. Must be designed before the system ships. (3 joints)</div></div>
+    <div class="badge-row"><div class="label"><span class="cat-badge implied">Implied</span></div><div>The plan implies the mechanism but does not name it explicitly. Needs to be surfaced and committed in writing. (7 joints)</div></div>
+    <div class="badge-row"><div class="label"><span class="cat-badge in-plan">In Plan</span></div><div>The mechanism is already in the plan, either fully or partially. Validate and lock. (5 joints)</div></div>
+    <div class="badge-row"><div class="label"><span class="cat-badge d-tag">D1–D8</span></div><div>Maps to one of the 8 named 90-day decisions that cannot wait until the business plan closes in July. Full register in <strong>JioCare - Strategic Decision Layers.md</strong>.</div></div>
+
+    <h4>The seven data-collection families</h4>
+    <p>Every joint produces, consumes, or audits data. The "Data Streams" column and the detail panel's "Upstream Data Categories" both reference these seven families from <strong>Jio_Care_Dataset_Inventory.md</strong>. Click any <span class="dcat" style="display:inline;cursor:default"><span class="num">N.</span>Category</span> badge in the detail panel to jump to the <a href="javascript:void(0)" onclick="toggleGuide('glossary',document.querySelector('[onclick*=glossary]'));setTimeout(()=>document.getElementById('glossary-data-cats').scrollIntoView({behavior:'smooth'}),150)">Glossary</a>.</p>
+    <table class="doc-table" style="margin-top:8px;">
+      <thead><tr><th style="width:36px">#</th><th style="width:150px">Family</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">1</td><td style="font-weight:600">Omics</td><td class="role">WGS, SNP, PRS, pharmacogenomics, methylation, proteomics, metabolomics, microbiome, transcriptomics — Unified Blood Draw + Gut Health Kit</td></tr>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">2</td><td style="font-weight:600">Biomarkers / Lab</td><td class="role">Metabolic baseline, lipid, liver, inflammatory, advanced 100+ biomarkers, kidney — fasting blood draw + urine</td></tr>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">3</td><td style="font-weight:600">Imaging</td><td class="role">Full-body MRI, CCTA, calcium score, DEXA, carotid US, retinal imaging — heavy iron + point-of-care</td></tr>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">4</td><td style="font-weight:600">Clinical / Assessment</td><td class="role">VO₂ max, grip strength, cognitive assessment, foot/neuropathy, body composition, BP — mix of clinic, home, and digital</td></tr>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">5</td><td style="font-weight:600">Continuous / Wearable</td><td class="role">CGM, Oura/WHOOP, activity, smart scale, home BP, food logging, stress/biofeedback — passive + active</td></tr>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">6</td><td style="font-weight:600">Phenotypic / Contextual</td><td class="role">Lifestyle, behavioural, smoking cessation, socioeconomic, intervention protocol, medication titration, outcome metrics</td></tr>
+        <tr><td style="font-weight:700;color:#0369a1;text-align:center">7</td><td style="font-weight:600">Consent / Governance</td><td class="role">DPDP consent ledger, ABDM interoperability, research consent artefacts, audit trail</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Suggested workflow</h4>
+    <ol>
+      <li><strong>Start with Load-Bearing Missing.</strong> Filter to "Load-Bearing Missing" — these 3 joints (Doctor-AI liability, Netmeds pharmacy choice, Member-Family co-decision) are where the system breaks if no mechanism is designed.</li>
+      <li><strong>Then 90-Day Decisions.</strong> Filter to D-tags — these 6 joints map to decisions that must be made in the next 90 days.</li>
+      <li><strong>Review Implied joints.</strong> These 7 are the quiet risks — the plan assumes them but hasn't committed in writing.</li>
+      <li><strong>Lock In Plan joints.</strong> Validate the 5 joints where mechanisms already exist.</li>
+      <li><strong>Click any row</strong> to open the detail panel with the full Smithian six-layer analysis for that actor.</li>
+      <li><strong>Edit mitigations</strong> in the table as deal terms are refined. Changes persist in your browser. Use Export JSON to share.</li>
+    </ol>
+  </div>
+
+  <!-- ═══════ DOCUMENT ECOSYSTEM ═══════ -->
+  <div class="guide-panel" id="doc-map">
+    <h4>The document family</h4>
+    <p>This dashboard sits inside a family of analytical documents. Each takes a different lens to the same system. Read them in the order that matches your question.</p>
+    <table class="doc-table">
+      <thead><tr><th>Document</th><th>What it does</th><th>When to read it</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><a href="docs/MDA-Note_200426.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">MDA Note_200426.md</a></td>
+          <td class="role">The master business plan. Six components: daily engagement, navigation, intervention-budget engine, biobank, Research Trust, insurance interface. Four-tier hospital architecture. CHW cadre at 1:1000. Privacy-by-architecture. Data Dividend as civilizational contract.</td>
+          <td class="when">Start here if you haven't read the plan. This is the system being analysed.</td>
+        </tr>
+        <tr>
+          <td><a href="docs/260421_Strategic_Memo.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Strategic_Memo.md</a></td>
+          <td class="role">The two-page strategic pre-read sent to the apex group. Frames the opportunity (cardiometabolic claims, biobank economics, AI clinical quality), the six-component operating system, and why only Reliance can build it.</td>
+          <td class="when">Read before the MDA Note if you want the 5-minute framing before the 45-minute detail.</td>
+        </tr>
+        <tr>
+          <td><a href="docs/260421_Data_Strategy.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Data_Strategy.md</a></td>
+          <td class="role">The data thesis. Longitudinal linked data as the compounding asset. <strong>Defines the seven data-collection families</strong> (Omics, Biomarkers, Imaging, Clinical, Continuous, Phenotypic, Consent/Governance) that appear in every joint's "Data Streams" column and detail panel. Pharma demand sizing. 43× premium for depth (23andMe vs deCODE). Data Dividend mechanics.</td>
+          <td class="when">Read when you need to understand the data streams column in this dashboard, the seven-category taxonomy, or the Research Trust licensing model. This is the canonical source for what each data family contains and how it is collected.</td>
+        </tr>
+        <tr>
+          <td><a href="docs/JioCare-Strategic-Decision-Layers.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">JioCare - Strategic Decision Layers.md</a></td>
+          <td class="role">The 90-day sprint decision surface. Eight domains (care model, data/tech, business model, operating model, capital, org design, regulatory, partnership) each broken into the decisions the team must make before July.</td>
+          <td class="when">Read when you need the D1–D8 decisions in full operational context, or when the dashboard's decision tags need background.</td>
+        </tr>
+        <tr>
+          <td><a href="docs/Smithian-Actor-Chains_Jio-Arogya.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Smithian-Actor-Chains_Jio-Arogya.md</a></td>
+          <td class="role"><strong>The primary source for this dashboard.</strong> 18 actors in 4 rings, 15 joints, 6 questions at each joint (individual, layer above, org objective, AI intersection, escalation boundary, value exchange). This is where the detail panel data comes from.</td>
+          <td class="when">Read the full document when a joint's detail panel raises a question the summary doesn't answer. Each joint has a §-reference (e.g. §2.1, §3.2) pointing to the relevant section.</td>
+        </tr>
+        <tr>
+          <td><a href="docs/Shumeet-MDA-Verbal-Brief.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Shumeet-MDA-Verbal-Brief.md</a></td>
+          <td class="role">The verbal brief and Q-index prepared for the MDA meeting. Anticipatory Q&amp;A mapped to the plan's weak points.</td>
+          <td class="when">Read before presenting to the apex group. The Q-index maps to the dashboard's load-bearing joints.</td>
+        </tr>
+        <tr>
+          <td><a href="docs/260421_Principles_Decisions_Op_Model.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Principles_Decisions_Op_Model.md</a></td>
+          <td class="role">Principles, key decisions, and the operating model. Covers org design, reporting lines, the three-entity structure (Care Entity + Allianz JV + Research Trust), and the single-owner question.</td>
+          <td class="when">Read when Joints 7, 8, or D1/D3/D7 are under discussion — the transfer-pricing, AI ownership, and org-design decisions live here.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════ GLOSSARY ═══════ -->
+  <div class="guide-panel" id="glossary">
+    <h4>Entities &amp; Actors</h4>
+    <dl class="glossary-grid">
+      <div class="glossary-item"><dt>Care Entity</dt><dd>Jio Arogya Care Services — the care delivery org. Runs the CHW cadre, navigation doctors, member experience. One of three P&amp;Ls (alongside Allianz JV and Research Trust).</dd></div>
+      <div class="glossary-item"><dt>Allianz JV</dt><dd>Jio Allianz — the insurance joint venture. The wrapper, not the business. Provides the captive payer, regulatory license, and actuarial discipline.</dd></div>
+      <div class="glossary-item"><dt>Research Trust</dt><dd>Separate legal entity (proposed Section 8 company) holding de-identified longitudinal data. Produces pharma licensing revenue and the Data Dividend. Independence from Reliance is load-bearing for credibility.</dd></div>
+      <div class="glossary-item"><dt>CHW</dt><dd>Community Health Worker (Arogya Saathi). Salaried, 1:1000 member ratio. The first human the member sees after the AI decides a human is needed.</dd></div>
+      <div class="glossary-item"><dt>Personal Agent</dt><dd>On-device AI. Holds all PII locally, orchestrates downstream layers. Daily touchpoint with the member. Most powerful actor in the system.</dd></div>
+      <div class="glossary-item"><dt>Clinical AI</dt><dd>Stateless inference service on Jio Brain. Different team from the Agent. Closer to medical literature. Authoritative at clinical decision points.</dd></div>
+      <div class="glossary-item"><dt>AI Scientist</dt><dd>Autonomous research system on the Trust's de-identified dataset. Compresses multi-year research cycles. Year 4+ capability.</dd></div>
+      <div class="glossary-item"><dt>Navigation Doctor</dt><dd>MBBS (possibly PG), NMC-registered. Clinical authority in the access stack. Authorises AI-recommended actions. Carries the liability the AI cannot.</dd></div>
+      <div class="glossary-item"><dt>ASHA</dt><dd>Accredited Social Health Activist. Government frontline health worker under the National Health Mission. ~1 per 1,000 rural; 1 per 2,500 urban. ₹3,500 central fixed incentive + state top-ups.</dd></div>
+      <div class="glossary-item"><dt>Netmeds</dt><dd>Inside Reliance Retail. Pharmacy dispensing rail. Most regular data feed in the system. Also the single largest regulatory tying-risk surface.</dd></div>
+    </dl>
+
+    <h4>Regulatory Bodies</h4>
+    <dl class="glossary-grid">
+      <div class="glossary-item"><dt>IRDAI</dt><dd>Insurance Regulatory and Development Authority of India. Regulates insurance products, bundling, commission structures, and the Allianz JV.</dd></div>
+      <div class="glossary-item"><dt>NMC</dt><dd>National Medical Commission (replaced MCI). Regulates medical practice, doctor registration, telemedicine guidelines. The body that can suspend a navigation doctor's license.</dd></div>
+      <div class="glossary-item"><dt>ICMR</dt><dd>Indian Council of Medical Research. Governs biobank ethics, research consent, biomedical research guidelines. Approves the Research Trust's research activity.</dd></div>
+      <div class="glossary-item"><dt>DPDP Authority</dt><dd>Digital Personal Data Protection Authority (under the DPDP Act 2023). Governs consent architecture, data processing basis, member rights, and the Data Dividend's legal frame.</dd></div>
+      <div class="glossary-item"><dt>CDSCO</dt><dd>Central Drugs Standard Control Organisation. Could classify the AI triage platform as a medical device (Class B or C), triggering registration and clinical-trial requirements.</dd></div>
+      <div class="glossary-item"><dt>NABH</dt><dd>National Accreditation Board for Hospitals &amp; Healthcare Providers. Quality accreditation framework. Used in the capitation scorecard as the Indian analogue to HEDIS.</dd></div>
+    </dl>
+
+    <h4 id="glossary-data-cats">Data Collection Families (7 categories)</h4>
+    <p style="margin-bottom:8px;font-size:11.5px;color:var(--ink-2);">From <strong>Jio_Care_Dataset_Inventory.md</strong> and <strong>260421_Data_Strategy.md</strong>. Each joint in the dashboard references these by number. The <span class="dcat" style="display:inline;cursor:default"><span class="num">N.</span>Name</span> badges in the detail panel link here.</p>
+    <dl class="glossary-grid">
+      <div class="glossary-item"><dt style="color:#0369a1">1. Omics</dt><dd>Whole-genome sequencing, SNP arrays, polygenic risk scores, pharmacogenomics, methylation, proteomics, metabolomics, microbiome, transcriptomics. Collected via Unified Blood Draw + Gut Health Kit at enrolment.</dd></div>
+      <div class="glossary-item"><dt style="color:#0369a1">2. Biomarkers / Lab</dt><dd>Metabolic baseline, lipid panel, liver function, inflammatory markers, advanced 100+ biomarker panel, kidney function. Collected via fasting blood draw + urine sample.</dd></div>
+      <div class="glossary-item"><dt style="color:#0369a1">3. Imaging</dt><dd>Full-body MRI, coronary CT angiography (CCTA), calcium score, DEXA bone density, carotid ultrasound, retinal imaging. Mix of heavy-iron (hospital) and point-of-care devices.</dd></div>
+      <div class="glossary-item"><dt style="color:#0369a1">4. Clinical / Assessment</dt><dd>VO₂ max, grip strength, cognitive assessment, foot/neuropathy screening, body composition, blood pressure. Mix of clinic visits, home-based, and digital capture.</dd></div>
+      <div class="glossary-item"><dt style="color:#0369a1">5. Continuous / Wearable</dt><dd>Continuous glucose monitor (CGM), Oura/WHOOP ring, activity trackers, smart scale, home BP cuff, food logging, stress/biofeedback. Passive + active daily capture.</dd></div>
+      <div class="glossary-item"><dt style="color:#0369a1">6. Phenotypic / Contextual</dt><dd>Lifestyle surveys, behavioural assessments, smoking cessation status, socioeconomic indicators, intervention protocol logs, medication titration records, clinical outcome metrics.</dd></div>
+      <div class="glossary-item"><dt style="color:#0369a1">7. Consent / Governance</dt><dd>DPDP Act consent ledger, ABDM health-claims interoperability artefacts, research consent records, audit trail. The legal and compliance backbone of the data asset.</dd></div>
+    </dl>
+
+    <h4>Technical &amp; Structural Terms</h4>
+    <dl class="glossary-grid">
+      <div class="glossary-item"><dt>Access Rule</dt><dd>No CHW self-dispatch; ordered layer escalation. The structural feature that keeps the CHW cadre inside the intervention budget.</dd></div>
+      <div class="glossary-item"><dt>Data Dividend</dt><dd>The civilizational contract: members share health data; the system returns financial value from pharma licensing. Weighted by tenure and participation, not disclosure completeness.</dd></div>
+      <div class="glossary-item"><dt>PMPM</dt><dd>Per Member Per Month. The unit cost metric for care delivery. The Care Entity → Allianz transfer price is expressed as PMPM.</dd></div>
+      <div class="glossary-item"><dt>HCX</dt><dd>Health Claims Exchange. India's ABDM-linked claims interoperability standard. Used for Tier 2 hospital discharge handshake.</dd></div>
+      <div class="glossary-item"><dt>HTA-In</dt><dd>Health Technology Assessment in India. The body that evaluates clinical AI safety and can serve as the independent auditor for the weight-change review board.</dd></div>
+      <div class="glossary-item"><dt>Section 8</dt><dd>Section 8 of the Companies Act 2013 — the Indian legal structure for a non-profit company with governance requirements. Proposed vehicle for the Research Trust.</dd></div>
+      <div class="glossary-item"><dt>SaMD</dt><dd>Software as a Medical Device. FDA classification framework increasingly referenced by Indian regulators for clinical AI.</dd></div>
+      <div class="glossary-item"><dt>Capitation</dt><dd>Fixed payment per member per year to a hospital, regardless of services rendered. Inverts overtreatment into undertreatment risk.</dd></div>
+      <div class="glossary-item"><dt>Risk Corridor</dt><dd>A loss-ratio band around novel interventions: Allianz guarantees the band; Care Entity absorbs excess. De-risks the actuary's catalogue-freeze instinct.</dd></div>
+      <div class="glossary-item"><dt>Jamnagar Pilot</dt><dd>The captive-cohort launch: 10K Reliance-employee families (~40K members), full architecture from Month 7. The short-term moat before the data asset compounds.</dd></div>
+    </dl>
+  </div>
+
+  <!-- ═══════ FILTERS ═══════ -->
+  <div class="filters">
+    <span class="label">Filter:</span>
+    <span class="chip active" data-filter="all" onclick="filterRows('all', this)">All (15)</span>
+    <span class="chip r0" data-filter="r0" onclick="filterRows('r0', this)">Ring 0 · Member (1)</span>
+    <span class="chip r1" data-filter="r1" onclick="filterRows('r1', this)">Ring 1 · AI (3)</span>
+    <span class="chip r2" data-filter="r2" onclick="filterRows('r2', this)">Ring 2 · Reliance (6)</span>
+    <span class="chip r3" data-filter="r3" onclick="filterRows('r3', this)">Ring 3 · External (5)</span>
+    <span class="chip" data-filter="load-bearing" onclick="filterRows('load-bearing', this)">Load-Bearing Missing (3)</span>
+    <span class="chip" data-filter="implied" onclick="filterRows('implied', this)">Implied Not Named (7)</span>
+    <span class="chip" data-filter="in-plan" onclick="filterRows('in-plan', this)">Already In Plan (5)</span>
+    <span class="chip" data-filter="d-tag" onclick="filterRows('d-tag', this)">90-Day Decisions (D1–D8)</span>
+  </div>
+
+  <!-- ═══════ MASTER TABLE ═══════ -->
+  <div class="table-wrap">
+    <table class="master">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th class="col-joint">Joint / Actor Chain</th>
+          <th class="col-ring">Ring</th>
+          <th class="col-keyrisk">Key Risk (natural default)</th>
+          <th class="col-data">Data Streams</th>
+          <th class="col-mit">Proposed Deal Mitigation</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <section class="footer">
+    <div class="box">
+      <h3>Natural Synergy — Preserve, Don't Redesign (§6)</h3>
+      <ul>
+        <li><strong>Personal Agent · Member</strong> — properly specified, the Agent's job is to help; the member wants help. Design work is in weight-setting governance, not in the relationship.</li>
+        <li><strong>Netmeds · Member</strong> — naturally aligned (volume vs medicine). Risk is tying, not incentive.</li>
+        <li><strong>Research Trust · Data-Dividend Member</strong> — Dividend makes the member a co-owner of the asset. Civilizational alignment. Easy to break if Dividend is token/late/opaque.</li>
+        <li><strong>CHW · Assigned Families</strong> — social alignment already in place. System must not break it via rotation.</li>
+        <li><strong>Allianz · Long-Tenure Member</strong> — statistically cheaper to underwrite. Premium must reward tenure, not penalise claims.</li>
+        <li><strong>Family · CHW</strong> — where the CHW is accepted into the household, the informal network becomes an asset, not a risk.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Strategic Non-Negotiables &amp; Notes</h3>
+      <p style="font-size:11px;color:var(--ink-3);margin-bottom:8px;">Board-level notes, cross-deal constraints, political considerations, national-strategy implications. Persisted automatically.</p>
+      <textarea id="notes-box" class="nn-textarea" placeholder="Hard lines. What must hold across all deals. Political cover requirements. GDP-level implications. Red lines for apex review..."></textarea>
+    </div>
+  </section>
+
+  <!-- Summary footer -->
+  <div style="margin-top:20px;padding-top:12px;border-top:1px solid var(--line);font-size:10px;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <div>
+      Source: <strong>Smithian-Actor-Chains_Jio-Arogya.md</strong> + <strong>Jio_Care_Dataset_Inventory.md</strong> · 4 rings · 15 joints · 7 data categories
+    </div>
+    <div>
+      <strong>3</strong> load-bearing &amp; missing ·
+      <strong>7</strong> implied not named ·
+      <strong>5</strong> already in plan ·
+      <strong>8</strong> named 90-day decisions
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════ DETAIL PANEL ═══════ -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<aside class="detail-panel" id="panel">
+  <div class="dp-header">
+    <button class="dp-close" onclick="closePanel()">✕</button>
+    <div class="dp-id" id="dp-id">JOINT #0</div>
+    <div class="dp-title" id="dp-title">—</div>
+    <div class="dp-tags" id="dp-tags"></div>
+  </div>
+  <div class="dp-body" id="dp-body"></div>
+</aside>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   GUIDE PANEL TOGGLES
+═══════════════════════════════════════════════════════════════ */
+function toggleGuide(id, btn) {
+  const panel = document.getElementById(id);
+  const isOpen = panel.classList.contains('visible');
+  document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.guide-toggle').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    panel.classList.add('visible');
+    btn.classList.add('open');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA CATEGORIES — from Jio_Care_Dataset_Inventory.md
+═══════════════════════════════════════════════════════════════ */
+const DATA_CATEGORIES = {
+  1: { name: "Omics", desc: "WGS, SNP, PRS, pharmacogenomics, methylation, proteomics, metabolomics, microbiome, transcriptomics — Unified Blood Draw + Gut Health Kit" },
+  2: { name: "Biomarkers / Lab", desc: "Metabolic baseline, lipid, liver, inflammatory, advanced 100+ biomarkers, kidney — fasting blood draw + urine" },
+  3: { name: "Imaging", desc: "Full-body MRI, CCTA, calcium score, DEXA, carotid US, retinal imaging — heavy iron + point-of-care" },
+  4: { name: "Clinical / Assessment", desc: "VO₂ max, grip strength, cognitive assessment, foot/neuropathy, body composition, BP — mix of clinic, home, and digital" },
+  5: { name: "Continuous / Wearable", desc: "CGM, Oura/WHOOP, activity, smart scale, home BP, food logging, stress/biofeedback — passive + active" },
+  6: { name: "Phenotypic / Contextual", desc: "Lifestyle, behavioural, smoking cessation, socioeconomic, intervention protocol, medication titration, outcome metrics" },
+  7: { name: "Consent / Governance", desc: "DPDP consent ledger, ABDM interoperability, research consent artefacts, audit trail" }
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   ACTORS — 6-layer Smithian analysis + upstream data-category touches
+═══════════════════════════════════════════════════════════════ */
+const ACTORS = {
+  memberFamily: {
+    name: "Member + Family / Informal Network",
+    ring: 0,
+    dataTouches: [1,2,3,4,5,6,7],
+    individual: "The member is rational with bounded information — games, withholds, reassurance-seeks, opts out. Data withholding for premium advantage; CHW as loneliness service; AI reassurance-seeking; biobank opt-out + Dividend opt-in.",
+    layerAbove: "The family. In India, health decisions are made by the family — the earning son decides what care elderly parents receive; the husband decides if the wife's symptom is worth a consult; the mother-in-law decides if the sick child sees a pharmacy or hospital. The cousin-who-is-a-doctor is the second-opinion of record in most educated middle-class households.",
+    orgObjective: "The member's and family's stated objective is health. The revealed objective is: steady premium cost, minimal visible surveillance, high reassurance, preserved autonomy, continued trust with the family physician.",
+    aiIntersection: "The Personal Agent on the daughter-in-law's phone will be asked for permission by the mother-in-law before the visit happens. The earning son pays the premium and makes the routing call, but the Agent talks to the parent — the Agent's trust relationship is with the wrong family member.",
+    escalationBoundary: "The cousin-who-is-a-doctor. Cheap (a WhatsApp message), trusted (family), authoritative (MBBS). The Navigator is a name on a screen; the cousin is at the Diwali lunch. The cousin wins most tie-breaks.",
+    designedValueExchange: "Family-decision-maker identification at enrolment. Agent addresses both member and decision-maker where they differ; CHW loops in decision-maker at each visit. Structured second-opinion channel for the family doctor under explicit consent. Long-tenure premium cap; Data Dividend weighted by tenure + participation (not disclosure completeness). Companion visits priced into Care Entity operating budget (not premium). No Navigator-continuity penalty."
+  },
+  personalAgent: {
+    name: "Personal Agent",
+    ring: 1,
+    dataTouches: [6, 7, 5],
+    individual: "No individual inside the Agent — engineer (ships features), PM (ships adoption), applied scientist (ships accuracy), red-teamer (ships safety; structurally pessimistic), ops engineer (ships uptime). Each wakes up thinking about something different.",
+    layerAbove: "Product leadership → Care Entity → Reliance consolidated. Each step trades nuance for speed. Top layer optimises for EBITDA and MDA visibility.",
+    orgObjective: "Four competing objectives with NO natural equilibrium: Deflection (CFO, insurer), Satisfaction (product), Safety (CMO, legal), Data capture (Research Trust). Default winner without governance = deflection-heavy.",
+    aiIntersection: "The Agent IS the AI. Most powerful actor in the system — holds all PII, orchestrates every downstream call, daily touchpoint with member. What IT optimises for is what the SYSTEM optimises for, regardless of org chart. <em>Build risk: voice-first, 8 Indian languages, on a JioPhone (KaiOS) or Jio Bharat device, intermittent connectivity, on-device PII, legally novel consent ledger — largest build in the plan.</em>",
+    escalationBoundary: "The member. Agent has no contract, no regulation, no payment to hold the member. Only trust. Earned through many small right answers; lost in one large wrong answer or one unexpected data disclosure.",
+    designedValueExchange: "Independent clinical-safety auditor (external, not Reliance, not Jio Brain) samples deflected conversations monthly; reports to Trust board quarterly, IRDAI annually. Member override with free human on short declared latency — system absorbs the metric impact. Weight-change review board chaired by CMO, with safety auditor, Trust ethics chair, IRDAI-side observer — not a product PM's A/B test."
+  },
+  clinicalAI: {
+    name: "Clinical AI",
+    ring: 1,
+    dataTouches: [2, 3, 4, 6, 7],
+    individual: "Stateless inference on Jio Brain. Different team from the Agent — closer to medical literature, writes safety evaluations, publishes against HTA-In and ICMR, professionally embarrassed by hallucinations.",
+    layerAbove: "Jio Brain leadership (GPU utilisation, inference cost, latency, accuracy benchmarks) vs Care Entity CMO (clinical safety, regulatory posture). Two orgs, two principals — the tension is permanent. 92% accuracy × 100M members × 7 clinical-triage queries per member per year × 8% error = ~56M wrong answers/year.",
+    orgObjective: "Three-way trade-off: Deflection (insurance economics) vs Accuracy (academic benchmark) vs Safety (avoidance of high-severity miss). Aggressive deflection defeats safety; aggressive accuracy raises cost; aggressive safety defeats deflection.",
+    aiIntersection: "Two AI collisions: (1) Agent and Clinical AI are different models with different objectives — without a written rule, they drift; member experiences incoherence. (2) Build risk: stateless clinical inference across top-50 Indian conditions, 8 languages, validated vs HTA-In/ICMR, with Physician CoPilot integrations is a 3–4 year build. Plan's Year-2 autonomy horizon is optimistic; assume human-in-loop through Year 3.",
+    escalationBoundary: "The doctor. MCI registration sits with the doctor. If AI is wrong and doctor signed, doctor is sued; AI has no registration to lose. Three rational doctor responses — rubber-stamp (caught on audit), bottleneck (throughput collapses), selective review (stable only if declared).",
+    designedValueExchange: "Care Entity carries AI-originated liability; doctor indemnified on good-faith AI-signed actions within declared risk-stratified review protocol published to NMC and IRDAI. Written handoff rule: Clinical AI is authoritative at clinical decision points; Agent updates member with 'we thought X, a closer look suggests Y.' Every disagreement logged and analysed monthly."
+  },
+  aiScientist: {
+    name: "AI Scientist",
+    ring: 1,
+    dataTouches: [1, 2, 3, 4, 5, 6],
+    individual: "Autonomous research system on Trust's de-identified longitudinal dataset — compresses the 5-year design-collect-publish cycle to a 6-week query-validate-publish loop. Operated by data scientists with publication counts and career trajectories — want novel findings, high effect sizes, broad access, minimal ethics friction.",
+    layerAbove: "Trust data-science team → Trust CEO → Trust board → independent Ethics Board with veto. Ethics Board's mandate is opposite of scientist's: restrict scope, protect consent, reject junk studies. <em>Build risk: no biobank has demonstrated autonomous AI hypothesis generation at 6-week cadence. UK Biobank is months-to-quarters. Assume Year 4 capability; Year 1–2 is human-led observational against a small cohort.</em>",
+    orgObjective: "Three-way trade-off: Speed (more findings, pharma demand) vs Rigour (replication, effect sizes, pre-registration) vs Consent scope discipline (narrower but member trust). None can dominate; all three needed for the Dividend to be credible.",
+    aiIntersection: "AI Scientist doesn't know what it will find. Hypothesis generation surfaces out-of-scope patterns (e.g. pharmacogenomic subgroup signal outside original consent). Scientist's default: publish. Board's default: not usable. Neither default is survivable long-term.",
+    escalationBoundary: "BioPharma buyer. Not interested in 'India data' — wants a specific cohort (Lp(a)-elevated SA men, 45–65, CV history, sized N) for a named pipeline asset. Phase III enrolment failing on inclusion criteria; post-market surveillance on SA under-representation; MASLD 3× Western prevalence. Generic access deals underperform.",
+    designedValueExchange: "Tiered licensing — exclusive (18-mo embargo, high fee) / non-exclusive early read (12-mo) / published. Pre-registered study ladder (Y1-2 observational → Y4+ target discovery) — pharma, scientists, ethics board all plan against it. Incidental-findings protocol: clinically-actionable findings return to member via Care Entity with downstream coverage. Clean-room model — buyer analyses in Trust environment, raw data never leaves. India-first access terms."
+  },
+  chw: {
+    name: "CHW / Arogya Saathi",
+    ring: 2,
+    dataTouches: [1, 2, 4, 5, 6, 7],
+    individual: "Covers ~1,000 members; salaried ₹18–22K; carries POC kit worth more than her monthly salary. Wants: steady income that clears the gig-economy hurdle (Zomato, Swiggy, Urban Company, Rapido, beauty-wellness — full-time metro riders gross ₹25–38K/month, ₹20–30K net of fuel and maintenance, per 2025–26 platform disclosures and TeamLease data); standing in the community; time not wasted; not being in trouble on the supervisor's dashboard. Gig-wage is the binding retention constraint, not the career ladder.",
+    layerAbove: "Supervisor runs pod of ~20 CHWs; watches visit completion, protocol adherence, data quality, escalations, incidents. At 100M ÷ 1,000 = ~100K CHWs — unit cost is the single biggest line in Care Entity P&L. Supervisor's incentive is max utilisation on min-necessary visits; CHW's is sometimes one more visit to a family she's attached to.",
+    orgObjective: "Deliver the field layer at specified density, protocol, and data-capture quality. UNSTATED: keep unit cost below per-member intervention budget. If cadre costs more than budget, the plan doesn't close.",
+    aiIntersection: "Agent decides when she visits (no self-dispatch — structural cost control). Two tensions: (1) AI deflection rate determines her workload — she has no control but her job depends on it. (2) AI says stable, she sees the member looks worse — who wins? Override too much wrongly erodes reputation; never overriding makes her redundant.",
+    escalationBoundary: "The hospital. At Tier 1, discharge routes through her. At Tier 2, contractual via HCX. At Tier 3-4, nothing binding — liaison may or may not reach. Without discharge summary her post-discharge visit is BLIND.",
+    designedValueExchange: "Salary benchmarked to top-quartile gig-economy take-home in the CHW's own city, reviewed 6-monthly, published inside the cadre — the retention mechanism. Career ladder matters only if this is solved first. Shared-savings bonus pool from Year 2 (claims-outcome data is real). Override review in Year 1 supervisor-daily, Year 2 pod-aggregated, Year 3 reputation system against 18 months of outcome data. Named + dated career progression with first cohort visible at Month 18 of Jamnagar. Contractually binding hospital discharge handshake by tier."
+  },
+  navDoctor: {
+    name: "Navigation Doctor",
+    ring: 2,
+    dataTouches: [2, 4, 6, 7],
+    individual: "MBBS (possibly PG) with MCI registration the state medical council can suspend. Wants: to practise good medicine; not be sued; throughput that doesn't break her; standing (6-min teleconsults don't feel like medicine; 20-min do but don't close economics).",
+    layerAbove: "Clinical lead runs the pool — watches consult quality, AI override rate, complaint rate, throughput. Reports to CMO. Clinical lead's pressure is throughput; CMO's is the next state medical council call.",
+    orgObjective: "Plan: Navigation Doctor is a clinical authority in the loop, NOT a rubber-stamp. What the plan does NOT specify (and must): what authority looks like operationally at the consult volumes implied by unit economics.",
+    aiIntersection: "Single most important joint in the operation. AI recommends; doctor authorises. Works at 20 consults/day. Breaks at 5–15/hr sustained in multiple languages across 50 condition categories. Genuine review impossible at that rate; literal rubber-stamp illegal. Only stable middle: declared risk-stratified review.",
+    escalationBoundary: "Specialist referral. Control is lost at the specialist boundary — she doesn't follow the member into that room. Member's expectations set by Personal Agent; specialist may recommend something else; member caught between two authorities. If specialist is locally known and Navigator is a name on a screen, member goes with specialist.",
+    designedValueExchange: "Declared risk-stratified review protocol auditable by NMC and IRDAI. Care Entity-level indemnity for AI-originated actions within protocol. Preferred specialist network on outcome contracts with two-way EHR. Throughput target at PROTOCOL-CLASS level (X high-risk real-review, Y medium, Z low-risk signed with audit) — the difference between designing for throughput and designing for the fiction of throughput."
+  },
+  careEntity: {
+    name: "Care Entity (Jio Arogya Care Services)",
+    ring: 2,
+    dataTouches: [1, 2, 3, 4, 5, 6, 7],
+    individual: "The CEO. Reports into Reliance consolidated; stands in front of apex group at 12/24/36-month gates. Wants: a credible plan at the first gate (missing any ends the project); organisational integrity across three P&Ls; single owner of the operating system reporting into MDA's office; time for first 5 hires.",
+    layerAbove: "Reliance consolidated / apex group — EBITDA, capital efficiency, strategic optionality, MDA visibility. Care Entity is ONE of many bets. Political survival depends on demonstrating at each gate that it is uniquely positioned AND on track.",
+    orgObjective: "Run Care Entity + Allianz JV + Research Trust as three P&Ls — operationally hard as independent units; legally impossible as one.",
+    aiIntersection: "Care Entity is the CUSTOMER not OWNER of Clinical AI (sits in Jio Brain). Horizontal (Jio Brain platform with SLAs to Care Entity — client, quality negotiated) or vertical (Care Entity product licensing Jio Brain infra — accountability, applied-science staffing)? Both-at-once is not defensible. Two tempos (ship fast vs ship safe) — default is ship fast and privately document safety debt.",
+    escalationBoundary: "Allianz. Care Entity's revenue IS Allianz's cost. No external PMPM benchmark for AI-first integrated care in India. Whatever transfer price lands is defensible only internally. Care Entity wins → Allianz loss ratio suffers → IRDAI reclassifies. Allianz wins → Care Entity starved → cadre can't deliver.",
+    designedValueExchange: "<strong>Cost-plus pass-through with published margin, proactively disclosed to IRDAI</strong> — primary mechanism (not 'independent actuary': the Institute of Actuaries of India has approximately 650 Fellows as of April 2025; the subset qualified to price novel AI-first care products is a handful, most employed by existing insurers; 'independent' is aspirational). Explicit ownership commitment on Clinical AI in writing. Declared care-vs-data time allocation (x% CHW minutes for sample logistics/biobank/dietary recall; y% for clinical delivery). Single owner of the operating system reporting into MDA's office."
+  },
+  allianz: {
+    name: "Allianz JV",
+    ring: 2,
+    dataTouches: [6, 7],
+    individual: "The appointed actuary. Career ends two ways: priced product blows up, or regulator questions her method. Wants: predictable loss ratio; regulatory filing that passes first review; methodological defensibility; no surprises.",
+    layerAbove: "Allianz India leadership (premium growth, loss ratio, Jio relationship). Allianz global audit committee watches JV as single line in EM portfolio — comfortable as long as nothing surprises them.",
+    orgObjective: "Combined ratio < 100%; grow premium; sustain the relationship.",
+    aiIntersection: "Allianz has little context for AI-driven care. Actuary looks at new intervention and asks claims-cost elasticity. If answer is '18 months', default is reject or price as if it doesn't work. Care Entity's default is to add interventions — the two defaults pull apart.",
+    escalationBoundary: "IRDAI can reclassify bundled structure as disguised commission, unapproved clinical decision support, or consent-architecture violation. Allianz global can declare JV a 'problem child' if Year 1 loss ratio swings unexpectedly.",
+    designedValueExchange: "Risk-corridor around AI-novel interventions — <24 months: Allianz guarantees loss ratio band; Care Entity absorbs excess. Catalogue cadence on 6-month window with pre-declared actuarial assumptions, explicit hypothesis, pre-registered metric, expected claims elasticity; failed interventions retire on 18-month loop. Proactive IRDAI disclosure — AI-in-loop, consent architecture, bundling structure, transfer-pricing method submitted proactively."
+  },
+  netmeds: {
+    name: "Netmeds / Pharmacy Rail",
+    ring: 2,
+    dataTouches: [6, 7],
+    individual: "Head of Jio Arogya integration at Netmeds — stitches Netmeds into Personal Agent's prescription flow. Reports to Netmeds leadership inside Reliance Retail. Optimising for fulfilment rate, refill adherence, GMV uplift from Jio Arogya book.",
+    layerAbove: "Netmeds leadership (margin, GMV growth) → Reliance Retail (footfall, category share). None of these are health-outcome objectives. Netmeds does not look at HbA1c — it looks at refill cadence.",
+    orgObjective: "Dispense reliably. The most regular data feed in the system — every dispensation is a datapoint. Also the P1 tying-risk surface in the entire architecture.",
+    aiIntersection: "Agent recommends prescription → Clinical AI validates → Navigation Doctor co-signs → fulfilment flows to Netmeds. From the member's perspective: one continuous surface from 'Agent asked a question' to 'tablet at my door.' This is exactly what makes IRDAI nervous.",
+    escalationBoundary: "IRDAI. 2022 Insurance-Medical-Device guidelines + older disguised-commission rules. A product where Jio Allianz pays the premium, Personal Agent recommends the drug, Netmeds fills the prescription — all inside Reliance — is the textbook definition of tying. Each leg defensible individually is exactly the problem.",
+    designedValueExchange: "Visible pharmacy choice at fulfilment — Agent presents three options (Netmeds default, nearby Jio Arogya-licensed chemist, member's own preferred pharmacy); choice persists. Netmeds wins on convenience and price, not by default. NO revenue share from Netmeds to Care Entity on Jio Arogya Rx — formalised in MSA. Adherence (not GMV) as primary KPI in integration scorecard reported to Care Entity CMO. Pre-emptive IRDAI engagement — written filing, not waiting."
+  },
+  tier1Hospital: {
+    name: "Tier 1 Hospital",
+    ring: 3,
+    dataTouches: [2, 3, 4],
+    individual: "Admitting doctor. Wants: clinical autonomy (the patient is hers now); procedure margin (directly or via department utilisation); not to be second-guessed by an AI and tele-doctor she's never met; not to carry liability for AI-originated error.",
+    layerAbove: "Admin (bed turnover, revenue/admission, LOS, complaint rate). Owner (founder-CEO in most Tier 1 cases) — capital return, local market. Under capitation the owner's incentive inverts — every marginal procedure is cost not revenue.",
+    orgObjective: "Run the hospital profitably under capitation. Capitation fixes overtreatment but rewards UNDERTREATMENT — cherry-pick healthy at renewal, lemon-drop complex, skimp at the margin. Readmission penalties discrete; reward for skimping continuous.",
+    aiIntersection: "Agent's care plan arrives with the member BEFORE the admitting doctor. Three responses: (1) Agree — trust reinforces. (2) Quietly ignore — member notices, trust erodes. (3) Actively counter — three-way conflict; at least one trust relationship breaks. AI care plan also becomes ammunition in capitation tension.",
+    escalationBoundary: "Two: member inside the stay (if three-way resolved badly, trust in Personal Agent damaged forever); discharge (without CHW routing, post-discharge is blind, readmission rises, capitation savings eaten).",
+    designedValueExchange: "Embedded Jio clinician at Tier 1 — counter-narrative goes through someone who understands the care plan. AI care plan framed as 'Personal Agent's expectation of care' — sets member expectation, not clinically binding. Binding quality scorecard (NABH-linked) with capitation clawback — flips arithmetic. Direct discharge protocol via CHW within 24 hours, non-negotiable at Tier 1. Preferred specialist network on outcome contracts with two-way EHR. Centres of Excellence in cardiometabolic, oncology, maternal-fetal, liver — turns price negotiation into shared asset."
+  },
+  regulators: {
+    name: "Regulators (IRDAI · NMC · ICMR · DPDP)",
+    ring: 3,
+    dataTouches: [7],
+    individual: "Mid-level officer whose career is built on not being the one who approved the thing that failed. Asymmetric math: approve and it works, nobody remembers; approve and it fails, name attached forever.",
+    layerAbove: "Department heads, political appointees. Credit for innovation slow and distributed; blame for scandal fast and concentrated. Aggregate risk aversion is rational.",
+    orgObjective: "Approve slowly, narrowly, with extensive documentation, preferring frameworks with precedent elsewhere. Career-safe default.",
+    aiIntersection: "Every regulator sees the same unprecedented thing: AI making clinical and semi-clinical decisions at national scale. Career-safe default: Class B/C medical device, CDSCO registration, clinical trial evidence, explainability. Each individually reasonable; combined, uneconomic.",
+    escalationBoundary: "Each other. A single CHW plasma draw touches all four — NMC (who may draw blood), ICMR (is this research?), DPDP (consent granularity), IRDAI (insured benefit or research budget?). Each can individually permit; any one can block; no coordination mechanism exists.",
+    designedValueExchange: "Bilateral engagement, NOT a four-party summit (these bodies have never co-convened on a single private-sector initiative). Separate tracks for each regulator, working off a common written framework submitted simultaneously — same framework, four meetings. Political sponsor at PMO or NITI Aayog level — cabinet-office problem, not regulator-level. Proactive disclosure, co-published where possible (HTA-In for AI safety; ICMR for biobank governance; DPDP for consent architecture) — officer has political cover. Regulatory sandbox language. Precedent borrowing (FDA SaMD, MHRA, Singapore)."
+  },
+  researchTrust: {
+    name: "Research Trust",
+    ring: 3,
+    dataTouches: [1, 2, 3, 4, 5, 6],
+    individual: "The Trust CEO — owns the pharma licensing book, reports to the Trust board. Professionally accountable for scientific credibility and the public governance report.",
+    layerAbove: "Trust board with fiduciary duty to charter — separate from Reliance's corporate objectives. Includes Reliance-nominated + independent directors (scientific, legal, ethics). Ethics board sits BESIDE (not under) the Trust board; has veto over research activity.",
+    orgObjective: "Produce scientifically credible research. Monetise via tiered licensing without compromising the Data Dividend. Protect member consent.",
+    aiIntersection: "AI Scientist runs on Trust data. Governance tension (AI Scientist speed vs Ethics Board scope) resolved at Trust board.",
+    escalationBoundary: "Reliance, in BOTH directions. If Trust is too close to Reliance — pharma buyers discount it; DPDP treats it as a data-controller extension. If too far — data transfer from Care Entity requires coordinated workflow; no independent commercial muscle to sign pharma-magnitude deals. Boundary is calibration, not separation.",
+    designedValueExchange: "Section 8 company with <strong>majority-independent board</strong>, including scientific, legal, and ethics figures of public standing; Reliance nominates minority directors. Public quarterly governance report (access, consent, ethics approvals, licensing revenue). Member representation on the protocol committee — member-elected seat with real observer rights at Ethics Board. Data Dividend audit published annually (member-level + aggregate). No sample export, no identity re-linking, no raw data sale — preserved in the Trust's charter, not in policy."
+  },
+  stateHealthMissions: {
+    name: "State Health Missions / ASHA Cadre",
+    ring: 3,
+    dataTouches: [6, 7],
+    individual: "The ASHA worker. Central fixed monthly incentive of ₹3,500 (raised from ₹2,000 in March 2025), plus performance-based incentives and state top-ups; total take-home typically ₹5,500–₹10,000 depending on state and performance (source: Ministry of Health reply to Lok Sabha, July 2025). Tied to outcomes (immunisation, institutional delivery, TB notification). Known in the community; often the primary trusted figure.",
+    layerAbove: "Block Medical Officer → District Health Officer → State Mission Director → State Health Secretary. Political appointees at the top; career civil service in the middle. District machinery is the operational unit that matters.",
+    orgObjective: "Deliver national health priorities through the public cadre. Defend the public sector's position where private initiatives encroach.",
+    aiIntersection: "ASHA increasingly equipped with state-supplied digital tools (ANMOL, ASHA-Soft). Jio CHW copilot is better. Where the two overlap, Jio CHW has better instrumentation; ASHA has better social standing.",
+    escalationBoundary: "District health administration. If Jio Arogya is perceived as competitive or dismissive of the public cadre, the district can block operations — refusal of space at public health centres, refusal to share ANM cadre data, public criticism via state MLAs. Non-trivial state veto at operational level.",
+    designedValueExchange: "ASHA-integration MoU with a named commercial term. Jio CHW visits coordinated with ASHA visits; ASHA workers get priority access to copilot at reduced cost; state programmes (immunisation, maternal, TB) get derivative data access under published governance. State Health Mission seat at regional governance layer — quarterly convening with Health Secretary covering district-level operations. PPP framing on specific programmes (maternal-fetal, TB, NCD screening). No-poaching of ASHA cadre, stated publicly."
+  },
+  competitors: {
+    name: "Competitors (Apollo, Tata, PhonePe)",
+    ring: 3,
+    dataTouches: [],
+    individual: "Competitor leadership evaluating integrated care models with capital and scale. Apollo has hospitals and pharmacy; Tata has digital health and insurance; PhonePe has distribution and payments reach.",
+    layerAbove: "Competitor boards and investors watching Jio Arogya for proof of concept. A successful Jamnagar pilot accelerates fast-follower timelines.",
+    orgObjective: "Replicate the care model (12–18 months). The data moat — biobank, longitudinal cohort, pharma licensing — takes 3–5 years to compound. The gap is the vulnerability.",
+    aiIntersection: "Competitors can license or build similar AI infrastructure. The AI is not the moat — the data asset is. The moat activates only when the cohort is large enough and long enough to answer pharma-grade questions.",
+    escalationBoundary: "Market. Once a competitor launches a comparable integrated care product, Jio Arogya's pricing power and hospital negotiating leverage are contested.",
+    designedValueExchange: "Captive-cohort launch (Reliance-employee Jamnagar pilot: 10K families, 40K members, full architecture from Month 7 — by the time a challenger is organising, Jio has a twelve-month cohort). Single-disease exclusive outcome contracts at each Tier 1 hospital (cardiometabolic, oncology, maternal-fetal). Pharma exclusivity in Year 1 on specific named pipeline assets. Each is a small moat; together they raise the challenger's cost of entry."
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION CROSS-REFERENCES — maps joint ID to §-refs in the Smithian doc
+   and related companion documents
+═══════════════════════════════════════════════════════════════ */
+const SECTION_REFS = {
+  1:  { smithian: "§2.1, §2.2, §6", related: "MDA Note (Personal Agent specification), Strategic Decision Layers §2 (data/tech)" },
+  2:  { smithian: "§2.2, §3.2, §6", related: "MDA Note (navigation layer), Strategic Decision Layers §2 (data/tech)" },
+  3:  { smithian: "§2.3, §4.3, §6", related: "Data Strategy §1.1 (longitudinal data thesis), MDA Note (Research Trust charter)" },
+  4:  { smithian: "§3.1, §6", related: "MDA Note (CHW cadre specification), Strategic Decision Layers §1 (care model)" },
+  5:  { smithian: "§3.1, §4.1, §6", related: "MDA Note (four-tier hospital architecture)" },
+  6:  { smithian: "§3.2, §4.1, §4.2, §6", related: "MDA Note (four-tier contract architecture), Principles_Decisions_Op_Model (capitation)" },
+  7:  { smithian: "§3.3, §6", related: "Principles_Decisions_Op_Model (transfer pricing, org design)" },
+  8:  { smithian: "§3.3, §6", related: "Strategic Decision Layers §2 (Clinical AI ownership), Principles_Decisions_Op_Model (org design)" },
+  9:  { smithian: "§3.4, §6", related: "MDA Note (intervention-budget engine), Principles_Decisions_Op_Model (JV structure)" },
+  10: { smithian: "§3.5, §6", related: "MDA Note (Netmeds integration), Strategic Decision Layers §5 (Netmeds)" },
+  11: { smithian: "§4.4, §6", related: "MDA Note (regulatory framework), Strategic Decision Layers §7 (regulatory engagement)" },
+  12: { smithian: "§4.5, §6", related: "Data Strategy §3 (governance), MDA Note (Research Trust independence)" },
+  13: { smithian: "§4.6, §6", related: "MDA Note (ASHA integration), Strategic Decision Layers §8 (state partnerships)" },
+  14: { smithian: "§5, §6", related: "MDA Note (family decision-making, enrolment design)" },
+  15: { smithian: "§4.7, §6", related: "Strategic Memo (competitive positioning), MDA Note (data moat thesis)" }
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   15 VALUE EXCHANGES — seeded from Smithian-Actor-Chains §6
+   Merged from 20 joints per the April 2026 rewrite.
+═══════════════════════════════════════════════════════════════ */
+const VALUE_EXCHANGES = [
+  { id:1, joint:"AI objective-function governance (weight-setting + inter-model handoff + audit)", actor:"personalAgent", ring:1, cat:"implied", dtag:"D4",
+    risk:"High", priority:"High",
+    keyRisk:"Deflection wins the silent political fight — whoever sets the Agent's weights writes the operating plan. Two models (Personal Agent and Clinical AI) with different objective functions will disagree; without a written handoff rule they drift, and the member experiences incoherence.",
+    streamsShort:["Conversation log","Weight-change ledger","Override events","Safety-audit sample","AI-vs-AI disagreement log","Handoff events"],
+    streamsLong:[
+      {n:"Conversation log",d:"Turn-level Agent↔member; deflection vs escalation outcome; latency; language"},
+      {n:"Objective-weight change ledger",d:"Every weight-setting change, governance sign-off, affected cohort, rollout %"},
+      {n:"Member override events",d:"Free-human-requested escalations; latency SLA; resolution; follow-up CSAT"},
+      {n:"Safety-audit sample",d:"Monthly externally-audited sample of deflected conversations (HTA-In or empanelled); missed-escalation threshold"},
+      {n:"Weight-change review board minutes",d:"CMO + safety auditor + Trust ethics chair + IRDAI observer"},
+      {n:"AI-vs-AI disagreement log",d:"When Agent and Clinical AI recommend differently; severity of divergence; condition"},
+      {n:"Handoff decision events",d:"Application of the written rule (Clinical AI wins at clinical decision points); time to resolution"},
+      {n:"Member-facing correction log",d:"'We thought X, a closer look suggests Y' events; member reaction"},
+      {n:"Monthly disagreement analytics",d:"By condition class, by language, by region; trend analysis"}
+    ],
+    defaultMit:"Independent clinical-safety auditor (external, not Reliance) samples deflected conversations monthly; reports to Trust board quarterly and IRDAI annually. Member override with free human on short declared latency — system absorbs the metric impact. Weight-change review board (CMO + safety auditor + Trust ethics chair + IRDAI observer) — not a PM A/B test. Written handoff rule: Clinical AI is authoritative at clinical decision points; Agent updates member plainly. Every disagreement logged and analysed monthly." },
+
+  { id:2, joint:"Doctor-AI liability and throughput (indemnity + declared review protocol)", actor:"clinicalAI", ring:1, cat:"load-bearing", dtag:"D2",
+    risk:"High", priority:"High",
+    keyRisk:"Doctor carries all AI-originated liability; AI has no MCI registration to lose. Rational response is bottleneck or rubber-stamp — neither survives scale or audit. At national volume (5–15 consults/hr in multiple languages across 50 conditions) genuine review is impossible; implicit selective review is indistinguishable from rubber-stamping.",
+    streamsShort:["AI recommendations","Doctor authorisations","Risk-class audit","Indemnity log","Consult log","Throughput targets"],
+    streamsLong:[
+      {n:"AI recommendation log",d:"Diagnosis, severity, confidence, condition class, language"},
+      {n:"Doctor authorisation events",d:"Sign-off type (real review / algorithmic+audit); timestamp; doctor ID"},
+      {n:"Risk-stratified review classes",d:"High (real review), medium (defined depth), low (signed with audit) — published to NMC/IRDAI"},
+      {n:"Audit sample",d:"Random + flagged samples of algorithmically-signed low-risk queries; 10% random + 100% incident"},
+      {n:"Indemnity claim log",d:"Care Entity-absorbed claims on good-faith AI-signed actions"},
+      {n:"Accuracy benchmarks",d:"HTA-In, ICMR evaluation results; 56M miss-class failure-mode analysis"},
+      {n:"Consult log",d:"Duration, condition class, language, outcome"},
+      {n:"Throughput target by protocol class",d:"Not at consult level — protocol-class targets"},
+      {n:"NMC / IRDAI audit artefacts",d:"Periodic submissions to make the protocol inspectable"},
+      {n:"Complaint log",d:"Member + regulatory; root-cause analysis"}
+    ],
+    defaultMit:"Care Entity carries AI-originated liability; doctor indemnified on good-faith AI-signed actions within declared risk-stratified review protocol published to NMC and IRDAI. Throughput target at PROTOCOL-CLASS level (X high-risk at real-review depth; Y medium at defined depth; Z low-risk signed with audit)." },
+
+  { id:3, joint:"Research Trust science governance (ethics scope + licensing model)", actor:"aiScientist", ring:1, cat:"in-plan", dtag:null,
+    risk:"Medium", priority:"Medium",
+    keyRisk:"Scientist wants broad access for hypothesis generation; Board wants narrow scope for consent integrity. Buyers demand raw data or exclusivity; Trust risks credibility loss (over-publishing) or walk-aways (under-answering). Generic access deals underperform — pharma wants named cohorts for named pipeline assets.",
+    streamsShort:["Study ladder register","Ethics decisions","Incidental findings","Tiered licensing","Clean-room queries","Embargo calendar"],
+    streamsLong:[
+      {n:"Pre-registered study ladder",d:"Y1-2 observational → Y2-3 pragmatic trials → Y3-4 pharmacogenomic → Y4+ target discovery; publicly posted"},
+      {n:"Ethics board decisions",d:"Approve / modify / veto; rationale; dissent"},
+      {n:"Incidental findings log",d:"Out-of-scope clinically-actionable findings; route-back events via Care Entity"},
+      {n:"AI Scientist hypothesis register",d:"Pre-registered hypotheses; post-hoc findings flagged separately"},
+      {n:"Member route-back events",d:"Clinically-actionable incidental findings delivered back with care coverage"},
+      {n:"Tiered licensing register",d:"Exclusive (18-mo embargo) / non-exclusive early read (12-mo) / published post-embargo; buyer, price, terms"},
+      {n:"Clean-room query log",d:"What was run, by whom, against which cohort; aggregate results exported"},
+      {n:"Cohort match log",d:"Pipeline-specific deliverables (e.g. SA Lp(a)-elevated CV cohort, N, follow-up Y years)"},
+      {n:"Embargo calendar",d:"Active embargoes; scheduled publication dates"},
+      {n:"India-first access terms ledger",d:"Target discovery / co-development clauses"}
+    ],
+    defaultMit:"Pre-registered study ladder; incidental-findings protocol routing clinically-actionable findings back to member via Care Entity with downstream coverage. Three-tier licensing (exclusive / non-exclusive early read / published). Pipeline-specific deliverables — not generic access. Data clean-room; aggregate export only. India-first access terms." },
+
+  { id:4, joint:"CHW cadre economics (retention vs gig + utilisation tension)", actor:"chw", ring:2, cat:"implied", dtag:null,
+    risk:"High", priority:"High",
+    keyRisk:"At ₹18–22K vs full-time metro gig gross of ₹25–38K, good CHWs exit to Zomato, Swiggy, Urban Company, Rapido. Binding retention constraint — the career ladder matters only if this is solved first. CHW attachment incentive (one more visit) vs supervisor utilisation/budget incentive misaligns at scale (~100K cadre ÷ 20 = ~5K supervisors).",
+    streamsShort:["Salary register","Gig-wage benchmark","Attrition log","Visit logs","Pod outcomes","Override reviews","Shared-savings"],
+    streamsLong:[
+      {n:"CHW salary register",d:"By city, tenure, grade; updated monthly"},
+      {n:"Top-quartile gig benchmark feed",d:"Zomato, Swiggy, Urban Company, Rapido, beauty-wellness — city-adjusted; per 2025–26 platform disclosures and TeamLease data"},
+      {n:"6-monthly review log",d:"Salary adjustments, published inside cadre"},
+      {n:"Attrition log",d:"By city, cause (gig, family, other); time-to-replace"},
+      {n:"Visit completion log",d:"Scheduled vs actual; duration; protocol"},
+      {n:"Protocol adherence rate",d:"Per CHW, per pod, rolling 30/90 day"},
+      {n:"Pod-level outcomes",d:"HbA1c control, BP control, retention, biobank consent rate"},
+      {n:"Override events",d:"CHW-overrides-AI; right/wrong over time; reputation weight (from Year 3)"},
+      {n:"Shared-savings bonus calculations",d:"Pod-level, activates Year 2 when claims-outcome data is real"},
+      {n:"Career progression register",d:"CHW → Senior → Supervisor → Navigator; public progression report"}
+    ],
+    defaultMit:"Salary benchmarked to top-quartile gig-economy take-home in the CHW's own city, reviewed every 6 months, published inside the cadre. Shared-savings bonus pool from Year 2 (pod-level, tied to the 18-month payback loop). Override review graduating: Year 1 supervisor-daily, Year 2 pod-aggregated, Year 3 reputation system against outcome data. Named + dated career progression cohort visible at Month 18 of Jamnagar." },
+
+  { id:5, joint:"CHW · Hospital discharge", actor:"chw", ring:2, cat:"in-plan", dtag:null,
+    risk:"Medium", priority:"Medium",
+    keyRisk:"Without contractually binding handshake, post-discharge visit is blind. CHW doesn't know diagnosis, medications, follow-up. Readmission rises; capitation savings eaten.",
+    streamsShort:["Discharge summaries","HCX handshake","Post-discharge visits","Readmissions"],
+    streamsLong:[
+      {n:"Discharge summaries (by tier)",d:"T1 direct-to-CHW, T2 HCX, T3 licensed tech stack, T4 liaison"},
+      {n:"Handshake events log",d:"Receipt within 24h; failure modes by tier"},
+      {n:"Post-discharge visit completion",d:"Within 24h of discharge; medication reconciliation performed"},
+      {n:"Readmission feed",d:"30/60/90 day; linked to hospital + diagnosis"},
+      {n:"Liaison escalation log",d:"Tier 4; 24-hour failure escalations"}
+    ],
+    defaultMit:"Contractually binding discharge handshake by tier: non-negotiable at T1; via HCX at T2; licensed tech stack at T3; 24-hour liaison escalation at T4. CHW never does a post-discharge visit blind." },
+
+  { id:6, joint:"Hospital control gradient (capitation gaming + doctor-AI friction + specialist cascade)", actor:"tier1Hospital", ring:3, cat:"in-plan", dtag:null,
+    risk:"High", priority:"High",
+    keyRisk:"Capitation inverts overtreatment into undertreatment — cherry-pick healthy, lemon-drop complex, skimp at the margin. Admitting doctor counters or ignores AI care plan, creating three-way conflict with member. Out-of-network specialist cascade destroys care plan coherence.",
+    streamsShort:["NABH scorecard","Capitation clawback","Care plan delivery","Doctor response","Referral events","Two-way EHR","Readmission","CoE investments"],
+    streamsLong:[
+      {n:"NABH-linked quality scorecard",d:"Quality metrics by condition class; threshold-based clawback"},
+      {n:"Capitation payment/clawback ledger",d:"Monthly; linked to scorecard performance"},
+      {n:"AI care plan delivery events",d:"Care plan timestamp; received-by-hospital timestamp"},
+      {n:"Doctor response",d:"Agree / ignore / counter; annotated rationale where captured"},
+      {n:"Embedded Jio clinician intervention log",d:"Counter-narrative mediation events at Tier 1"},
+      {n:"Member-expectation tracking",d:"What member expected (from Agent) vs what happened"},
+      {n:"Specialist referral events",d:"Named specialist, condition, reason; in-network vs out"},
+      {n:"Two-way EHR feed",d:"Tier 1 only; outcome visibility vs black-hole referrals elsewhere"},
+      {n:"Outcome contract scorecard",d:"Preferred specialist network; quality, outcomes, patient-reported"},
+      {n:"Readmission data",d:"30/60/90-day; risk-adjusted"},
+      {n:"CoE joint investment ledger",d:"Cardiometabolic, oncology, maternal-fetal, liver — shared asset performance"},
+      {n:"Risk-adjusted mortality",d:"Case-mix adjusted; board-level"}
+    ],
+    defaultMit:"Embedded Jio clinician on-site at Tier 1. Care plan framed as 'Personal Agent's expectation of care' — not clinically binding. Binding quality scorecard (NABH-linked) with capitation clawback below threshold. Direct discharge protocol non-negotiable at Tier 1. Preferred specialist network on outcome contracts with two-way EHR. Centres of Excellence as data-and-care joint investments (cardiometabolic, oncology, maternal-fetal, liver)." },
+
+  { id:7, joint:"Care Entity · Allianz transfer price", actor:"careEntity", ring:2, cat:"implied", dtag:"D3",
+    risk:"High", priority:"High",
+    keyRisk:"No external PMPM benchmark for AI-first integrated care in India. Price constructed by political weight, not discovered by market. IRDAI reclassification as disguised commission is a P1 risk.",
+    streamsShort:["PMPM model","Published margin","Claims feed","IRDAI disclosures"],
+    streamsLong:[
+      {n:"PMPM model inputs (cost-plus)",d:"Direct costs + published margin; quarterly refresh"},
+      {n:"Claims data feed",d:"From Allianz to Care Entity; for actuarial and intervention-retirement loops"},
+      {n:"Intervention cost ledger",d:"Per-intervention unit costs; budget vs actual"},
+      {n:"Allianz loss ratio",d:"Monthly; rolling 12-month; broken out by cohort"},
+      {n:"Proactive IRDAI disclosure archive",d:"Transfer-price method, margin, methodology, challenger filings"}
+    ],
+    defaultMit:"Cost-plus pass-through with published margin, proactively disclosed to IRDAI. The Institute of Actuaries of India has approximately 650 Fellows (as of April 2025); the subset qualified to price novel AI-first care products is a handful, most employed by existing insurers. Published margin + proactive disclosure removes the negotiation and gives IRDAI transparency." },
+
+  { id:8, joint:"Care Entity · Clinical AI ownership", actor:"careEntity", ring:2, cat:"implied", dtag:"D1",
+    risk:"High", priority:"High",
+    keyRisk:"Horizontal (Jio Brain platform) vs vertical (Care Entity product) ownership unresolved. Ambiguity creates a scenario where on any failure two teams point at each other; accountability diffuses; safety debt accumulates silently.",
+    streamsShort:["SLA log","Safety-debt register","Ownership decision","Incident log"],
+    streamsLong:[
+      {n:"Clinical AI SLA log",d:"Uptime, accuracy by condition class, latency, escalation rate"},
+      {n:"Safety-debt register",d:"Documented by Clinical AI team; severity, mitigation plan, ETA"},
+      {n:"Incident log",d:"Clinical events with AI in the loop; root-cause assignment (horizontal vs vertical)"},
+      {n:"Ownership decision record",d:"Written commitment: horizontal or vertical; signatories; date"},
+      {n:"Applied-science staffing record",d:"Headcount, seniority; if vertical, Care Entity team; if horizontal, Jio Brain team"}
+    ],
+    defaultMit:"Single decision in writing: Clinical AI is HORIZONTAL (Jio Brain platform with negotiated SLAs to Care Entity) OR VERTICAL (Care Entity product licensing Jio Brain infra, Care Entity owns safety evaluation staffing). Both-at-once is not defensible." },
+
+  { id:9, joint:"Allianz · novel-intervention pricing", actor:"allianz", ring:2, cat:"in-plan", dtag:null,
+    risk:"Medium", priority:"Medium",
+    keyRisk:"Actuary freezes catalogue without claims-cost elasticity. Dynamic intervention catalogue cannot exist. The core value prop of AI-driven care is blocked at underwriting.",
+    streamsShort:["Intervention catalogue","Risk-corridor","Claims elasticity","6-mo cadence"],
+    streamsLong:[
+      {n:"Intervention catalogue",d:"Active interventions; enter / retire dates; pre-registered hypotheses"},
+      {n:"Risk-corridor metrics",d:"Loss-ratio band status by intervention; breach events"},
+      {n:"Claims elasticity by intervention",d:"Claims-cost response vs pre-declared actuarial assumption"},
+      {n:"6-month catalogue review log",d:"Entries, retirements, modifications; actuarial sign-off"},
+      {n:"18-month retirement loop",d:"Failed interventions retired on the actuarial loop; lessons-learned"},
+      {n:"Proactive IRDAI filings",d:"AI-in-loop mechanism, consent, bundling, transfer-pricing"}
+    ],
+    defaultMit:"Risk-corridor around AI-novel interventions (<24 months): Allianz guarantees loss-ratio band; Care Entity absorbs excess. 6-month catalogue cadence with pre-declared actuarial assumptions, hypothesis, pre-registered metric, expected claims elasticity. Failed interventions retired on 18-month loop." },
+
+  { id:10, joint:"Netmeds · member choice-of-pharmacy", actor:"netmeds", ring:2, cat:"load-bearing", dtag:"D6",
+    risk:"High", priority:"High",
+    keyRisk:"One continuous surface from Agent→Clinical AI→Nav Doctor→Netmeds — all inside Reliance — is the textbook definition of tying. Each leg defensible individually is the problem. IRDAI disguised-commission complaint inside Year 1.",
+    streamsShort:["Pharmacy-choice log","Adherence","Refill cadence","IRDAI disclosure"],
+    streamsLong:[
+      {n:"Visible pharmacy-choice selection log",d:"Agent shows 3 options (Netmeds default, licensed chemist, member's own); selection persisted"},
+      {n:"Adherence data (primary KPI)",d:"Fill-to-fill gap, medication possession ratio, dispensed vs prescribed"},
+      {n:"Refill cadence",d:"Frequency, stockouts, switches"},
+      {n:"Prescription-to-fulfilment time",d:"By pharmacy choice; service-level comparison"},
+      {n:"No-revenue-share audit",d:"Annual audit of flows between Netmeds and Care Entity on Arogya Rx"},
+      {n:"IRDAI bundling disclosure",d:"Written filing; not waiting"}
+    ],
+    defaultMit:"Visible pharmacy choice at fulfilment — 3 options (Netmeds default, nearby licensed chemist, member's own). No revenue share from Netmeds to Care Entity on Arogya Rx — formalised in MSA. Adherence (not GMV) as primary KPI. Pre-emptive IRDAI engagement via written filing." },
+
+  { id:11, joint:"Regulators · joint veto at intersections", actor:"regulators", ring:3, cat:"implied", dtag:"D8",
+    risk:"High", priority:"High",
+    keyRisk:"Four bodies (IRDAI, NMC, ICMR, DPDP) independently cautious. Single CHW plasma draw touches all four simultaneously. Any one can block; no coordination mechanism exists. Career-safe default is freeze.",
+    streamsShort:["Bilateral engagement ledger","Framework filings","Sandbox approvals","Precedents"],
+    streamsLong:[
+      {n:"Bilateral engagement ledger",d:"Separate tracks for IRDAI, NMC, ICMR, DPDP; meeting minutes; common framework"},
+      {n:"Common framework filings",d:"Same document submitted to all four simultaneously"},
+      {n:"Political sponsor engagement",d:"PMO / NITI Aayog sponsor; deputy convenings"},
+      {n:"Proactive disclosure archive",d:"AI safety (HTA-In), biobank governance (ICMR), consent architecture (DPDP), bundling (IRDAI)"},
+      {n:"Sandbox approvals",d:"Limited-scope, time-boxed approvals; review windows; expansion triggers"},
+      {n:"International precedent citations",d:"FDA SaMD, MHRA, Singapore sandbox — political cover"}
+    ],
+    defaultMit:"Bilateral engagement (not a four-party summit — they've never co-convened on a private-sector initiative). Same framework, four meetings. Political sponsor at PMO / NITI Aayog — cabinet-office problem, not regulator-level. Proactive co-publication. Sandbox language. Precedent borrowing (FDA SaMD, MHRA, Singapore)." },
+
+  { id:12, joint:"Research Trust · independence perception", actor:"researchTrust", ring:3, cat:"implied", dtag:"D5",
+    risk:"High", priority:"High",
+    keyRisk:"Reliance-controlled-Trust-in-practice kills pharma credibility; DPDP treats it as a data-controller extension; Data Dividend becomes theatre. The civilizational contract unwinds.",
+    streamsShort:["Governance report","Board composition","Licensing revenue","Dividend audit"],
+    streamsLong:[
+      {n:"Quarterly public governance report",d:"Access, consent, ethics approvals, licensing revenue — published"},
+      {n:"Trust board composition disclosure",d:"Independent directors named; reputations; Reliance-nominated minority"},
+      {n:"Ethics approval ledger",d:"Approvals, modifications, vetoes; dissent"},
+      {n:"Licensing revenue disclosure",d:"By tier, by buyer, aggregate"},
+      {n:"Data Dividend audit",d:"Member-level statement + aggregate distribution; annual publication"},
+      {n:"Section 8 registration",d:"Legal structure confirmation"},
+      {n:"Member protocol-seat minutes",d:"Member-elected observer at Ethics Board; agenda, dissent"}
+    ],
+    defaultMit:"Section 8 company with majority-independent board (scientific, legal, ethics figures of public standing); Reliance nominates minority. Public quarterly governance report. Member representation on protocol committee with real observer rights. Data Dividend audit published annually. No sample export, no identity re-linking, no raw data sale — preserved in charter." },
+
+  { id:13, joint:"State Health Missions · parallel cadre", actor:"stateHealthMissions", ring:3, cat:"implied", dtag:null,
+    risk:"Medium", priority:"Medium",
+    keyRisk:"District health administration can block operations — refusal of PHC space, refusal to share ANM cadre data, public criticism via state MLAs. Non-trivial state veto at operational level. Every Jio CHW sits alongside an ASHA.",
+    streamsShort:["ASHA-integration MoU","Copilot usage","State programme data","District log"],
+    streamsLong:[
+      {n:"ASHA-integration MoU activity",d:"Coordination events; by district; against the named commercial term"},
+      {n:"ASHA copilot usage",d:"Licensed access at reduced cost; adoption by district"},
+      {n:"State programme derivative data",d:"Immunisation, TB, maternal-fetal — under published governance"},
+      {n:"District-level engagement log",d:"Block Medical Officer, DHO, political contacts"},
+      {n:"State Health Secretary convening minutes",d:"Quarterly; regional governance layer"},
+      {n:"PPP contract performance",d:"On specific programmes (maternal-fetal, TB, NCD screening)"}
+    ],
+    defaultMit:"ASHA-integration MoU with named commercial term; coordinated visits; ASHA priority copilot access at reduced cost; state programme derivative data under published governance. State Health Mission seat at regional governance with quarterly Secretary convening. PPP framing on specific programmes. Public no-poaching commitment." },
+
+  { id:14, joint:"Member · Family co-decision", actor:"memberFamily", ring:0, cat:"load-bearing", dtag:null,
+    risk:"High", priority:"High",
+    keyRisk:"Agent talks to the wrong family member. Earning son pays premium but Agent talks to parent. Mother-in-law has effective veto on daughter-in-law's decisions. Cousin-who-is-a-doctor wins most tie-breaks — a WhatsApp message vs a name on a screen.",
+    streamsShort:["Decision-maker ID","Family map","Second-opinion channel","Gaming signal"],
+    streamsLong:[
+      {n:"Family decision-maker identification",d:"Captured at enrolment; updated on life events"},
+      {n:"Family-tree map",d:"Earning son, spouse, mother-in-law, cousin-doctor; roles per family member"},
+      {n:"Second-opinion channel log",d:"Family doctor shares full clinical picture under explicit consent; input logged"},
+      {n:"Cousin-doctor consultation log",d:"Consent, engagement events, resolution"},
+      {n:"Family premium gaming signal",d:"Grandfather added at onset, removed at high-risk year; risk-pool composition"},
+      {n:"Decision-maker-vs-patient divergence",d:"Events where the patient agreed but the decision-maker routed elsewhere"}
+    ],
+    defaultMit:"Family-decision-maker identification at enrolment. Agent addresses both member and decision-maker where they differ; CHW loops decision-maker in at each visit. Structured second-opinion channel for the family doctor under explicit consent; input logged. Long-tenure premium cap; Dividend weighted by tenure + participation (not disclosure). Companion visits funded by Care Entity operating budget. No Navigator-continuity penalty." },
+
+  { id:15, joint:"Competitors · moat timing gap", actor:"competitors", ring:3, cat:"in-plan", dtag:null,
+    risk:"Medium", priority:"High",
+    keyRisk:"Care model is replicable in 12–18 months by anyone with capital and scale. Data moat activates in 3–5 years. The gap between the two is the strategic vulnerability.",
+    streamsShort:["Captive-cohort metrics","Tier 1 exclusives","Pharma exclusivity","Competitor watch"],
+    streamsLong:[
+      {n:"Captive-cohort launch metrics",d:"Jamnagar pilot: 10K families, 40K members; enrolment, engagement, outcome data from Month 7"},
+      {n:"Single-disease exclusive contracts",d:"Cardiometabolic, oncology, maternal-fetal at each Tier 1; contract status"},
+      {n:"Pharma Year 1 exclusivity register",d:"First-mover on named pipeline assets; buyer, terms, timeline"},
+      {n:"Competitor intelligence",d:"Apollo, Tata, PhonePe — care model progress, data-asset status, partnership announcements"}
+    ],
+    defaultMit:"Captive-cohort launch (Reliance-employee Jamnagar pilot: 10K families, 40K members, full architecture from Month 7). Single-disease exclusive outcome contracts at Tier 1 hospitals (cardiometabolic, oncology, maternal-fetal). Pharma exclusivity in Year 1 on specific named targets. Each is a small moat; together they raise the challenger's cost of entry." },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE + PERSISTENCE
+═══════════════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'jio-arogya-smithian-dashboard-v3';
+let state = loadState();
+
+function defaultState() {
+  const s = { rows: {}, notes: '' };
+  VALUE_EXCHANGES.forEach(ve => {
+    s.rows[ve.id] = { mitigation: stripHtml(ve.defaultMit) };
+  });
+  return s;
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    const d = defaultState();
+    VALUE_EXCHANGES.forEach(ve => {
+      if (parsed.rows && parsed.rows[ve.id]) {
+        d.rows[ve.id] = { ...d.rows[ve.id], ...parsed.rows[ve.id] };
+      }
+    });
+    d.notes = parsed.notes || '';
+    return d;
+  } catch (e) { return defaultState(); }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function stripHtml(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+}
+function escapeHtml(s) {
+  const div = document.createElement('div');
+  div.textContent = s || '';
+  return div.innerHTML;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER TABLE
+═══════════════════════════════════════════════════════════════ */
+const RING_LABELS = { 0: 'Ring 0', 1: 'R1 · AI', 2: 'R2 · Rel', 3: 'R3 · Ext' };
+
+function ringTag(ring) {
+  return `<span class="ring-tag r${ring}">${RING_LABELS[ring]}</span>`;
+}
+function catBadge(cat) {
+  const labels = { 'load-bearing': 'Load-Bearing', 'implied': 'Implied', 'in-plan': 'In Plan' };
+  return `<span class="cat-badge ${cat}">${labels[cat]}</span>`;
+}
+function dBadge(dtag) {
+  if (!dtag) return '';
+  return `<span class="cat-badge d-tag">${dtag}</span>`;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = VALUE_EXCHANGES.map(ve => {
+    const s = state.rows[ve.id];
+    const streamsHtml = ve.streamsShort.map(x => `<span class="data-stream">${x}</span>`).join('');
+    return `
+      <tr data-id="${ve.id}" data-ring="r${ve.ring}" data-cat="${ve.cat}" data-dtag="${ve.dtag || ''}">
+        <td class="col-id">${ve.id}</td>
+        <td class="col-joint" onclick="openPanel(${ve.id})">${ve.joint}${catBadge(ve.cat)}${dBadge(ve.dtag)}</td>
+        <td class="col-ring" onclick="openPanel(${ve.id})">${ringTag(ve.ring)}</td>
+        <td class="col-keyrisk" onclick="openPanel(${ve.id})">${ve.keyRisk}</td>
+        <td class="col-data" onclick="openPanel(${ve.id})">${streamsHtml}</td>
+        <td class="col-mit"><textarea class="mit-input" placeholder="Deal term, contract language, governance mechanism..." data-id="${ve.id}" onclick="event.stopPropagation()">${escapeHtml(s.mitigation)}</textarea></td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.querySelectorAll('.mit-input').forEach(el => {
+    el.addEventListener('input', (e) => {
+      const id = parseInt(e.target.dataset.id);
+      state.rows[id].mitigation = e.target.value;
+      saveState();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FILTERS
+═══════════════════════════════════════════════════════════════ */
+function filterRows(filter, chipEl) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chipEl.classList.add('active');
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    let show = true;
+    if (filter === 'all') show = true;
+    else if (filter === 'r0') show = tr.dataset.ring === 'r0';
+    else if (filter === 'r1') show = tr.dataset.ring === 'r1';
+    else if (filter === 'r2') show = tr.dataset.ring === 'r2';
+    else if (filter === 'r3') show = tr.dataset.ring === 'r3';
+    else if (filter === 'load-bearing') show = tr.dataset.cat === 'load-bearing';
+    else if (filter === 'implied') show = tr.dataset.cat === 'implied';
+    else if (filter === 'in-plan') show = tr.dataset.cat === 'in-plan';
+    else if (filter === 'd-tag') show = !!tr.dataset.dtag;
+    tr.classList.toggle('hidden', !show);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DETAIL PANEL
+═══════════════════════════════════════════════════════════════ */
+function openPanel(id) {
+  const ve = VALUE_EXCHANGES.find(x => x.id === id);
+  if (!ve) return;
+  const actor = ACTORS[ve.actor];
+
+  document.getElementById('dp-id').textContent = `JOINT #${ve.id} · ${actor.name.toUpperCase()}${ve.dtag ? ' · ' + ve.dtag : ''}`;
+  document.getElementById('dp-title').textContent = ve.joint;
+  document.getElementById('dp-tags').innerHTML = `
+    ${ringTag(ve.ring)}
+    ${catBadge(ve.cat)}
+    ${dBadge(ve.dtag)}
+  `;
+
+  const streamsRows = ve.streamsLong.map(s => `<tr><td class="name">${s.n}</td><td class="desc">${s.d}</td></tr>`).join('');
+  const dataCats = (actor.dataTouches || []).map(n => {
+    const c = DATA_CATEGORIES[n];
+    return `<a href="javascript:void(0)" class="dcat" title="${escapeHtml(c.desc)}" onclick="event.stopPropagation();closePanel();toggleGuide('glossary',document.querySelector('[onclick*=glossary]'));setTimeout(()=>document.getElementById('glossary-data-cats').scrollIntoView({behavior:'smooth'}),200)" style="text-decoration:none;cursor:pointer"><span class="num">${n}.</span>${c.name}</a>`;
+  }).join('');
+
+  const refs = SECTION_REFS[ve.id] || {};
+
+  document.getElementById('dp-body').innerHTML = `
+    <div class="risk-box"><strong>Key risk if left to default:</strong><br>${ve.keyRisk}</div>
+
+    <h4>Data Streams Through This Joint</h4>
+    <table class="ds-table">
+      <thead><tr><th>Stream</th><th>What it carries</th></tr></thead>
+      <tbody>${streamsRows}</tbody>
+    </table>
+
+    <h4>${actor.name} — Upstream Data Categories Touched</h4>
+    <div class="dcat-list">${dataCats || '<em style="color:var(--ink-3);font-size:11px">Derivative only</em>'}</div>
+    <div style="font-size:10.5px;color:var(--ink-3);margin-top:6px;line-height:1.45">From <code>Jio_Care_Dataset_Inventory.md</code> — the seven data-collection families. Hover for summary; click any badge to open the full definitions in the Glossary.</div>
+
+    <h4>The Individual</h4>
+    <div class="layer">${actor.individual}</div>
+
+    <h4>Layer Above</h4>
+    <div class="layer">${actor.layerAbove}</div>
+
+    <h4>Org's Stated Objective</h4>
+    <div class="layer">${actor.orgObjective}</div>
+
+    <h4>AI Intersection</h4>
+    <div class="layer">${actor.aiIntersection}</div>
+
+    <h4>Escalation Boundary</h4>
+    <div class="layer">${actor.escalationBoundary}</div>
+
+    <h4>Designed Value Exchange (from the document)</h4>
+    <div class="ve-box">${actor.designedValueExchange}</div>
+
+    <h4>Where to read more</h4>
+    <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:10px 12px;font-size:12px;color:var(--ink-2);line-height:1.55;">
+      <div style="margin-bottom:6px;"><strong style="color:#0369a1;">Smithian-Actor-Chains_Jio-Arogya.md:</strong> ${refs.smithian || '—'}</div>
+      <div><strong style="color:var(--ink-3);">Related documents:</strong> ${refs.related || '—'}</div>
+    </div>
+  `;
+
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePanel();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════════════════════ */
+function resetAll() {
+  if (!confirm('Reset all mitigations and strategic notes back to defaults? This cannot be undone.')) return;
+  state = defaultState();
+  saveState();
+  renderTable();
+  document.getElementById('notes-box').value = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+renderTable();
+const notesBox = document.getElementById('notes-box');
+notesBox.value = state.notes || '';
+notesBox.addEventListener('input', (e) => {
+  state.notes = e.target.value;
+  saveState();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+# Jio-Bio-Care Proposal Memo
+
+# **The frame and the organizing idea**
+
+Three things have become true at once. Jio Allianz is months from a launch date that gives us a captive payer of national scale. The largest block of private insurance claims in India is cardiometabolic disease and its hospital-borne complications, most of which is preventable with a ten-year lead time if someone can see the trajectory. And the unit cost of deep phenotyping has fallen far enough to make population-scale biobanking economic for the first time in any market. The window to build the defining health franchise in India is the next twenty-four months. This memo proposes what to build, why only we can build it, and what to decide first.
+
+**What is not the problem.** Primary care in India is not scarce. Pharmacies, clinics(licensed and unlicensed), diagnostic chains, and telehealth saturate every postcode. Patients route themselves to whoever is closest and fastest when symptomatic, and they are largely satisfied with the relief they receive. Adding more primary care capacity does not guarantee usage nor change outcomes, does not shift claims, and does not build a franchise.
+
+**What is the problem.** Two things break in Indian private health, and both are addressable at our scale. The first is that the relationship between a member and a health system is transactional and episodic. People meet their clinician in the crisis, not before. The second is that secondary and tertiary care are navigated alone. Indian families facing a cardiac scare, a cancer diagnosis, a recommended surgery, or a new chronic diagnosis enter a system that over-tests, steers to higher-margin procedures, charges opaquely, and releases them without follow-up. This is where private insurance claims leak, and this is where the human cost concentrates.
+
+**What we are building.** A health operating system. The organizing idea is not a clinic chain and not a new insurance product. Jio Allianz is the insurance product. What sits beneath it, and makes it economic, is an operating layer with six interlocking components: a daily engagement stack, a human navigation layer, an intervention-budget engine, a biobank with retrospective assay capability, a Research Trust holding de-identified data, and an insurance interface feeding outcomes back into premium pricing. The experience that runs on top of the operating system is a trusted relationship formed with the member in their healthy years, monetized when they need to navigate secondary and tertiary care, and compounded across their lifetime into the most valuable longitudinal health dataset in the country.
+
+**The unit of value that compounds.** Revenue, clinic footprints, and premium products can all be copied by any well-capitalized competitor. One asset cannot be copied at our scale within a decade: patient-years of consented, longitudinal, multi-omic phenotype linked to navigation decisions and outcomes. Every architectural choice that follows is in service of compounding this asset faster than any other actor in India, or in fact globally outside the Nordic and UK biobank consortia. Trust is the entry. Data is the flywheel. Outcomes are the proof.
+
+**Why us.** The specific infrastructure needed to compound this asset already exists in the group. Jio digital identity reaches four hundred and fifty million Indians. JioFiber and JioPhone can enable ambient sensing at household scale as technologies mature. Jio Allianz gives us a captive payer and, through any group policy we choose to hold, a proof vehicle before Allianz is live. Reliance Foundation and Strand Life Sciences anchor the tertiary and omics layers. Jio Brain provides inference. India’s ABDM and DPDPA frameworks give us a consent rail native to domestic law that no foreign actor can replicate. No pure-commercial competitor can assemble this combination in under a decade, and no state-led actor will. The window opens now because assay costs have crossed a line and Allianz is ready.
+
+**The social contract.** The founding story of this company was trust offered by ordinary Indians in return for industrial dividends. The new story asks the same ordinary Indians to trust us with their health data and their navigation choices in return for better outcomes and a dividend on discovery. The same civilizational contract, in a new asset class. A pharmaceutical firm cannot credibly offer this, because it is a buyer of the data. A hospital chain cannot offer this, because it is a seller of procedures. A foreign actor cannot offer this, because it cannot promise return of value. Only we can.
+
+# **The architecture, the build options, the commercial engine**
+
+**The operating system.** Six components, each load-bearing and each designed to plug into the others.
+
+**Daily engagement** is the surface the member sees every day. A Personal Agent lives on the member’s device and holds their personally identifiable information locally. A Clinical AI inference layer processes consented data on demand and retains nothing; it is stateless by design, so the compute layer can never become a honeypot. A community health worker cadre at a density of one per thousand members provides the human escalation path when the agent judges that human contact is needed. This is where trust is formed.
+
+**Navigation** is the layer that activates when a clinical signal appears or an event looms. A human navigator, drawn from the CHW cadre and a specialist coordinator team, walks the member through their secondary or tertiary care. They recommend the hospital and the specialist. They flag over-testing and over-procedure. They negotiate pricing. They compress admission duration. They close the loop on discharge, adherence, and chronic follow-up. This is where trust is monetized.
+
+**The intervention-budget engine** disciplines the care side by the insurer’s profit and loss. Every clinical action, from a remote consultation to a recommended procedure, runs against an eighteen-month payback loop. Interventions that do not demonstrably reduce claims are retired. This is how care becomes economic rather than volume-driven.
+
+**The biobank,** built with retrospective assay as a first principle, collects biosamples from every member at enrollment. Assays run only on the subset triggered by clinical or research relevance. This is how deep phenotyping moves from a few lakhs per participant upfront to tens of thousands at steady state.
+
+**The Research Trust** is a separate legal entity. It holds de-identified data and biobank custody and signs pharma and academic partnerships without contaminating the insurer’s or the care entity’s profit and loss. It is also the channel through which the Data Dividend flows back to members.
+
+**The insurance interface** is the feedback loop between outcomes and premium pricing. Jio Allianz is the anchor buyer. Any Indian group insurer is a sufficient proof vehicle in the interim.
+
+**Primary care lives inside the operating system but is not the product.** Since primary care is already supplied by the Indian market at density and price, our primary care presence is the Personal Agent, the CHW cadre, and a thin physical footprint where in-person touch is clinically material. Physical infrastructure is data capture and trust maintenance. It is not a retail business and will not be sized as one.
+
+**The build options.** Four ways to assemble the operating system exist, and the decision between them is the most material one we face after the framing itself. An asset-light platform owns data, agent, navigator, and Research Trust and partners everything clinical. An asset-medium build owns the data spine and a thin physical footprint and partners labs, primary care, and hospitals. An asset-heavy build owns the delivery chain end-to-end, at the capex and complexity implied. A platform-as-a-service exposes the operating system to third-party insurers, employers, and hospital chains with the thinnest direct consumer presence. Each of the internal plans in circulation maps onto one of these options. The position of this memo is that these are options to be chosen after ninety days of validation, not commitments to be made today.
+
+**The commercial engine.** Care does not need to pay for itself in Year One. Two revenue streams pay for it earlier than care economics can on their own, and both are material.
+
+**Navigation-linked margin capture.** The largest and most opaque block of private insurance claims in India is secondary and tertiary care. A trusted navigator reduces unnecessary procedures, routes to better-performing hospitals, negotiates pricing, compresses admissions, and closes the discharge loop. On a hundred-thousand-member book, partial conversion of these levers is worth several hundred crores a year in reduced claims. The revenue can be booked two ways: directly from the member as a subscription that bundles the navigator, and from the insurer as a per-member-per-month management fee or a share of the claims savings demonstrably produced. Both forms activate the same underlying mechanism.
+
+**Research partnership revenue.** The Research Trust holds four assets with distinct revenue shapes: a metabolomics reference panel, a proteomics and pQTL panel, a CGM glycaemic reference dataset, and — over a longer horizon — a pre-disease trajectory biomarker. Comparable deals establish that the category is real and the magnitudes are material: pharma partners in the UK Biobank proteomics consortium at forty to one-hundred-twenty crores each, deCODE's Roche and Amgen arrangements in the low thousands of crores, 23andMe's GSK partnership at the twenty-five-hundred-crore mark, and biomarker-licensing valuations in the tens of thousands of crores at the Grail precedent. The ninety-day sprint will size each asset bottom-up against Indian pharma willingness-to-pay and return with defensible ranges. The Year One milestone is LOIs signed in at least two of these shapes; the Year Four milestone is conversion to revenue. Neither is speculative — both are anchored in deal shapes the global biobank category has already demonstrated.
+
+**Capex and the honest FCF story.** The ninety-day sprint is small: a focused team, LOI conversations, a unified specification. The 180-day consumer pilot is mid-scale: five hundred to one thousand members, Personal Agent MVP, navigator cadre, biobank seed, assay float. The Year Two scale-up is material but gated on pilot outcomes. The FCF-by-Year-Three ambition is achievable. It is not deliverable from primary care margin, because Indian primary care does not turn free cash flow positive in three years and we are not in that business. The honest path to Year Three free cash flow is the research partnership ladder converting LOIs to signed deals across Years One to Three, combined with navigation-linked claims savings from Year Two onward. The sprint’s first deliverable is hard numbers against each of these.
+
+# **The proof, the phasing, the ask**
+
+**The minimum viable proof.** A single cohort of members, run on the full architecture, measured against five legs simultaneously. First, members enroll and engage in the healthy/non-clinical state; trust forms. Second, when clinical events occur, members route through the JioCare navigator rather than around us; trust is operational. Third, deep phenotype produces clinically meaningful risk stratification that changes the timing or the choice of intervention. Fourth, outcomes translate to measurable claims-cost reduction priced by an insurer, whether Jio Allianz when it is live or a group insurer before then. Fifth, de-identified data finds buyers; at least two pharma LOIs are signed inside the first hundred and eighty days. All five in one pilot, not in series. Any one leg failing tells us which piece is weak before we scale.
+
+**The first customer \-  deliberately open.** Three beachheads are credible and each produces a different economic and data shape. Urban affluent, forty-five to sixty-five, cardiometabolic: a clinical-grade product at three to four lakhs a year, where trust forms through preventive surveillance and navigation monetizes fast because secondary events are near. Urban affluent, thirty to forty-five, performance and longevity: a consumer-grade product at seventy-five thousand to one and a half lakhs a year, where trust forms through daily insights and ambient sensing, and the compounding relationship is the longest of the three. Employer groups, twenty-five to fifty-five: a capitated group policy, where the employer buys trust on behalf of the employee and the scale ramp is the fastest. The same Personal Agent, the same navigator, the same biobank, the same Research Trust, and the same Data Dividend underlie all three. Pre-deciding in April is a bet that should be a decision in July, with the economics and the signed LOIs in hand. The sprint’s output is a chosen beachhead priced and ready to launch, not three candidates and a recommendation.
+
+**Phasing.** Three gates.
+
+**Gate 1, end of July 2026:** a fundable plan. A unified specification across all six operating system blocks. Economics replacing every placeholder. The Research Trust legal structure filed. Two to three signed pharma LOIs. A chosen beachhead with pilot design. A chosen build option.
+
+**Gate 2, end of October 2026:** a consumer pilot live in the chosen beachhead. Five hundred to one thousand members on the full architecture, including the navigation layer. Six months of engagement, navigation, outcomes, and biobank seed in hand by March 2027\.
+
+**Gate 3, mid-2027:** the Jio Allianz-wrapped cohort launches. The scale decision is taken with twelve months of outcomes and signed pharma partnerships already on record.
+
+**The ask.** Not capital today. Four things. One, endorse the framing: the operating system is what we are building; trust built before the event and navigation at the event are what the member experiences and pays for; data compounding is the moat; the Data Dividend is the contract. Two, name one owner for the operating system, reporting into your office. Three, authorize a ninety-day sprint at a small funded scope. Four, park the distribution plan debates until the sprint concludes; every one of them plugs into the operating system, and none should be promoted before the sprint’s economics are in hand. We return by the end of July 2026 with economics that can be priced, a chosen build option with a committed owner, a consumer pilot ready to go live in October, and the first pharma LOIs on the table.
+
+**Intent:** 
+
+We believe that key modalities of healthcare delivery and organization can, will and should change in the next 10 years. We are building the infrastructure that drives this change. A healthcare for every Indian that is data and evidence based, abundant, preventative and customer-centric. 
+
+**Insights from Prior Experience:** 
+
+1. **Abandon Industrial Revolution Healthcare:** Our hospital centric system was built for an acute disease burden, which has inverted to chronic (70% of the burden today). The hospital center model was built when both the technology and the knowledge was centralized (i.e., in the walls of the building and in the physician’s head). Chronic needs to be managed differently (30-40% clinical and 60% environmental, behavioral and social drivers). [jalanishaan@gmail.com](mailto:jalanishaan@gmail.com)Broken incentives?
+
+2. ### **AI inference costs collapse the supply constraint:** India has 70 doctors per 100,000 people; 60% of primary-care interactions in low-income India are with unqualified providers. Genome sequencing fell from $3B in 2003 to under $100 today — faster than Moore's Law for 15 years. Clinical AI inference sits on the same trajectory: \~$100/member/year today, $10–15 within four years. This enables 80% task-shifting to AI \+ community health workers. The window during which depth, data, AI, and regulation combine into a structural moat is short.
+
+3. **Not all data is equal:** Longitudinal data is specifically what we need to capture. We fundamentally believe that Longitudinal biological and medical data is uniquely valuable because it captures how health changes over time—revealing trajectory, response, and progression that static cross sectional datasets cannot. That makes it especially powerful for prediction, precision care, and therapeutic discovery when linked across rich clinical and molecular data. This is what will underpin both a bio and a personalized medicine strategy and development for us.
+
+4. ### **India is the world's most valuable un-sequenced biological population.**
+
+   1.4 billion people. 4,600 endogamous population groups. 7 million novel genetic variants. Almost none of this exists in the global research base. Indian patients receive treatments designed for European genomes. Pharma that wants to develop for South Asian disease biology cannot do it today. India can run trials at 1/10th US cost with 10x faster enrollment. A pre-consented, genotyped, continuously-monitored JioCare cohort is a structural asset that cannot be replicated.  
+ 
+
+
+5. **Capturing Longitudinal Data:** Longitudinal data is valuable but operationally hard to obtain at scale—retention, consistent testing, and cost are the barriers. The largest longitudinal study today in India is the LASI study with 72,000 in phase 1\. The largest globally are the All of Us (US) and UK Biobank (UK) with 1 million and 500K participants respectively. To obtain this efficiently, it must be captured as a by-product of a long term, high retention customer relationship. This is why we play a key role in directly providing care.  
+     
+6. **No fixed healthcare supply:** While we want to provide care, we will focus on building intelligence and flexible supply, not clinics or hospitals. Return-on-asset math corrupts clinical decisions and makes one focus on volume; we refuse that structure. Less than 15% of total capex in our plan will be on clinics, buildings, and/or pods.
+
+7. **Trust at the individual level is a pre-condition to providing care:** Trust in preventative healthcare is produced by witnessed commitment rather than by formal authority or brand alone. The implication of this is that we believe that a model where a live person owns and builds the relationship with a patient will have higher retention, better care outcomes, and create more opportunities for data capture. 
+
+8. **We will build a new healthcare workforce around the frontline worker going to the home:** The core instrument is the community health worker, augmented by a 24/7 AI doctor in 8+ Indian languages, ambient monitoring through existing Jio devices, and point-of-care diagnostics. A pod sees 38 symptomatic walk-ins per day and misses 75% of the catchment. Half of India's hypertensives are undiagnosed; they will not walk into a pod. CHW \+ AI reaches every home. This personal relationship is key to building trust and creating locally specific models of care. This also solves the other key challenge \- demand for primary care is extremely challenged and any inconvenience or friction dramatically suppresses it. 
+
+**Approach:**
+
+*Summary*
+
+| UNDERWRITING *GTM through Insurance* | *ACCESS (90%) How care reaches the member proactively* | *ESCALATION (10%) How member reaches care when needed* | DATA *What we measure* | SCIENCE *What the data pays back* |
+| :---- | :---- | :---- | :---- | :---- |
+| **1 · Embedded within insurance** | **2 · Direct, on-demand at Home Care**  | **3 · Four-tier hospital partner network** | **4 · Instrumented member-year** | **5 · Research Trust dividend** |
+| •  Insurance as the wrapper, not the business •  One premium, family of four covered •  Digital support, CHW, interventions priced in •  Filed with IRDAI under the Jio Allianz licence •  Multi-year contract binds member and incentivizes long term interventions | •  Personal Agent in English, Hindi, Gujarati • New class of tech-equipped CHWs trained •  Clinical AI, 24×7, voice and chat • NetMeds partner stores as physical nodes | •  Tier-1 anchor, full integrated, value based contracting •  Tier-2 on standard contract with base outcomes payments •  Tier-3 small hospital partnerships •  Discharge-to-home speed and visibility •  CHW continuity after every event | •  CGM, BP cuff, air and water sensors •  MedLab panel, omic baseline •  ABHA-native, Health Locker resident •  One longitudinal record per member | •  TechBio Research Trust, member-owned •  Biobank at every Tier-1 site •  AI Scientist on India-native cohort •  Pharma, biotech, public-health revenue |
+|  | Unit economics covered within Insurance Product |  | Investments repaid by Data and Science Assets |  |
+
+***Bundled Insurance Product → Proactive, at home, on-demand care → Supported escalation journey →*** ***Instruments measure → Science compounds***
+
+**The Operating Model**
+
+*Specification of the five systems — Access, Escalation, Underwriting\*, Data, Science.*
+
+This document specifies Jio Arogya as a register of components. Each component is defined by a specification table describing its function, scope, inputs, outputs, exclusions, and build requirements. Summary matrices show how the components relate to one another. The Access, Underwriting, and Science systems follow a uniform specification form. The Escalation system uses a cross-tier matrix because the controlling question is how four contract types substitute for hospital ownership. The Data system uses instrumentation and signal registers because the controlling question is what is captured, how often, and what longitudinal record accumulates.
+
+\*This includes underwriting, though it would need to be workshopped with the Jio Alliance team in collaboration. 
+
+# **1 · Underwriting**
+
+## *Jio Allianz carries the risk. Jio Care delivers the care. Plans are co-designed.*
+
+Premium, reserves, claims, and grievance redressal sit on the Jio Allianz balance sheet under the IRDAI licence. Clinical care sits in Jio Care under its protocols and ethics board. Plans are priced jointly: the intervention budget for each plan is computed from the actuarial baseline and released to care delivery as the operating envelope. The two entities are legally separated. Data flow between them is DPDP-compliant, consent-ledger-tracked, and purpose-limited.
+
+### **Plan economics**
+
+| Plan tier | Annual premium | Target loss ratio | Zero-marginal service floor | Intervention budget / member / year | Served cohort |
+| :---- | :---- | :---- | :---- | :---- | :---- |
+| **Basic** | ₹7,000 | 70% | ₹300 | ₹680 | Low-risk single adult |
+| **Core** | ₹15,000 | 70% | ₹300 | ₹1,500 | Mass-market family floater |
+| **Standard** | ₹30,000 | 70% | ₹300 | ₹3,800 | Urban middle-class individual or couple |
+| **Premium** | ₹50,000 | 70% | ₹300 | ₹6,500 | Cardiometabolic or high-utilisation cohort |
+| **Comprehensive** | ₹80,000 | 70% | ₹300 | ₹10,900 | Chronic-disease and research cohort |
+
+ 
+
+| 1.1 · Balance Sheet · Jio Allianz |  |
+| :---- | :---- |
+| **Entity** | Jio Allianz General Insurance Company Limited. IRDAI-licensed insurer. |
+| **Function** | •  Holds reserves and regulatory capital •  Prices and books premium •  Pays claims •  Issues member-facing plan terms and certificates of insurance •  Handles grievance redressal under the IRDAI licence |
+| **Relationship to care** | Every plan is co-designed with Jio Arogya Health Services prior to filing with IRDAI. Neither entity prices a product the other has not agreed to deliver. |
+| **Risk** | Absorbs actuarial and catastrophic risk on the insurer balance sheet. |
+| **Exclusions** | •  Does not deliver clinical care •  Does not hold clinical data •  Does not operate the CHW cadre or the Personal Agent |
+
+ 
+
+| 1.2 · Intervention Catalogue |  |
+| :---- | :---- |
+| **Content** | Register of at least thirty priced interventions. Each intervention tagged with a priced unit, expected outcome effect, and expected claims-cost elasticity. |
+| **Evidence standard** | Published peer-reviewed evidence at launch. Internal claims-linked outcome data replaces external evidence within 24 months of launch. |
+| **Zero-marginal interventions (every plan)** | •  Personal Agent access •  Clinical AI access •  Digital coaching •  Member education modules •  Screening triage |
+| **Priced interventions (allocator-selected)** | •  CHW home visits by cadence tier •  Home air-quality sensor deployment •  Cellular BP cuff for hypertensive members •  Continuous Glucose Monitor for diabetic and pre-diabetic members •  Human-supplemented dietary coaching hours •  Remote lab panels beyond the plan baseline •  Specialty tele-consultations |
+| **Exclusions** | •  No intervention without published evidence at launch •  No intervention that cannot be delivered nationally at scale |
+| **Build requirements** | •  Intervention database •  Continuous evidence-refresh workflow •  Actuarial tagging discipline •  Allocator logic |
+
+ 
+
+| 1.3 · Actuarial Loop |  |
+| :---- | :---- |
+| **Function** | Quarterly measurement cycle. Claims experience flows from Jio Allianz into the Intervention Budget Engine via a linked claims–care data feed. Each active intervention is repriced against observed claims-cost effect in the served cohort. |
+| **Decision rule** | No intervention remains in the catalogue without demonstrated claims-cost effect within 18 months of launch. Interventions failing the rule are repriced once; a second failure removes the intervention from the catalogue. |
+| **Governance** | Independent review by the Jio Allianz appointed actuary. Quarterly report submitted to the Jio Arogya board. |
+| **Exclusions** | •  No sunk-intervention defence •  No politically weighted retention |
+| **Build requirements** | •  Quarterly review cycle with published calendar •  Linked claims–care data feed •  Appointed-actuary review protocol |
+
+ 
+
+| 1.4 · Regulatory Frame |  |
+| :---- | :---- |
+| **Entity structure** | Jio Allianz (IRDAI-licensed insurer) and Jio Care (care-delivery entity) are legally separate. A master services agreement governs the care-delivery relationship. |
+| **Regulated flows** | •  Member-facing plan terms, consent, and grievance redressal sit under the insurance licence •  Clinical protocols and ethics review sit under the care-delivery entity |
+| **Data flows** | Inter-entity data flows are DPDP-compliant, consent-ledger-tracked, and purpose-limited. Every cross-entity request carries a linked consent token. |
+| **Oversight** | •  Independent ethics board with veto over research activity •  Annual public governance report •  Member representation on the clinical protocol committee |
+| **Exclusions** | •  No co-mingling of the two books •  No insurer signal overrides a clinical protocol |
+
+# 
+
+# **2 · Access**
+
+## *Three components reach the member. Engagement is ordered.*
+
+The access system contains three operating components: a per-member conversational interface running on the member device, a stateless central clinical inference service, and a distributed cadre of salaried Community Health Workers. Each component has a defined scope, deployment footprint, and handoff rule. Cross-component flow is governed by the Access Rule (Component 1.4).
+
+### **Access summary**
+
+| Component | Location | Service ratio | Holds PII | Clinical reasoning | Physical presence |
+| :---- | :---- | :---- | :---- | :---- | :---- |
+| **A · Personal Agent** | Member device \+ member cloud locker | 1 per member | Yes | No | No |
+| **B · Clinical AI** | Jio Brain (centralised service) | Shared | No | Yes | No |
+| **C · Frontline Worker** | Field / member home | 1 per 500 members | No (routed via Agent) | Assisted by Clinical AI | Yes |
+
+ 
+
+| 2.1 · Personal Agent |  |
+| :---- | :---- |
+| **Function** | Runs a persistent conversational interface on the member's mobile device. It runs within the member’s trust boundary \- this is the only component of the entire system that may touch identifiable data. Connected devices stream raw data to this agent, not to the cloud. Operates as the system-of-record for member identity, language preference, medication list, appointment history, consent ledger, and prior interaction log. Orchestrates downstream layers on the member's behalf: issues queries to the Clinical AI, dispatches the Frontline Worker, files claims with Jio Allianz, retrieves records from hospitals and labs, and manages consent grants. |
+| **Deployment** | Native integration on JioPhone. Jio MyHealth app on Android. One instance per enrolled member. Eight Indian languages, voice and text. |
+| **Inputs** | •  Member voice and text input •  Incoming events from lab systems, pharmacies, hospital EHRs, CHW copilot, and Clinical AI •  Consent responses from the member |
+| **Outputs** | •  Member-facing responses in the member's language •  De-identified, consent-scoped queries to the Clinical AI •  Structured work orders to the Frontline Worker •  Claim submissions and grievance events to Jio Allianz |
+| **PII scope** | Holds all member identifiable data. PII does not leave the device except to an encrypted per-member cloud locker under the member's own key. Every cross-boundary request carries a linked consent token. |
+| **Exclusions** | •  Performs no clinical diagnosis •  Issues no prescriptions without clinician co-sign •  Executes no autonomous treatment decision |
+| **Build requirements** | •  Agent runtime on JioPhone and Android •  Encrypted per-member cloud locker •  Consent ledger aligned to ABDM Consent Manager •  Voice and text stack across eight Indian languages |
+
+ 
+
+| 2.2 · Clinical AI |  |
+| :---- | :---- |
+| **Function** | Stateless clinical inference service. Returns differentials, protocol recommendations, screening flags, risk scores, prescription suggestions, and escalation triggers across the top fifty Indian condition categories. Services queries from the Personal Agent, the Frontline Worker's copilot, and the physician CoPilot deployed at Tier-1 and Tier-2 hospital partners. |
+| **Deployment** | Central service on Jio Brain inference infrastructure. Accessible via authenticated API. |
+| **Inputs** | De-identified, consent-scoped queries containing structured member history and the presenting question. |
+| **Outputs** | •  Structured clinical response with confidence interval and cited evidence •  Explicit escalation recommendation (self-care / tele-consult / CHW visit / hospital) •  Protocol reference for downstream execution |
+| **Availability** | 24×7. Eight Indian languages. Voice and text. |
+| **Autonomy posture** | Human-in-the-loop for all prescriptions and all clinical escalations through Year 2 (?). Autonomous operation on a restricted task list thereafter, subject to published safety evaluation with HTA-In and ICMR and regulator concurrence. |
+| **Exclusions** | •  Stores no query state •  Holds no member identity •  Issues no orders without clinician co-sign until explicitly authorised and regulator-cleared |
+| **Build requirements** | •  Jio Brain inference stack •  Clinical protocol library across fifty Indian condition categories •  Published Indian Health AI safety benchmarks •  Multilingual clinical UX •  Physician CoPilot for hospital and clinic network deployment |
+
+ 
+
+| 2.3 · Frontline Worker (Community Health Worker) |  |
+| :---- | :---- |
+| **Function** | Salaried Front line Health Worker executing a defined protocol at each home visit. Operates as the primary physical layer in the access stack. Performs measurements, sample collection, medication reconciliation, dispensing where licensed, dietary recall, first-line counselling, and escalation to the Clinical AI. |
+| **Deployment** | 1 CHW per 1000 enrolled members. Approximately 100,000 CHWs at 100M member scale. ASHA cadre integrated under MoU with State Health Missions where desirable. |
+| **Visit cadence** | •  High-risk members — monthly •  Medium-risk members — quarterly •  Low-risk members — semi-annually •  Additional visits on escalation from Layer 2 Visits are at the family level, not just the individual level, which creates efficiencies, captures more data and better represents the Indian social dynamic and interconnected relationships |
+| **Visit protocol** | •  Blood pressure, weight, waist circumference, glucose •  Brief validated mental-health screen (PHQ-2, GAD-2) •  Medication reconciliation against Netmeds dispensing log •  Dietary recall via voice tool •  Indoor air reading where sensor deployed •  Child immunisation status verification where applicable •  Sample collection for scheduled lab panels |
+| **Equipment** | Point-of-care kit: pulse oximeter, otoscope, handheld ECG, peak-flow meter; portable ultrasound from Year 3\. Estimated unit cost ₹12,000. Tablet with CHW copilot. |
+| **Inputs** | •  Dispatch orders from the Personal Agent (via Clinical AI escalation or scheduled protocol) •  Member's longitudinal visit record |
+| **Outputs** | •  Structured protocol completion record to Personal Agent •  Lab samples routed to Reliance MedLab •  Point-of-care readings streamed to Personal Agent |
+| **Exclusions** | •  No self-dispatch •  No independent clinical judgement outside the copilot protocol •  No member PII on the CHW's personal device |
+| **Build requirements** | •  CHW cadre at 1:1000 density •  Training and certification academy, co-branded with State Health Missions where available •  Point-of-care kit at \~₹12,000 per CHW •  Field dispatch and operations tooling •  ASHA integration MoU template |
+
+ 
+
+| 2.4 · Access Rule |  |
+| :---- | :---- |
+| **Statement** | Layer 1 (Personal Agent) answers first. Layer 2 (Clinical AI) answers the subset of queries that Layer 1 escalates. Layer 3 (Frontline Worker) intervenes only on Layer 2 escalation or on a scheduled protocol visit. Member self-dispatch of the CHW is not permitted. |
+| **Logging** | Every escalation carries a structured reason code. Every physical visit carries a clinical trigger recorded against the member's longitudinal record. |
+| **Rationale** | •  The CHW minute is the most expensive unit in the access stack •  Self-dispatch would saturate CHW capacity and breach the intervention budget •  Ordered engagement is required for the plan-level unit economics to close |
+| **Audit** | Rule enforcement is audited weekly by the actuarial loop (Component 3.4). |
+
+# **3 · Escalation**
+
+## *Four contract tiers substitute for hospital and clinic ownership.*
+
+Hospital and clinic ownership would solve four problems: control over the episode, cost of the stay, visibility into outcomes, and owning the patient relationship. However, owning and running hospitals is asset heavy, creates the wrong (volume) incentives and distracts from the real value add work. So we propose that instead of owning hospitals and large clinic chains, we substitute for four contract types. Almost every clinic and hospital in India is placed in one of four tiers. The matrix below specifies how each tier addresses each of the four problems; the specification tables that follow give contract-level detail.
+
+### **Escalation matrix**
+
+| Mechanism | Tier 1 · Preferred | Tier 2 · Standard | Tier 3 · Small Hospital and Partner Clinics | Tier 4 · Non-Network |
+| :---- | :---- | :---- | :---- | :---- |
+| **Share of network** | 5% | 10% | 10% | Remainder |
+| **Share of volume** | ≥60% | \~25% | \~10% | ≤5% |
+| **Contract form** | Capitation or outcomes-based payment (within 24 months) | Case-rate with outcome adjustments | Pre-paid annual volume envelope | None — tariff at point of service |
+| **Control mechanism** | Embedded clinical leadership; direct-discharge protocol | On-site member-services desk; contractually required protocols for top 15 conditions | None — influence via technology adoption (to be proven) | None — 24×7 member liaison only |
+| **Cost mechanism** | Capitation fixes cost per member-year | Readmission penalties; never-event exclusions | Pre-payment priced below Tier-2 case-rate average | Settled at tariff through standard claims process |
+| **Visibility / Data mechanism** | Two-way EHR integration; real-time clinical dashboards to CMO | HCX claims data; discharge summaries via on-site desk | Technology licensing writes structured data directly to JioCare record | Liaison collects and uploads discharge documentation |
+| **Patient relationship** | Personal Agent before, during, after; CHW on discharge | Personal Agent \+ on-site desk \+ post-discharge CHW | Personal Agent through stay; CHW post-discharge | Personal Agent \+ 24×7 liaison; CHW within 48 hours of discharge |
+
+ 
+
+| Tier 1 · Preferred Partners — 5% of network, ≥60% of volume |  |
+| :---- | :---- |
+| **Scope** | Deeply contracted anchor hospitals in each geography. HN Reliance, Seven Hills, Karkinos, plus one or two chosen peers per metro and tier-one city. |
+| **Contract form** | Migration from fee-for-service to capitation or outcomes-based payment within 24 months of onboarding. Fee-for-service closed thereafter. |
+| **Integration** | •  Two-way EHR integration with Tier-1 HIS •  Jio Arogya clinical leadership embedded on-site •  Direct-discharge protocol handing the member to the post-acute CHW within 24 hours of discharge |
+| **Instrumentation** | •  Readmission rate by condition •  Hospital-acquired infection rate •  Protocol adherence for top 15 conditions •  Length of stay •  Patient experience score •  Dashboards report to Chief Medical Officer in real time |
+| **Joint investments** | Centres of Excellence — cardiometabolic, oncology, maternal-fetal, liver — jointly operated. CoEs double as clinical-trial and biobank sites. Research consent and sample collection are built into the admission workflow. |
+| **Volume commitment** | Majority of the elective volume within each geography. Research enrolment at admission for consenting members. |
+| **Exit trigger** | Two consecutive quarters below contractually defined outcome thresholds. Contract is renegotiated or the partner is down-tiered to Tier 2\. |
+
+ 
+
+| Tier 2 · Standard Partners — 10% of network, \~25% of volume |  |
+| :---- | :---- |
+| **Scope** | Mid-sized hospitals in every district. |
+| **Contract form** | Case-rate contracts. Outcomes-based adjustments layered on top: readmission penalties, never-event exclusions, documented protocol adherence required for the top fifteen conditions. |
+| **Integration** | •  Standard Health Claims Exchange — electronic pre-authorisation, claims submission, admission and discharge notifications •  No EHR-level integration •  Jio Arogya member-services and payments desk on-site above a defined volume threshold |
+| **Instrumentation** | •  HCX claims data •  Discharge summaries uploaded into the member record by the on-site desk •  Outcome review every two quarters against contractual thresholds |
+| **Volume commitment** | 15–30% of the partner's admitted volume, rising with performance in successive contract cycles. |
+| **Exit trigger** | Failure to meet clinical evidence thresholds over two review cycles. Status drops to Tier 3 and volume is routed elsewhere. |
+
+ 
+
+| Tier 3 · Small Hospital Partners and Partner Specialist Clinics — 10% of network, \~10% of volume |  |
+| :---- | :---- |
+| **Scope** | Long-tail 50–150-bed local hospitals serving Bharat. Chronic insurer-receivable cash-flow stress — 60 to 120 days of outstanding claims. |
+| **Contract form** | Pre-paid annual volume envelope, advanced monthly, settled quarterly against actual utilisation. Economically equivalent to a prompt-payment discount, priced below the Tier-2 case-rate average. |
+| **Integration** | •  Jio Arogya is the exclusive technology licensing partner •  Ambient clinical scribe •  AI-assisted clinical documentation •  DPDP-compliant consent capture at point of admission •  Lab-report digitisation •  Patient communication module |
+| **Data flow** | Every encounter writes structured data into the JioCare record through the licensed technology stack. No clinical-protocol intrusion by the contract. |
+| **Volume commitment** | Pre-paid envelope sized against historic throughput. Surplus utilisation reconciled quarterly. |
+| **Exit trigger** | •  Failure to adopt the data-capture stack within six months of onboarding •  Failure to meet quarterly data-quality audits |
+
+ 
+
+| Tier 4 · Non-Network — remainder of Indian hospitals, ≤5% of volume |  |
+| :---- | :---- |
+| **Scope** | All Indian hospitals without a Jio Arogya contract. Reached via emergency admissions in unfamiliar locations, family preference, unreferred specialists, and small-town facilities outside the network. |
+| **Contract form** | None. Claims settled at tariff through the standard claims process. |
+| **Patient-side services** | •  Member liaison reaches the member within 24 hours of admission notification •  Discharge summaries, diagnostic reports, and prescriptions collected and uploaded to the member record •  Medication reconciliation performed on discharge •  Post-discharge CHW home visit within 48 hours •  Transport and logistics assistance for displaced members |
+| **Exclusions** | No clinical control. No cost negotiation. No instrumentation. |
+| **Exit trigger** | Not applicable. This tier is the permanent catchment for uncontracted episodes. |
+
+ 
+
+**Operating principle.** Jio Arogya does not operate hospitals. Jio Arogya operates the layer that knows the member, orchestrates the stay, captures the data, governs the outcome, and retains the relationship before, during, and after the admission. Hospital ownership is not the unit of control; contract design plus data integration plus patient-side services is.
+
+# **4 · Data**
+
+## *What we capture, through what instruments, at what frequency, and what longitudinal record accumulates.*
+
+Intelligence has a shelf life. Static datasets devalue; trained models age; continuous instrumentation compounds. The data system is therefore specified in two registers. The Instrumentation Register (Component 4.1) enumerates every sensor and feed, what it captures, at what frequency, and whether it is existing or built. The Longitudinal Record (Components 4.2 and 4.3) specifies the dataset that accumulates per member per year and across the full five-year enrolment. Architecture, consent, and the Data Dividend are specified in Components 4.4 and 4.5.
+
+### **4.1 · Instrumentation Register**
+
+| Instrument | Data captured | Frequency | Status |
+| :---- | :---- | :---- | :---- |
+| **Jio MyHealth app on phone** | Activity, steps, sleep pattern, voice cadence, medication reminders, consent-scoped location | Continuous, passive | Existing |
+| **Jio partner wearable** | HR, HRV, SpO2, skin temperature, movement, sleep staging | Continuous | Existing; included in Premium and Comprehensive tiers |
+| **Continuous Glucose Monitor** | Glucose trajectory, meal response, overnight pattern | Continuous, 14-day cycles | Existing; diabetic and pre-diabetic members |
+| **JioFiber router (ambient sensing)** | Contact-free respiration, heart rate, fall detection, household rhythm | Continuous, ambient | Existing hardware; new software layer (scientific advancement needed) |
+| **Netmeds \+ Reliance Retail Pharmacy** | Dispensing record, adherence, refill cadence | Per dispensation event | Existing |
+| **Reliance MedLab** | Standard annual panels; specialty panels on indication | ≥1 per year | Existing |
+| **Strand multi-omic module** | Whole-genome 30× depth; baseline proteomics; baseline metabolomics; 16S microbiome | Baseline at enrolment; 3-year refresh | Existing; research-scoped consent |
+| **Home air-quality sensor** | PM2.5, PM10, CO, CO2, humidity | Continuous, passive | Build or Buy  (\~₹1,800 per unit; Premium and Comprehensive) |
+| **Home water-quality kit** | Hardness, microbial load, heavy metals | Quarterly mail-in | Build or Buy (lab-processed) |
+| **Cellular BP cuff** | Systolic, diastolic, pulse | Daily | Build or Buy  (\~₹2,400 per unit; hypertensive members) |
+| **On-device mental-health signal** | Typing cadence, voice sentiment, sleep regularity, activity rhythm | Continuous, on-device inference | Build (only the risk score leaves the device) |
+| **Dietary recall tool** | Voice-driven food diary scored against South Asian food database | Daily prompts; weekly minimum | Build (six regional languages) |
+| **CHW point-of-care kit** | Pulse oximeter, otoscope, handheld ECG, peak-flow meter; portable ultrasound from Year 3 | Every CHW visit | Build (\~₹12,000 per CHW) |
+| **EHR / HCX feed from hospital network** | Admissions, diagnoses, prescriptions, procedures, discharge | Per encounter | Existing rails; live via tier integration |
+
+ 
+
+### **4.2 · Member-Year Signal Register**
+
+The table below specifies what a single enrolled member produces in a single year of enrolment — the essential deliverable of the instrumentation stack.
+
+| Signal class | Annual volume | Source instrument | Consent scope |
+| :---- | :---- | :---- | :---- |
+| **Continuous physiology (HR, HRV, SpO2, respiration, activity)** | \~8,760 hours | Wearable \+ JioFiber ambient | Member-standard |
+| **Sleep staging** | \~365 nights | Wearable | Member-standard |
+| **Indoor air-quality exposure** | \~525,000 minutes | Home air-quality sensor | Member-standard |
+| **Glucose (diabetic / pre-diabetic members)** | \~35,000 readings | Continuous Glucose Monitor | Member-standard |
+| **Blood pressure (hypertensive members)** | ≥365 readings | Cellular BP cuff | Member-standard |
+| **Mental-health score** | ≥52 weekly scores | On-device signal | On-device, score-only |
+| **Dietary recall** | ≥52 structured records | Voice recall tool | Member-standard |
+| **Water-quality readings** | 4 quarterly samples | Mail-in kit | Member-standard |
+| **Lab panels** | 1 standard \+ 1–3 specialty | Reliance MedLab | Member-standard |
+| **Pharmacy dispensations** | Per refill event | Netmeds \+ Reliance Retail | Member-standard |
+| **Clinical encounters** | Per encounter | EHR / HCX feed | Member-standard |
+| **CHW visit records** | 2–12 visits | CHW point-of-care kit | Member-standard |
+| **Omics panels** | 1 at enrolment; refresh on 3-year cycle | Strand multi-omic module | Research-scoped |
+
+ 
+
+| 4.3 · Five-Year Longitudinal Record |  |
+| :---- | :---- |
+| **Scope** | The cumulative dataset held on a Core member after five years of continuous enrolment. |
+| **Omics** | Collected and biobanked samples allow for at least: •  Whole-genome sequence (baseline) •  Two proteomics panels (one baseline \+ one 3-year refresh) •  Two microbiome panels (one baseline \+ one 3-year refresh) |
+| **Continuous signals** | •  Five years of wearable physiology •  Five years of ambient JioFiber sensing •  Five years of indoor air-quality exposure |
+| **Discrete readings** | •  Five years of daily BP (if hypertensive) •  Five years of CGM (if diabetic / pre-diabetic) •  Five years of weekly mental-health scores •  Five years of weekly dietary records (engagement dependent) |
+| **Clinical record** | •  Five years of pharmacy dispensations •  Five years of lab panels •  Five years of EHR encounters and discharge summaries |
+| **Human touch** | Five years of structured CHW visit records, 10–60 total visits depending on risk tier. |
+| **Comparators** | •  UK Biobank: 500,000 members, cross-sectional omics, episodic linkage •  deCODE: 400,000 Icelanders, deep omics, limited phenotypic continuity •  Jio Care (target state): 100M members with linked multi-omic, continuous sensing, dispensing, clinical, and behavioural signal at South Asian genome |
+
+ 
+
+### **4.4 · Data Architecture**
+
+Privacy is enforced in infrastructure rather than in policy. The architecture consists of three layers across three legal entities, with three boundaries. Every cross-boundary event is logged and audited. The architecture is ABDM-native: ABHA ID is the member identity, the ABDM Consent Manager is the legal spine, the Health Claims Exchange is the claims rail, and Health Locker is the member's portable record.
+
+| Layer | Entity | Holds | Emits | Cannot |
+| :---- | :---- | :---- | :---- | :---- |
+| **Layer 1** | Personal Agent on member device \+ per-member cloud locker | All member PII; consent ledger; medication list; appointment history | De-identified, consent-scoped queries to Layer 2; work orders to Layer 3 | Leave the member's control without a logged consent event |
+| **Layer 2** | Jio Brain Clinical AI (stateless service) | No member state | Clinical recommendations and escalation triggers | Re-identify a query to a member |
+| **Layer 3** | TechBio Research Trust (separate legal entity, independent ethics board) | Research-consented, de-identified, linked longitudinal dataset | Aggregate study results; licensed research access under approved protocols | Sell raw data; re-link to identity; share data outside Indian jurisdiction |
+
+ 
+
+| 4.5 · Data Dividend |  |
+| :---- | :---- |
+| **Function** | Returns research-licensing revenue to contributing members on a weighted basis. Each licensing event generates a distribution pool released to members whose data contributed to the licensed study. |
+| **Weighting factors** | •  Depth of record (number of signal classes) •  Length of enrolment (years) •  Scope of consent (baseline vs. research-extended) |
+| **Economic impact** | •  Core longitudinal members (≥5 years, full genome, continuous wearable, metabolomics) — annual Dividend can fully offset the next year's premium •  Full cohort — typical annual offset 10–30% of premium |
+| **Exclusions** | •  No payment for data-volume as such •  No payment for single-event consent grants •  No payment prior to the licensing-revenue closing period |
+| **Build requirements** | •  Dividend accounting rule •  Annual member statement •  Public audit of pool distribution by the Research Trust |
+
+# **5 · Science**
+
+## *Continuous instrumentation generates the substrate. Science converts it into new medicine.*
+
+The Research Trust holds the research-consented dataset and operates the scientific programme. Four components define the programme: an autonomous research engine (5.1), a maturity-graded study ladder (5.2), a biobank of physical samples (5.3), and a governance structure holding the ethics, access, and licensing rules (5.4).
+
+ 
+
+| 5.1 · AI Scientist |  |
+| :---- | :---- |
+| **Function** | Autonomous research system operating on the Research Trust's de-identified dataset. Generates hypotheses, designs cohort studies, and runs primary analyses. Human scientists review, validate, replicate, and publish. |
+| **Operating principle** | Compresses the research loop from the conventional five-year design-collect-publish cycle to a six-week query-validate-publish cycle against the live cohort. This is the operational answer to the shelf-life-of-intelligence thesis: research must run at the pace at which intelligence itself ages. |
+| **Inputs** | •  De-identified longitudinal dataset held by the Research Trust •  Ethics-board-approved study protocols •  External literature and prior hypotheses |
+| **Outputs** | •  Hypothesis candidates ranked by effect size and data support •  Study designs specified to a pre-registration standard •  Primary analyses and effect estimates with confidence intervals •  Human-reviewed publication drafts |
+| **Exclusions** | •  No publication without human validation and replication •  No study executed outside the ethics-board mandate |
+| **Build requirements** | •  Jio Brain research inference layer •  Data clean-room for the Research Trust •  Human-scientist team of \~50 FTE by Year 3 •  Publication and peer-review workflow |
+
+ 
+
+| 5.2 · Study Ladder |  |
+| :---- | :---- |
+| **Function** | Defines which class of research runs when, as the cohort matures. Observational work runs at 1M members. Pragmatic trials require 10M+. Biomarker and drug co-development requires multi-timepoint sample collection and linked omics. |
+| **Year 1–2 — Observational, pre-disease trajectory** | •  Cardiometabolic progression in South Asians •  Real-world medication effect in Indian cohorts •  Diet–disease linkage using the voice recall tool |
+| **Year 2–3 — Embedded pragmatic trials** | •  Randomisation at the care-plan level, delivered through CHW visits •  Zero marginal recruitment cost once enrolled •  Device- and intervention-level comparative trials |
+| **Year 3–4 — Pharmacogenomic and biomarker studies** | •  Partner-funded Phase II and III •  India indications first •  Target enrolment speed: 10× US comparable sites •  Target cost: \~1/10 of US equivalent |
+| **Year 4+ — Target discovery and drug co-development** | •  Novel South Asian targets validated in JioCare data •  Licensed or co-developed under India-first access terms •  Milestone and royalty economics booked to the Research Trust |
+| **Exclusions** | No randomised output in Year 1\. No drug-discovery promises against the Year-2 cohort. No pharma-sponsored work outside Trust governance. |
+
+ 
+
+| 5.3 · Biobank |  |
+| :---- | :---- |
+| **Function** | Physical-sample asset underpinning the research programme. Every enrolling member provides a baseline set of blood, urine, stool, and saliva samples under explicit research consent. Residual volume is cryo-preserved at −80°C for retrospective assays. |
+| **Sample collection** | •  Enrolment baseline: blood, urine, stool, saliva •  High-risk members: follow-up draws annually •  Other members: follow-up draws every three years |
+| **Standard assay panel** | •  Whole-genome sequencing at 30× depth •  Baseline proteomics •  Baseline metabolomics •  16S microbiome |
+| **Storage** | Two biobank sites — West India and South India — operated with Strand Life Sciences. Residual cryo-preservation at −80°C. Cold-chain collection network through CHWs and Tier-1 hospitals. |
+| **Target inventory** | By Year 5: 250,000 multi-timepoint sample sets from a longitudinally characterised population. |
+| **Operational rationale** | Collect low cost samples through the journey \- store and label properly. Assay selected patients with clinical signal or outcomes under study. Any future assay not yet invented — single-cell transcriptomics, spatial proteomics, immune repertoire profiling, novel biomarker panels — can be retrospectively executed on stored samples.  |
+| **Exclusions** | •  No sample withdrawal except under full consent •  No shipment of samples outside India for processing |
+| **Build requirements** | •  Two biobank sites •  Cold-chain collection network •  Sample governance under the Research Trust ethics board |
+
+ 
+
+| 5.4 · Governance · TechBio Research Trust |  |
+| :---- | :---- |
+| **Entity** | Separate legal entity with its own profit-and-loss, ethics board, and public reporting. |
+| **Ethics board** | Independent board with veto over all research activity. Public quarterly safety and access report. Member representation on the protocol committee. |
+
+**Summary Economics:** 
+
+TBD
+
+**Jamnagar Launch Plan:**
+
+## **The product**
+
+Jio Allianz Standard Family Plan. Family of four. Annual premium ₹50,000–₹1,00,000. Filed with IRDAI under the Jio Allianz licence. Sold as one bundled product — every component of the operating model included, priced into a single premium.
+
+Bundle contents: Personal Agent on every adult's device (Gujarati, Hindi, English); 24×7 Clinical AI access; one CHW per 500 members at risk-stratified visit cadence; CGM for diabetic members; cellular BP cuff for hypertensives; home air-quality sensor; annual Reliance MedLab panel; quarterly water-quality kit; Strand baseline multi-omic on research consent; full discharge concierge at our Jamnagar Tier-1 hospital.
+
+## The cohort
+
+10,000 families. 40,000 members. Enrolled across three channels:
+
+* 6,000 families — Reliance Jamnagar employee base and extended contractors. Group enrolment through HR.  
+* 3,000 families — Jamnagar city middle class. Direct-to-consumer through the Jio MyHealth app and two Reliance Retail flagship stores.  
+* 1,000 families — local cooperatives and small-enterprise associations. Bulk enrolment at subsidised cost.
+
+**The goals — what we prove in twelve months**
+
+| Dimension | Month-12 target |
+| ----- | ----- |
+| Experience — Net Promoter Score | ≥ 60 |
+| Experience — Personal Agent time-to-first-resolution (limited scope) | \< 90 seconds |
+| Experience — discharge-to-home continuity | CHW visit within 24 hours of every discharge |
+| Engagement — monthly Personal Agent check-in | ≥ 80% of members |
+| Engagement — CGM continuous wear among diabetics | ≥ 70% |
+| Engagement — scheduled CHW visit completion | ≥ 90% on cadence |
+| Outcomes — HbA1c reduction in diabetic cohort | ≥ 0.8 points |
+| Outcomes — BP control (≤140/90) in hypertensives | ≥ 75% |
+| Outcomes — avoidable hospital admissions | −20% vs. matched control |
+| Unit economics — loss ratio | ≤ 72% |
+| Research — family opt-in to TechBio Research Trust | ≥ 60% |
+| Research — baseline biobank samples collected | ≥ 30,000 |
+
+## **Timeline**
+
+* **Months 0–6:** Co-design plan with Jio Allianz. Tier-1 hospital contract signed, EHR integration built. CHW recruitment, training, and certification. Instrument supply chain (CGM, BP cuff, air sensor). Personal Agent app live in Gujarati and Hindi. Clinical AI safety evaluation publ  
+* ished with HTA-In.  
+* **Month 7:** Soft launch. 500 families, Reliance employees only. Full telemetry.  
+* **Months 8–10:** Scale to 3,000 families.   
+* **Month 11-12:** First scorecard review. Intervention catalogue, pricing, and protocol refresh. Public Launch. Decision gate for the second city. Direct-to-consumer through the app and Reliance Retail stores.   
+  **Go-live gate — all seven conditions must be met before public launch**  
+1. IRDAI product approval in hand.  
+2. CHW cadre of 80 trained, certified, and deployed.  
+3. Tier-1 hospital contract signed and two-way EHR integration live.  
+4. Personal Agent live in Gujarati and Hindi with consent ledger operating end-to-end.  
+5. Clinical AI safety evaluation published with HTA-In and ICMR concurrence.  
+6. Biobank collection live at the Tier-1 site with cold-chain in place.  
+7. ABHA-native enrolment flow tested end-to-end with the Health Claims Exchange.
+
+## **What Jamnagar teaches us**
+
+Whether a bundled, vertically integrated, data-driven family health product can improve outcomes, earn trust, and close its unit economics in a single Indian city — before it scales to a nation. Can this be a viable funded attractive model within insurance economics? How much of the business model would need to be underwritten by future pharma or biotech revenue?
+
+**Appendix:** 
+
+1. **Frontline healthcare worker economics vs Pod**  
+2. **Clinical AI and Personal Agent**  
+3. **Longitudinal Data \- Research / Near Term**  
+4. **Disease Prevalence and efficacy difference \- India vs World**  
+5. **Product Outline for GTM**  
+6. **Data Sources and Cost**  
+7. **Data Architecture**  
+8. **First 5 hires**
