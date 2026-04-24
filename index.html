@@ -103,9 +103,7 @@ table.master td:last-child { border-right: none; }
 .data-stream { display: block; padding: 1px 0; font-family: 'Inter', sans-serif; color: var(--data); font-weight: 500; }
 .data-stream::before { content: '▸ '; color: #94a3b8; font-size: 9px; }
 
-.mit-input { width: 100%; min-height: 38px; padding: 5px 7px; font-size: 11px; border: 1px solid var(--line); background: #fafafa; font-family: inherit; resize: vertical; line-height: 1.35; color: var(--ink); }
-.mit-input:focus { outline: none; border-color: var(--ink); background: #fff; }
-.mit-input::placeholder { color: #94a3b8; font-style: italic; }
+.col-mit-text { font-size: 11px; line-height: 1.4; color: var(--ink-2); }
 
 .cat-badge { display: inline-block; font-size: 8.5px; font-weight: 700; padding: 1px 5px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 2px; margin-left: 6px; vertical-align: 1px; white-space: nowrap; }
 .cat-badge.load-bearing { background: var(--hi); color: #fff; }
@@ -194,7 +192,6 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
   table.master thead { display: table-header-group; }
   table.master tbody tr { page-break-inside: avoid; }
   table.master thead th { background: #1f2937 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .mit-input { background: #fff !important; border: 1px solid #cbd5e1 !important; }
   .ring-tag, .cat-badge, .data-stream, .col-data { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .footer { page-break-before: auto; margin-top: 14px; }
   .box { background: #fff !important; }
@@ -214,11 +211,10 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
   <header class="masthead">
     <div>
       <h1>Jio Arogya — Smithian Risk &amp; Deal Dashboard</h1>
-      <div class="subtitle">15 Joints · 18 Actors · 4 Rings · Where to invest · Load-bearing risks · Deal mitigations · Data streams</div>
+      <div class="subtitle">15 Joints · 18 Actors · 4 Rings · Load-bearing risks · Designed mitigations · Data streams</div>
     </div>
     <div class="controls">
       <button onclick="window.print()">Print / PDF</button>
-      <button onclick="resetAll()" style="color:#b91c1c;border-color:#fca5a5">Reset</button>
     </div>
   </header>
 
@@ -274,7 +270,7 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
       <li><strong>Ring</strong> — Which ring of the system the joint sits in. <span class="ring-tag r0">Ring 0</span> Member &amp; Family. <span class="ring-tag r1">R1 · AI</span> Technology quasi-actors. <span class="ring-tag r2">R2 · Rel</span> Reliance-controlled human actors. <span class="ring-tag r3">R3 · Ext</span> External counterparties.</li>
       <li><strong>Key Risk</strong> — What happens if nobody designs the value exchange and rational actors follow their default incentives.</li>
       <li><strong>Data Streams</strong> — The data the joint produces, consumes, or audits. From the <strong>Jio_Care_Dataset_Inventory.md</strong> seven-category taxonomy.</li>
-      <li><strong>Proposed Deal Mitigation</strong> — Editable. The specific mechanism (payment, indemnity, contract term, governance structure) that converts the conflict into alignment. Pre-seeded from the Smithian doc; edit to refine during deal execution. Changes persist in your browser.</li>
+      <li><strong>Proposed Deal Mitigation</strong> — The specific mechanism (payment, indemnity, contract term, governance structure) that converts the conflict into alignment. From the Smithian doc.</li>
     </ul>
 
     <h4>What the badges mean</h4>
@@ -305,7 +301,7 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
       <li><strong>Review Implied joints.</strong> These 7 are the quiet risks — the plan assumes them but hasn't committed in writing.</li>
       <li><strong>Lock In Plan joints.</strong> Validate the 5 joints where mechanisms already exist.</li>
       <li><strong>Click any row</strong> to open the detail panel with the full Smithian six-layer analysis for that actor.</li>
-      <li><strong>Edit mitigations</strong> in the table as deal terms are refined. Changes persist in your browser. Use Export JSON to share.</li>
+      <li><strong>Read mitigations</strong> in the table — the proposed mechanism for each joint. Click a row for the full six-layer analysis.</li>
     </ol>
   </div>
 
@@ -317,37 +313,37 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
       <thead><tr><th>Document</th><th>What it does</th><th>When to read it</th></tr></thead>
       <tbody>
         <tr>
-          <td><a href="docs/MDA-Note_200426.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">MDA Note_200426.md</a></td>
+          <td><a href="docs/MDA-Note_200426" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">MDA Note_200426.md</a></td>
           <td class="role">The master business plan. Six components: daily engagement, navigation, intervention-budget engine, biobank, Research Trust, insurance interface. Four-tier hospital architecture. CHW cadre at 1:1000. Privacy-by-architecture. Data Dividend as civilizational contract.</td>
           <td class="when">Start here if you haven't read the plan. This is the system being analysed.</td>
         </tr>
         <tr>
-          <td><a href="docs/260421_Strategic_Memo.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Strategic_Memo.md</a></td>
+          <td><a href="docs/260421_Strategic_Memo" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Strategic_Memo.md</a></td>
           <td class="role">The two-page strategic pre-read sent to the apex group. Frames the opportunity (cardiometabolic claims, biobank economics, AI clinical quality), the six-component operating system, and why only Reliance can build it.</td>
           <td class="when">Read before the MDA Note if you want the 5-minute framing before the 45-minute detail.</td>
         </tr>
         <tr>
-          <td><a href="docs/260421_Data_Strategy.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Data_Strategy.md</a></td>
+          <td><a href="docs/260421_Data_Strategy" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Data_Strategy.md</a></td>
           <td class="role">The data thesis. Longitudinal linked data as the compounding asset. <strong>Defines the seven data-collection families</strong> (Omics, Biomarkers, Imaging, Clinical, Continuous, Phenotypic, Consent/Governance) that appear in every joint's "Data Streams" column and detail panel. Pharma demand sizing. 43× premium for depth (23andMe vs deCODE). Data Dividend mechanics.</td>
           <td class="when">Read when you need to understand the data streams column in this dashboard, the seven-category taxonomy, or the Research Trust licensing model. This is the canonical source for what each data family contains and how it is collected.</td>
         </tr>
         <tr>
-          <td><a href="docs/JioCare-Strategic-Decision-Layers.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">JioCare - Strategic Decision Layers.md</a></td>
+          <td><a href="docs/JioCare-Strategic-Decision-Layers" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">JioCare - Strategic Decision Layers.md</a></td>
           <td class="role">The 90-day sprint decision surface. Eight domains (care model, data/tech, business model, operating model, capital, org design, regulatory, partnership) each broken into the decisions the team must make before July.</td>
           <td class="when">Read when you need the D1–D8 decisions in full operational context, or when the dashboard's decision tags need background.</td>
         </tr>
         <tr>
-          <td><a href="docs/Smithian-Actor-Chains_Jio-Arogya.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Smithian-Actor-Chains_Jio-Arogya.md</a></td>
+          <td><a href="docs/Smithian-Actor-Chains_Jio-Arogya" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Smithian-Actor-Chains_Jio-Arogya.md</a></td>
           <td class="role"><strong>The primary source for this dashboard.</strong> 18 actors in 4 rings, 15 joints, 6 questions at each joint (individual, layer above, org objective, AI intersection, escalation boundary, value exchange). This is where the detail panel data comes from.</td>
           <td class="when">Read the full document when a joint's detail panel raises a question the summary doesn't answer. Each joint has a §-reference (e.g. §2.1, §3.2) pointing to the relevant section.</td>
         </tr>
         <tr>
-          <td><a href="docs/Shumeet-MDA-Verbal-Brief.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Shumeet-MDA-Verbal-Brief.md</a></td>
+          <td><a href="docs/Shumeet-MDA-Verbal-Brief" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Shumeet-MDA-Verbal-Brief.md</a></td>
           <td class="role">The verbal brief and Q-index prepared for the MDA meeting. Anticipatory Q&amp;A mapped to the plan's weak points.</td>
           <td class="when">Read before presenting to the apex group. The Q-index maps to the dashboard's load-bearing joints.</td>
         </tr>
         <tr>
-          <td><a href="docs/260421_Principles_Decisions_Op_Model.md" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Principles_Decisions_Op_Model.md</a></td>
+          <td><a href="docs/260421_Principles_Decisions_Op_Model" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Principles_Decisions_Op_Model.md</a></td>
           <td class="role">Principles, key decisions, and the operating model. Covers org design, reporting lines, the three-entity structure (Care Entity + Allianz JV + Research Trust), and the single-owner question.</td>
           <td class="when">Read when Joints 7, 8, or D1/D3/D7 are under discussion — the transfer-pricing, AI ownership, and org-design decisions live here.</td>
         </tr>
@@ -924,40 +920,6 @@ const VALUE_EXCHANGES = [
     defaultMit:"Captive-cohort launch (Reliance-employee Jamnagar pilot: 10K families, 40K members, full architecture from Month 7). Single-disease exclusive outcome contracts at Tier 1 hospitals (cardiometabolic, oncology, maternal-fetal). Pharma exclusivity in Year 1 on specific named targets. Each is a small moat; together they raise the challenger's cost of entry." },
 ];
 
-/* ═══════════════════════════════════════════════════════════════
-   STATE + PERSISTENCE
-═══════════════════════════════════════════════════════════════ */
-const STORAGE_KEY = 'jio-arogya-smithian-dashboard-v3';
-let state = loadState();
-
-function defaultState() {
-  const s = { rows: {} };
-  VALUE_EXCHANGES.forEach(ve => {
-    s.rows[ve.id] = { mitigation: stripHtml(ve.defaultMit) };
-  });
-  return s;
-}
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultState();
-    const parsed = JSON.parse(raw);
-    const d = defaultState();
-    VALUE_EXCHANGES.forEach(ve => {
-      if (parsed.rows && parsed.rows[ve.id]) {
-        d.rows[ve.id] = { ...d.rows[ve.id], ...parsed.rows[ve.id] };
-      }
-    });
-    return d;
-  } catch (e) { return defaultState(); }
-}
-function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-
-function stripHtml(html) {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-}
 function escapeHtml(s) {
   const div = document.createElement('div');
   div.textContent = s || '';
@@ -984,7 +946,6 @@ function dBadge(dtag) {
 function renderTable() {
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = VALUE_EXCHANGES.map(ve => {
-    const s = state.rows[ve.id];
     const streamsHtml = ve.streamsShort.map(x => `<span class="data-stream">${x}</span>`).join('');
     return `
       <tr data-id="${ve.id}" data-ring="r${ve.ring}" data-cat="${ve.cat}" data-dtag="${ve.dtag || ''}">
@@ -993,18 +954,10 @@ function renderTable() {
         <td class="col-ring" onclick="openPanel(${ve.id})">${ringTag(ve.ring)}</td>
         <td class="col-keyrisk" onclick="openPanel(${ve.id})">${ve.keyRisk}</td>
         <td class="col-data" onclick="openPanel(${ve.id})">${streamsHtml}</td>
-        <td class="col-mit"><textarea class="mit-input" placeholder="Deal term, contract language, governance mechanism..." data-id="${ve.id}" onclick="event.stopPropagation()">${escapeHtml(s.mitigation)}</textarea></td>
+        <td class="col-mit col-mit-text" onclick="openPanel(${ve.id})">${ve.defaultMit}</td>
       </tr>
     `;
   }).join('');
-
-  tbody.querySelectorAll('.mit-input').forEach(el => {
-    el.addEventListener('input', (e) => {
-      const id = parseInt(e.target.dataset.id);
-      state.rows[id].mitigation = e.target.value;
-      saveState();
-    });
-  });
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1102,16 +1055,6 @@ function closePanel() {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePanel();
 });
-
-/* ═══════════════════════════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════════════════════════ */
-function resetAll() {
-  if (!confirm('Reset all mitigations back to defaults? This cannot be undone.')) return;
-  state = defaultState();
-  saveState();
-  renderTable();
-}
 
 /* ═══════════════════════════════════════════════════════════════
    INIT
