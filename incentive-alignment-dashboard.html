@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jio Arogya — Incentive Alignment Dashboard</title>
+<style>
+:root {
+  --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --paper:#fbfaf7; --rule:#1f2937; --line:#cbd5e1;
+  --r0:#b45309; --r0bg:#fffbeb; --r1:#1e40af; --r1bg:#eff6ff; --r2:#334155; --r2bg:#f1f5f9; --r3:#6b21a8; --r3bg:#faf5ff;
+  --g:#166534; --gbg:#f0fdf4; --a:#a16207; --abg:#fefce8; --r:#b91c1c; --rbg:#fef2f2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:13px;line-height:1.5}
+.wrap{max-width:1720px;margin:0 auto;padding:24px 20px 60px}
+header{border-bottom:3px solid var(--rule);padding-bottom:18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:24px;font-weight:700;letter-spacing:-0.02em}
+.sub{font-size:12px;color:var(--ink3);max-width:740px;margin-top:4px}
+.ctrls{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end}
+.ctrls button{padding:7px 14px;background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:11px;cursor:pointer;border-radius:3px}
+.ctrls button:hover{background:var(--ink);color:#fff}
+.ctrls button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.bar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:#fff;border:1px solid var(--line);margin-bottom:16px;font-size:11px;align-items:center}
+.chip{padding:4px 12px;border-radius:99px;cursor:pointer;border:1px solid var(--line);background:#fff;font-weight:500;font-size:11px;user-select:none}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.grid{overflow-x:auto;border:2px solid var(--rule);background:#fff}
+table{width:100%;border-collapse:collapse}
+th{background:var(--ink);color:#fff;padding:10px 8px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;position:sticky;top:0;z-index:10;border-right:1px solid #475569}
+th:first-child{text-align:left}
+th:last-child{border-right:none}
+td{border-bottom:1px solid #e2e8f0;vertical-align:top;border-right:1px solid #f1f5f9}
+td:last-child{border-right:none}
+.aname{font-weight:600;background:#f8fafc;border-right:2px solid var(--line);font-size:12px;padding:10px 8px}
+.rtag{font-size:9px;padding:2px 6px;border-radius:3px;font-weight:700;display:inline-block;margin-bottom:4px}
+.rh{background:#f1f5f9;font-weight:700;font-size:12px;border-left:6px solid;padding:6px 12px!important}
+
+/* Data cells */
+.c{cursor:pointer;transition:all .15s;position:relative}
+.c:hover{box-shadow:inset 0 0 0 2px var(--ink);z-index:1}
+.c.green{background:var(--gbg);border-left:4px solid var(--g)}
+.c.amber{background:var(--abg);border-left:4px solid var(--a)}
+.c.red{background:var(--rbg);border-left:4px solid var(--r)}
+
+/* OVERVIEW MODE — compact heatmap cells */
+body.overview table{min-width:1100px}
+body.overview .aname{min-width:170px;padding:6px 8px}
+body.overview th{font-size:9px;padding:6px 4px}
+body.overview th:first-child{min-width:170px}
+body.overview .c{padding:6px 7px;min-height:44px;font-size:10px;line-height:1.25}
+body.overview .c .kw{display:block;font-weight:700;color:var(--ink2)}
+body.overview .c .d,body.overview .c .i,body.overview .c .t{display:none}
+
+/* DETAIL MODE — full text cells */
+body.detail table{min-width:1600px}
+body.detail .aname{min-width:200px;padding:10px 8px}
+body.detail .c{padding:10px 8px;min-height:90px;font-size:11px;line-height:1.3}
+body.detail .c .kw{display:none}
+body.detail .c .d{display:block;font-weight:600;color:var(--ink2);margin-bottom:3px}
+body.detail .c .i{display:block;font-size:10px;color:var(--g);font-style:italic}
+body.detail .c .t{display:block;font-size:9.5px;color:var(--r);margin-top:6px}
+
+/* Summary row/col */
+.sum{background:#f8fafc!important;border-left:none!important;padding:6px 8px;font-size:10px;text-align:center;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sum .sg{color:var(--g)}
+.sum .sa{color:var(--a)}
+.sum .sr{color:var(--r)}
+.sum-actor{background:#f8fafc!important;border-right:2px solid var(--line)!important;padding:6px 8px;font-size:10px;font-weight:600;text-align:center;min-width:100px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sum-actor .sg{color:var(--g)}
+.sum-actor .sa{color:var(--a)}
+.sum-actor .sr{color:var(--r)}
+.sum-actor .hpct{display:block;font-size:9px;color:var(--ink3);font-weight:500;margin-top:2px;letter-spacing:.02em}
+.sum .hpct{display:block;font-size:9px;color:var(--ink3);font-weight:500;margin-top:2px;letter-spacing:.02em}
+.scoreline{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;justify-content:center}
+.scoreline .sep{color:#94a3b8}
+th.sum-head{background:#475569!important;font-size:9px;min-width:100px;width:100px;text-align:center}
+/* Dominant-alignment tint for summary cells — turns the scorecard into a heatmap */
+.sum-actor.dom-green,.sum.dom-green{background:var(--gbg)!important}
+.sum-actor.dom-amber,.sum.dom-amber{background:var(--abg)!important}
+.sum-actor.dom-red,.sum.dom-red{background:var(--rbg)!important}
+
+/* State-of-system headline strip */
+.sos{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:#fff;border:1px solid var(--line);margin-bottom:12px;font-size:11px}
+.sos .sos-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-right:4px}
+.sos .pill{display:inline-flex;align-items:baseline;gap:6px;padding:4px 10px;border-radius:99px;border:1px solid;font-weight:600}
+.sos .pill .num{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.sos .pill .pct{font-size:10px;opacity:.75}
+.sos .pill.g{color:var(--g);border-color:var(--g);background:var(--gbg)}
+.sos .pill.a{color:var(--a);border-color:var(--a);background:var(--abg)}
+.sos .pill.r{color:var(--r);border-color:var(--r);background:var(--rbg)}
+.sos .health{margin-left:auto;font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+.sos .health strong{font-size:16px;color:var(--ink);letter-spacing:-.01em;margin-left:6px;font-variant-numeric:tabular-nums}
+
+/* Sticky actor-name column (keeps label visible when scrolling horizontally) */
+.aname{position:sticky;left:0;z-index:4}
+.rh{position:sticky;left:0;z-index:4}
+
+/* Cross-highlight on cell hover */
+th.hl{background:#475569!important}
+.aname.hl{outline:2px solid var(--ink);outline-offset:-2px}
+
+/* Floating tooltip (replaces per-cell absolute tooltips; avoids scroll-container clipping) */
+#fltip{position:fixed;display:none;background:var(--ink);color:#fff;padding:8px 12px;border-radius:4px;font-size:11px;line-height:1.4;max-width:320px;z-index:1500;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#fltip strong{display:block;margin-bottom:2px;color:#fff}
+#fltip em{font-style:normal;color:#cbd5e1;font-size:10px}
+
+.legend{margin-top:24px;padding:16px;background:#fff;border:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-size:12px}
+.li{display:flex;gap:10px;align-items:flex-start}
+.sw{width:22px;height:22px;flex-shrink:0;border:2px solid var(--ink)}
+
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.75);display:none;align-items:center;justify-content:center;z-index:2000}
+.mc{background:#fff;width:92%;max-width:780px;max-height:92vh;overflow-y:auto;border:3px solid var(--ink)}
+.mh{padding:18px 24px;border-bottom:2px solid var(--rule);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10}
+.mb{padding:24px}
+.mb h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #e2e8f0}
+.mb h4:first-child{margin-top:0}
+.mb .bx{padding:14px;border-radius:4px;margin-bottom:12px;font-size:13px;line-height:1.55}
+
+.pf{margin-top:32px;text-align:center;font-size:10px;color:var(--ink3);border-top:1px solid var(--line);padding-top:10px}
+
+@media print{
+  @page{size:A3 landscape;margin:10mm}
+  .bar,.ctrls,.modal,#fltip{display:none!important}
+  body{background:#fff;font-size:9px}
+  th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .c{min-height:auto}
+  .c.green,.c.amber,.c.red,.sum-actor.dom-green,.sum-actor.dom-amber,.sum-actor.dom-red,.sum.dom-green,.sum.dom-amber,.sum.dom-red,.sos .pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .aname,.rh{position:static}
+}
+</style>
+</head>
+<body class="overview">
+<div class="wrap">
+<header>
+  <div>
+    <h1>Jio Arogya — Incentive Alignment Dashboard</h1>
+    <div class="sub">Journey steps × Actors × Self-interest alignment. <strong>Overview</strong> shows the heatmap at a glance; <strong>Detail</strong> expands every cell. Click any cell for the full breakdown. Sourced from final-email-docs/, the final shared Summary (22 Apr 2026), and speaking notes.</div>
+  </div>
+  <div class="ctrls">
+    <button class="primary" id="btn-ov" onclick="setMode('overview')">Overview</button>
+    <button id="btn-dt" onclick="setMode('detail')">Detail</button>
+    <button onclick="window.print()">Print / PDF</button>
+    <button onclick="resetAll()">Reset</button>
+  </div>
+</header>
+
+<div class="bar">
+  <strong style="margin-right:10px">Ring:</strong>
+  <span class="chip on" onclick="fRing('all',this)">All</span>
+  <span class="chip" onclick="fRing(0,this)" style="color:var(--r0);border-color:var(--r0)">Member+Family</span>
+  <span class="chip" onclick="fRing(1,this)" style="color:var(--r1);border-color:var(--r1)">AI</span>
+  <span class="chip" onclick="fRing(2,this)" style="color:var(--r2);border-color:var(--r2)">Reliance</span>
+  <span class="chip" onclick="fRing(3,this)" style="color:var(--r3);border-color:var(--r3)">External</span>
+  <strong style="margin:0 10px">Alignment:</strong>
+  <span class="chip on" onclick="fAlign('all',this)">All</span>
+  <span class="chip" onclick="fAlign('green',this)" style="color:var(--g)">Aligned</span>
+  <span class="chip" onclick="fAlign('amber',this)" style="color:var(--a)">Needs Work</span>
+  <span class="chip" onclick="fAlign('red',this)" style="color:var(--r)">Tensions</span>
+</div>
+
+<div class="sos" id="sos"></div>
+
+<div class="grid"><table><thead id="th"></thead><tbody id="tb"></tbody><tfoot id="tf"></tfoot></table></div>
+<div id="fltip"></div>
+
+<div class="legend">
+  <div class="li"><div class="sw" style="background:var(--gbg)"></div><div><strong style="color:var(--g)">GREEN</strong> — In the actor's rational self-interest. Natural alignment.</div></div>
+  <div class="li"><div class="sw" style="background:var(--abg)"></div><div><strong style="color:var(--a)">AMBER</strong> — Partially incentivized. Needs reinforcement to hold.</div></div>
+  <div class="li"><div class="sw" style="background:var(--rbg)"></div><div><strong style="color:var(--r)">RED</strong> — Against rational self-interest. Clear tension.</div></div>
+</div>
+<div class="pf">Independent Incentive Alignment Dashboard · Overview = bird's-eye heatmap, Detail = full text, Click = deep dive · Sourced from final-email-docs/, final shared Summary, speaking-notes/</div>
+</div>
+
+<div class="modal" id="M" onclick="if(event.target.id==='M')cM()">
+  <div class="mc">
+    <div class="mh"><div><div id="ms" style="font-size:12px;color:var(--ink3)"></div><div id="ma" style="font-size:20px;font-weight:700;margin-top:2px"></div></div><button onclick="cM()" style="font-size:28px;background:none;border:none;cursor:pointer;color:var(--ink3)">×</button></div>
+    <div class="mb" id="mb"></div>
+  </div>
+</div>
+
+<script>
+var STEPS=[
+{id:1,t:"Enrolment & Baseline",d:"Member signs up via Jio MyHealth. Agent activates in local language. Baseline CHW visit, biomarker panel, ABHA linkage, consent. Family decision-maker identified."},
+{id:2,t:"Daily Engagement",d:"Personal Agent + wearables/CGM provide continuous monitoring, nudges, lifestyle coaching. System reaches out before symptoms."},
+{id:3,t:"Symptom Triage",d:"Member or Agent detects issue. Personal Clinical Agent triages (~70% closed without human). Unlimited specialist-level care via Agent."},
+{id:4,t:"Navigation & Doctor",d:"Agent routes to appropriate tier. Telehealth or Navigation Doctor review. Prescription. Record follows member."},
+{id:5,t:"Dispense & Adherence",d:"Pharmacy fulfilment with visible choice (Netmeds + alternatives). Refill tracking. Adherence as primary KPI."},
+{id:6,t:"Hospital / Acute",d:"Admission to Preferred or chosen tier. Embedded support. Cashless. No surprise bills. Discharge handshake."},
+{id:7,t:"Post-Discharge",d:"Arogya Saathi visit within 24-48h. Medication reconciliation. Readmission prevention. Intensified support."},
+{id:8,t:"Data & Research",d:"De-identified data to Research Trust. Opt-in omics/proteomics. Pharma licensing. Incidental findings routed back."},
+{id:9,t:"Renewal & Dividend",d:"Risk-adjusted premium. Data Dividend distribution. Loss ratio feedback. Intervention retirement loop."},
+{id:10,t:"Governance & Reg",d:"Consent ledger, bilateral regulator engagement (IRDAI, NMC, ICMR, DPDP), Trust governance, audit trails."}
+];
+
+var ACTORS=[
+{id:"mf",n:"Member + Family",r:0},
+{id:"pa",n:"Personal Clinical Agent",r:1},
+{id:"ch",n:"Arogya Saathi (CHW)",r:2},
+{id:"ce",n:"Care Entity / Nav Team",r:2},
+{id:"al",n:"Allianz JV / Actuary",r:2},
+{id:"nm",n:"Netmeds / Pharmacy",r:2},
+{id:"ho",n:"Preferred Hospitals",r:3},
+{id:"rg",n:"Regulators",r:3},
+{id:"rt",n:"Research Trust",r:3}
+];
+
+// k = short keyword for overview mode (4-6 words max)
+var M={
+1:{
+mf:{k:"Privacy vs biobank opt-in",d:"Sign up via Jio MyHealth; provide family history via Agent conversation (no forms); consent to baseline data; opt into biobank upgrade for tier benefits",g:"Access to proactive care system; premium discount for opt-ins; family covered under one subscription",t:"Privacy concerns may cause opt-out of biobank; family decision-maker (earning son, mother-in-law) may override member's choices",a:"amber",v:"Granular, revocable consent visible in app at all times. Opt-in paid for in tier benefits, not coerced. Mandatory ask lighter than hospital enrolment. (Summary p3-4)"},
+pa:{k:"Level-3 AI or model collapses",d:"Activate in member's language (Gujarati, Hindi, Tamil etc.); read ABHA record; schedule baseline CHW visit; narrate findings",g:"Initial trust relationship; baseline data to personalise all future interactions",t:"Must carry relationship at frontier-class (Level 3) quality or member stops opening the app and longitudinal asset thins (Summary p5-6)",a:"red",v:"Level-3 AI requirement explicitly stated: 'Without Level-3 AI on the member's phone, there is no trust contract, no honest data, and no deflection rate. The entire model collapses.' (Summary p6)"},
+ch:{k:"Gig pay competition",d:"Conduct household baseline screening (BP, glucose, waist, SpO2, meds reconcile, MH screen); draw biomarker panel; collect biobank sample if opted in",g:"Salary; structured protocol-driven visit; community standing from being the family's health contact",t:"CHW carries POC kit worth more than monthly salary; time pressure vs thoroughness; gig platforms (Zomato, Swiggy, Urban Company) offer competitive pay",a:"amber",v:"Salary benchmarked to top-quartile gig take-home in CHW's city, reviewed 6-monthly. Career ladder visible at Month 18 of pilot. (PD, Summary)"},
+ce:{k:"No cost benchmark exists",d:"Hire and deploy CHW cadre; set up ABHA integrations; manage consent architecture; coordinate with Allianz on member onboarding",g:"Member acquisition; data asset starts compounding from Day 1",t:"Unit cost of enrolment (CHW visit + biomarkers + sample logistics) must close against per-member budget; no external benchmark exists",a:"amber",v:"Bottoms-up economics pressure-tested in 90-day sprint. Biobank costs covered by pharma LOIs from Year 2. (Summary p10)"},
+al:{k:"No actuarial precedent",d:"Underwrite the member; set premium based on demographics and available risk data",g:"New premium volume; member enters the book",t:"No prior claims history for this novel product; actuary cannot price AI-first care from existing tables",a:"red",v:"Actuarial baseline co-developed with Allianz during sprint. IRDAI allows wellness discounts and no-claim bonuses. (Summary p7, PD)"},
+nm:{k:"Aligned",d:"Not directly active at enrolment",g:"Member enters ecosystem (future dispensing volume)",t:"No tension at this step",a:"green",v:"N/A at enrolment"},
+ho:{k:"Aligned",d:"Not directly active at enrolment",g:"Member enters network (future capitated volume)",t:"No tension at this step",a:"green",v:"N/A at enrolment"},
+rg:{k:"Consent must be built-in, not retrofit",d:"DPDP consent architecture must be compliant from Day 1; ABHA linkage must follow ABDM rules",g:"Proactive compliance reduces future enforcement burden",t:"If consent ledger is a retrofit rather than a product-level default, DPDP can break the data flywheel (Summary p8)",a:"amber",v:"Build consent ledger and data minimisation as product-level defaults from day one, not retrofits. Get legal opinion on 'legitimate use' framework. (Summary p8)"},
+rt:{k:"Independence perception critical",d:"Receive first biobank samples under research-scoped consent; set up de-identification pipeline",g:"Longitudinal data asset begins compounding",t:"Trust must be perceived as independent from Reliance or pharma buyers will discount it and DPDP treats it as data-controller extension",a:"red",v:"Separate legal entity, independent ethics board, Indian-resident samples only. Two keys required for re-identification — Trust's and member's. (Summary p5)"}
+},
+2:{
+mf:{k:"Compliance fatigue risk",d:"Wear CGM/wearable; respond to Agent nudges; log meals/activity; allow proactive monitoring",g:"'Knows you before you're sick' — early detection of HR drift, glucose excursions, environmental risks; personalised coaching",t:"Compliance fatigue; may stop wearing devices or opening the app; 'if she stops opening it, the longitudinal asset thins' (Summary p6)",a:"amber",v:"Agent must feel like 'a loving older sibling who knows biology' not a form. Delight: deliver something that makes life demonstrably better — a water purifier, better sleep, a worry resolved. (Summary p9)"},
+pa:{k:"70% deflection or economics break",d:"Monitor wearable/CGM streams; detect signal drift (HR, glucose, SpO2); trigger proactive outreach in member's language; coordinate Netmeds refills preemptively",g:"Continuous data stream; deepening trust relationship; demonstrated value",t:"Deflection vs safety: must resolve ~70% at Layer 1 or CHW cadre saturates and economics break (Summary p6, p14)",a:"red",v:"70% deflection target validated against control in 90-day sprint. Proactive triggers: wearable drift, adherence gaps, due screenings, seasonal risk, family-context risk. (Summary p14)"},
+ch:{k:"No control over own workload",d:"Respond to AI-dispatched visits only (no self-dispatch); routine follow-up per protocol",g:"Steady workload driven by AI; no need to generate own schedule",t:"Has no control over own workload — AI deflection rate determines visit volume. May see member looks worse but AI says stable.",a:"amber",v:"Access Rule is load-bearing: 'If the member could summon a CHW directly, the unit economics would not close and the cadre would saturate.' (Summary p14). Override review graduating over years."},
+ce:{k:"Ship fast vs ship safe",d:"Operate the daily engagement platform; manage Agent infrastructure; monitor engagement metrics",g:"Retention; data compounding; demonstrated value at 12/24/36-month gates",t:"Pressure to ship fast vs ship safe; two tempos pulling apart",a:"amber",v:"Single owner of operating system reporting to apex group. Clinical safety not traded for speed."},
+al:{k:"Aligned",d:"Not directly active in daily engagement",g:"Lower future claims from proactive detection",t:"No direct tension at this step",a:"green",v:"Loss ratio improvement from proactive engagement demonstrated via pilot data"},
+nm:{k:"GMV vs adherence quality",d:"Fulfil pre-emptive refills triggered by Agent (e.g., inhaler before PM2.5 spike)",g:"Steady dispensing volume; most regular data feed in the system",t:"GMV incentive vs adherence quality — Netmeds looks at refill cadence, not HbA1c",a:"amber",v:"Adherence (not GMV) as primary KPI in integration scorecard. (PD)"},
+ho:{k:"Aligned",d:"Not directly active in daily engagement",g:"Healthier members entering hospital when needed (less acute, better data)",t:"No tension at this step",a:"green",v:"N/A"},
+rg:{k:"Non-physician triage boundary",d:"Not directly active but consent for continuous monitoring must hold",g:"Proactive care reduces burden on public health system",t:"NMC/state councils may restrict non-physician triage if Agent crosses clinical boundaries (Summary p8)",a:"amber",v:"All clinical decisions go through licensed doctor with audit trail. Algorithm recommends; human authorises. (Summary p8)"},
+rt:{k:"Data quality is make-or-break",d:"Receive de-identified continuous data streams (CGM, wearable time-series)",g:"Longitudinal dataset growing daily; most valuable data is continuous, not episodic (DS)",t:"Data quality and labelling must be controlled end-to-end or 'it negates the final value' (DS p1)",a:"amber",v:"Quality-controlled pipeline. 'Without consistent sample handling, you cannot distinguish a real biological signal from a degradation artefact.' (DS)"}
+},
+3:{
+mf:{k:"Cousin-doctor wins tie-breaks",d:"Report symptom to Agent or respond to AI-flagged risk; answer clinical questions",g:"Unlimited specialist-level care via Agent; no waiting, no travel, no cost; 'not Google — get a consultation from someone that knows you' (Summary p1)",t:"May bypass system entirely and go to local doctor or use Google/ChatGPT instead; 'cousin-who-is-a-doctor' wins most tie-breaks",a:"amber",v:"Agent must be better than Google and the cousin: 'one single specialist-level Clinical AI that can combine it all together' (Summary p1). Frame as patient empowerment. (Summary p10)"},
+pa:{k:"Scale accuracy in 8+ languages",d:"Clinical triage; determine escalation level (Agent-closes vs telehealth vs CHW dispatch); close ~70% without human",g:"Demonstrated clinical value; maintained trust; data from every interaction",t:"Accuracy at scale: inference across top conditions in 8+ languages. A Level-2 agent deflects materially less and the stack below becomes uneconomic (Summary p6)",a:"red",v:"Level-3 AI requirement. Safety benchmarking across providers during sprint. (PD, Summary p6)"},
+ch:{k:"No self-dispatch allowed",d:"Dispatched only if telehealth decides hands-on care needed; perform physical assessment at home",g:"Targeted visits (not wasted on cases Agent could handle); meaningful clinical role",t:"No self-dispatch means she cannot respond to what she sees in the community unless AI sends her",a:"amber",v:"Access Rule is structural cost control. Four layers: Agent → Netmeds OTC → telehealth → CHW. (Summary p14)"},
+ce:{k:"Teleconsult throughput pressure",d:"Ensure triage infrastructure is running; manage telehealth doctor pool; monitor escalation rates",g:"Lower per-member cost when Agent resolves at Layer 1",t:"Throughput pressure on telehealth doctors; 6-min teleconsults don't feel like medicine, 20-min do but don't close economics",a:"amber",v:"Throughput target at protocol-class level, not per-consult. Clinical AI positioned as 'clinician extender, not replacement'. (Summary p9)"},
+al:{k:"Aligned",d:"Not directly active in triage",g:"Efficient triage reduces unnecessary claims",t:"No direct tension",a:"green",v:"Benefits from lower claim volume"},
+nm:{k:"Aligned — OTC volume",d:"Fulfil OTC orders placed by Agent for minor ailments (fever, cold, acidity, rash)",g:"OTC volume; quick fulfilment data",t:"No tension — natural volume driver",a:"green",v:"Agent closes OTC loop by placing Netmeds order; no human needed. (Summary p14)"},
+ho:{k:"Aligned",d:"Not directly active in triage",g:"Receives better-triaged referrals",t:"No tension at this step",a:"green",v:"N/A"},
+rg:{k:"Medical device classification risk",d:"NMC boundaries on non-physician triage; CDSCO may classify AI as medical device",g:"Patient safety maintained through regulatory guardrails",t:"Career-safe default for mid-level officer is to restrict: Class B/C medical device, CDSCO registration, clinical-trial evidence, explainability. Each individually reasonable; combined, uneconomic. (Summary p8)",a:"red",v:"Keep CHW scope within ASHA-equivalent boundaries. All clinical decisions through licensed doctor. Engage regulators proactively, not reactively. (Summary p8)"},
+rt:{k:"Aligned",d:"Receive de-identified triage interaction traces",g:"Data on condition patterns, resolution paths, language and regional variations",t:"No direct tension at this step",a:"green",v:"Interaction traces tagged with consent scope"}
+},
+4:{
+mf:{k:"Family may override routing",d:"Accept Agent's routing recommendation; attend appointment at recommended facility; carry record",g:"No lock-in; Preferred made visibly better (cashless, no surprise bills, immediate discharge, on-site support). Out-of-network still covered.",t:"May prefer own doctor or local hospital regardless of Agent recommendation; family elder may override",a:"amber",v:"'We do not lock members in. We make Preferred visibly better, not out-of-network visibly worse.' Repeated non-adherence = premium step-up at renewal, disclosed upfront. (Summary p2, p15)"},
+pa:{k:"Care plan vs doctor conflict",d:"Pick facility using 4 factors: clinical match → travel time → tier economics → member preference; generate and transmit care plan",g:"Navigation data; demonstrated routing value; member trust deepened",t:"Four-factor routing is complex; member expectations set by Agent may conflict with what admitting doctor recommends",a:"amber",v:"Clinical match first, tier economics as tiebreaker not gate. Free second opinions before major surgery. (Summary p1, p14)"},
+ch:{k:"Navigation competes with visits",d:"Support member through appointment logistics; accompany if needed",g:"Relationship continuity; visible role in care navigation",t:"Time spent on navigation competes with routine visit schedule",a:"amber",v:"Companion visits priced into Care Entity operating budget"},
+ce:{k:"Transfer price is political",d:"Maintain 4-tier hospital network contracts; deploy embedded clinical leadership at Tier 1; run on-site member-services at Tier 2",g:"Volume steering to preferred network; data visibility; cost control through capitation",t:"No external benchmark for AI-first integrated care pricing in India. Transfer price between Care Entity and Allianz is politically constructed, not market-discovered.",a:"red",v:"Arm's-length pricing; Audit Committee approval with quarterly disclosure; no member benefit available only because both sides sit in Reliance. (Summary p8)"},
+al:{k:"Catalogue freeze vs value prop",d:"Approve claims pathway; ensure member routing aligns with contracted network",g:"Lower claims cost from in-network routing; negotiated rates",t:"If Care Entity adds interventions freely, loss ratio suffers. If Allianz freezes catalogue, value prop dies.",a:"red",v:"Risk corridor around novel interventions: Allianz guarantees loss-ratio band, Care Entity absorbs excess. 6-month catalogue cadence. (PD)"},
+nm:{k:"Aligned",d:"Not primary actor in navigation step",g:"Prescription flow generates dispensing volume downstream",t:"No tension",a:"green",v:"N/A"},
+ho:{k:"Doctor may counter AI plan",d:"Receive referred patient with Agent-generated care plan; provide care per contracted tier",g:"Guaranteed volume under capitation (Tier 1) or case-rate (Tier 2); data integration with Jio Arogya",t:"Admitting doctor may counter or ignore AI care plan: 'three-way conflict; at least one trust relationship breaks'. Capitation incentivises undertreatment. (Summary p2, p10)",a:"red",v:"Embedded clinical leadership at Tier 1. Care plan framed as 'Personal Agent's expectation of care' not clinically binding. Quality scorecard with clawback. (Summary escalation matrix)"},
+rg:{k:"P1 tying / managed-care risk",d:"IRDAI monitors insurer-provider integration for tying risk",g:"Market integrity maintained",t:"'IRDAI reclassifies as managed care and restricts insurer-provider integration' — the P1 regulatory risk (Summary p7-8)",a:"red",v:"Position as 'integrated care platform' not HMO. Pre-engage IRDAI now. Every intra-group contract externally benchmarked. (Summary p8)"},
+rt:{k:"Aligned",d:"Not directly active in navigation",g:"Clinical encounter data enriches longitudinal record",t:"No tension",a:"green",v:"N/A"}
+},
+5:{
+mf:{k:"Aligned — visible choice",d:"Choose pharmacy (visible 3 options); take prescribed medication; allow adherence tracking",g:"Convenient fulfilment; medication at door; no need to hunt for pharmacy",t:"May prefer own local chemist or skip medication entirely",a:"green",v:"'Visible pharmacy choice at fulfilment — Netmeds default, nearby licensed chemist, member's own preferred pharmacy; choice persists.' (PD)"},
+pa:{k:"Tying perception risk",d:"Transmit prescription to chosen pharmacy; track refill cadence; flag adherence gaps; reorder preemptively",g:"Adherence data is continuous engagement signal; demonstrates value",t:"Must not create a tying perception (Agent recommends drug → Netmeds fills → all inside Reliance)",a:"amber",v:"Visible choice breaks the tying chain. No revenue share from Netmeds to Care Entity on Arogya Rx. (PD)"},
+ch:{k:"Aligned — natural role",d:"Check medication adherence during visits; reconcile prescriptions",g:"Actionable visit agenda; measurable impact on outcomes",t:"No tension — adherence checking is natural CHW role",a:"green",v:"Standard protocol during every routine and post-discharge visit"},
+ce:{k:"GMV vs adherence KPI tension",d:"Manage Netmeds integration; ensure adherence KPI trumps GMV KPI in scorecard",g:"Better outcomes → lower claims → fundable at gates",t:"Netmeds leadership (inside Reliance Retail) optimises for margin and GMV growth, not health outcomes",a:"amber",v:"Adherence (not GMV) as primary KPI in integration scorecard reported to Care Entity CMO. (PD)"},
+al:{k:"Aligned",d:"Monitor medication compliance as input to loss-ratio modelling",g:"Better adherence → more predictable claims",t:"No direct tension",a:"green",v:"Claims data reflects adherence impact"},
+nm:{k:"Tying risk — textbook definition",d:"Fulfil prescriptions; provide refill data; offer competitive pricing",g:"Dispensing volume; most regular data feed; GMV from Jio Arogya book",t:"GMV and margin incentive may conflict with adherence quality; also the single largest regulatory tying-risk surface in the architecture",a:"red",v:"No revenue share to Care Entity formalised in MSA. Visible pharmacy choice. Pre-emptive IRDAI engagement via written filing. (PD, Summary p8)"},
+ho:{k:"Aligned",d:"Not primary actor in dispensing",g:"Better-medicated patients present less acutely",t:"No tension",a:"green",v:"N/A"},
+rg:{k:"Disguised commission watch",d:"IRDAI watches for disguised commission in insurer→pharmacy flow; drug scheduling rules apply",g:"Consumer protection maintained",t:"'A product where Jio Allianz pays the premium, Personal Agent recommends the drug, Netmeds fills the prescription — all inside Reliance — is the textbook definition of tying.' (PD)",a:"red",v:"Written filing to IRDAI, not waiting. Each leg defensible individually is exactly the problem — pre-emptive engagement required. (Summary p8)"},
+rt:{k:"Aligned",d:"Receive de-identified medication/adherence data for research",g:"Pharmacoepidemiologic data for pharma buyers",t:"No direct tension",a:"green",v:"Adherence inference flows de-identified to Trust"}
+},
+6:{
+mf:{k:"Three-way trust at stake",d:"Present at hospital; follow care pathway; expect cashless discharge, no surprise bills, on-site support",g:"'Never alone' — Arogya Saathi + Agent navigate the complex journey; pre-approved claims; free second opinions before major surgery (Summary p1)",t:"If three-way conflict between Agent care plan, admitting doctor, and member expectations is resolved badly, 'trust in Personal Agent damaged forever'",a:"amber",v:"'No surprise bills ever.' Free expert second opinions. On-site support team at Preferred. Transparent tier differential disclosed upfront. (Summary p1)"},
+pa:{k:"Care plan may be overridden",d:"Transmit care plan to hospital; stay available to member and family through the stay; answer questions",g:"Full encounter data into longitudinal record; maintained trust through crisis",t:"Agent's care plan may be countered by admitting doctor; member caught between two authorities",a:"amber",v:"Care plan framed as expectation, not clinically binding. Agent available for all questions through stay. (Summary p1)"},
+ch:{k:"Blind without discharge summary",d:"Coordinate discharge logistics; prepare for 24h post-discharge visit; ensure discharge summary received",g:"Structured role in acute episode; relationship deepened through crisis support",t:"Without contractual discharge handshake, post-discharge visit is blind — 'she doesn't know diagnosis, medications, follow-up'",a:"amber",v:"Direct discharge protocol non-negotiable at Tier 1; contractual via HCX at Tier 2; liaison at Tier 3-4. (Summary escalation matrix)"},
+ce:{k:"Capitation rewards undertreatment",d:"Deploy embedded clinical leadership (Tier 1); run on-site member-services desk (Tier 2); 24×7 liaison (Tier 4)",g:"Control over episode quality; cost predictability under capitation; data visibility",t:"Embedded leadership creates friction with hospital's own clinical hierarchy. Capitation fixes overtreatment but rewards undertreatment — 'cherry-pick healthy, lemon-drop complex, skimp at margin'",a:"red",v:"Quality scorecard (NABH-linked) with capitation clawback below threshold. Two-way EHR at Tier 1. Readmission penalties. (Summary escalation matrix)"},
+al:{k:"No actuarial precedent for capitation",d:"Process claims; manage cashless flow; monitor loss ratio on acute episodes",g:"Predictable claims via capitation/case-rate; reduced fraud waste abuse",t:"Novel capitation model in India — no actuarial precedent for AI-first integrated care pricing",a:"amber",v:"Risk corridor. Proactive IRDAI disclosure. Claims-cost elasticity measured per intervention. (PD)"},
+nm:{k:"Aligned",d:"Not primary actor during hospital stay",g:"Post-discharge prescription volume",t:"No tension",a:"green",v:"N/A"},
+ho:{k:"Doctors will dismiss our plan",d:"Deliver care per contracted tier; accept embedded leadership at Tier 1; share EHR data; follow discharge protocol",g:"Guaranteed volume; capitation or case-rate revenue; CoE joint investment (cardiometabolic, oncology, maternal-fetal)",t:"Doctor may 'quietly ignore or actively counter' AI care plan. 'Hospitals will naturally react — tougher negotiations, doctors within hospital dismissing quality of our care plan.' (Summary p10)",a:"red",v:"Embedded clinician resolves counter-narrative. Quality scorecard with clawback flips arithmetic. Centres of Excellence turn price negotiation into shared asset. (Summary escalation matrix, p10)"},
+rg:{k:"Overlapping jurisdiction, no coordination",d:"NMC governs doctor practice; IRDAI governs claims process; NABH governs quality",g:"Quality and safety standards upheld",t:"Multiple regulators with overlapping jurisdiction at a single hospital event; no coordination mechanism",a:"amber",v:"Bilateral engagement tracks. Same framework, separate meetings. (PD)"},
+rt:{k:"Data visibility degrades by tier",d:"Receive de-identified hospital encounter data",g:"Rich clinical encounter data enriches longitudinal record for research",t:"In-network: full two-way EHR. Out-of-network: only discharge summary via liaison — data visibility degrades by tier",a:"amber",v:"Technology licensing at Tier 3 writes structured data directly to record. Liaison collects at Tier 4. (Summary escalation matrix)"}
+},
+7:{
+mf:{k:"May disengage post-crisis",d:"Receive CHW visit; follow medication plan; attend follow-ups; allow recovery monitoring",g:"Intensified support after crisis; 'the relationship deepens after the crisis, it does not end' (Summary p9)",t:"May disengage after feeling better; may not follow up on recommendations",a:"amber",v:"'We don't compel. We make compliance visibly cheaper and non-compliance visibly worse — through her own numbers, not through our policy.' (Summary p15)"},
+pa:{k:"Intensity vs disengagement",d:"Schedule follow-ups; monitor recovery via wearables; coordinate CHW visit; medication reminders; depression screening",g:"Rich post-acute data; demonstrated crisis-support value; retention",t:"Must maintain relationship intensity when member may want to disengage",a:"amber",v:"Daily check-ins. Recovery tracking. Medication adherence. 'The system intensifies after crisis.' (Summary p9)"},
+ch:{k:"Blind visit without discharge data",d:"Visit within 24h (Tier 1) or 48h (other tiers); medication reconciliation; mental-health screen; update longitudinal record",g:"Highest-value visit type; visible impact on readmission; relationship deepened",t:"Without discharge summary, visit is blind. Readmission rises; capitation savings eaten.",a:"amber",v:"Discharge handshake contractually binding by tier. CHW never does a post-discharge visit blind. (Summary escalation matrix)"},
+ce:{k:"Handshake degrades by tier",d:"Ensure discharge-to-CHW handshake works by tier; monitor readmission rates; adjust care protocols",g:"Lower readmission → better economics → demonstrated value at gates",t:"Handshake reliability degrades from Tier 1 (direct protocol) to Tier 4 (liaison only)",a:"amber",v:"Contractually binding by tier. Readmission data at 30/60/90 days linked to hospital + diagnosis."},
+al:{k:"Aligned",d:"Monitor readmission rates; factor into loss ratio",g:"Lower readmission = lower claims",t:"No direct tension",a:"green",v:"Readmission data feeds actuarial models"},
+nm:{k:"Aligned",d:"Fulfil updated post-discharge prescriptions; track adherence to new medication regime",g:"New prescription volume; adherence data",t:"No tension — natural dispensing moment",a:"green",v:"Immediate post-discharge Netmeds fulfilment"},
+ho:{k:"May not cooperate on discharge",d:"Provide discharge summary per contractual protocol; cooperate with CHW routing",g:"Lower readmission reflects well on quality scorecard",t:"Hospital may not prioritise structured discharge to Jio system, especially at Tier 3-4",a:"amber",v:"Protocol non-negotiable at Tier 1; via HCX at Tier 2; tech stack at Tier 3; 24h liaison escalation at Tier 4"},
+rg:{k:"Aligned",d:"Not directly active in post-discharge",g:"Lower readmission reduces system burden",t:"No tension",a:"green",v:"N/A"},
+rt:{k:"Aligned",d:"Receive de-identified post-discharge outcome data",g:"Recovery trajectories enrich longitudinal dataset; most valuable for pre-disease trajectory research",t:"No direct tension",a:"green",v:"Post-discharge data tagged with condition and intervention for research use"}
+},
+8:{
+mf:{k:"Dividend must feel real",d:"Continue participation; maintain biobank consent; receive Data Dividend",g:"Financial return from data contribution; personalised insights from research findings; 'the same civilizational contract — in a new asset class' (SM)",t:"May revoke consent; may not see dividend value as sufficient; may not understand what their data is used for",a:"amber",v:"Data Dividend weighted by tenure + participation (not disclosure completeness). Revocation stops future use; samples already assayed remain in de-identified aggregates. (Summary p5, SM)"},
+pa:{k:"Incidental findings may alarm",d:"Route incidental findings back to member; maintain consent visibility in app",g:"Trust maintained through transparency; member sees value of data contribution",t:"Incidental findings may alarm member or require downstream coverage not budgeted",a:"amber",v:"Clinically-actionable incidental findings returned to member via Care Entity with downstream coverage"},
+ch:{k:"Research consent adds visit time",d:"Collect repeat biobank draws where scoped; explain research consent to family",g:"Structured protocol; additional visit purpose",t:"Research consent explanation adds time to visits; family may have questions CHW cannot answer",a:"amber",v:"CHW training on research consent. Time allocation for sample logistics declared as % of CHW minutes."},
+ce:{k:"Care time vs data collection",d:"Manage data flows to Trust; declare care-vs-data time allocation; coordinate with Trust on incidental findings",g:"Trust licensing revenue; demonstrated value of data asset at gates",t:"Pressure to allocate CHW time to data collection at expense of clinical delivery",a:"amber",v:"Declared care-vs-data time allocation (x% CHW minutes for sample logistics; y% for clinical delivery)"},
+al:{k:"Aligned",d:"Not directly active in research layer",g:"Longitudinal data improves future actuarial precision",t:"No direct tension",a:"green",v:"Benefits from better risk modelling downstream"},
+nm:{k:"Aligned",d:"Not directly active in research layer",g:"Pharmacoepidemiologic data generates research demand",t:"No tension",a:"green",v:"N/A"},
+ho:{k:"Aligned",d:"Not directly active in research (data already de-identified)",g:"Research findings may improve clinical protocols",t:"No tension",a:"green",v:"N/A"},
+rg:{k:"ICMR+DPDP block commercialisation",d:"ICMR governs biomedical research rules; DPDP governs cross-border transfer; CDSCO may classify AI research tools",g:"Research integrity and member protection",t:"'ICMR biomedical-research rules and DPDP cross-border transfer block biobank commercialisation' (Summary p8)",a:"red",v:"Data Trust as Indian-resident entity. International licensing only via de-identified, purpose-bound access. ICMR research registration before first external use. (Summary p8)"},
+rt:{k:"Pharma wants raw data; Trust can't give it",d:"Operate biobank; run approved studies; license access to pharma; manage tiered licensing (exclusive / non-exclusive / published); enforce clean-room model",g:"Pharma licensing revenue (₹40-3000 Cr range per deal); scientific credibility; Data Dividend source",t:"Scientist wants broad access; Ethics Board wants narrow scope. Pharma wants raw data; Trust must ship 'models not rows'. Generic access deals underperform — pharma wants named cohorts for specific pipeline assets. (DS)",a:"red",v:"Three-tier licensing. Pre-registered study ladder. Clean-room model — buyer analyses in Trust environment, raw data never leaves. Pipeline-specific deliverables. India-first access terms. ~30 realistic BioPharma customers globally. (Summary p7, DS)"}
+},
+9:{
+mf:{k:"Premium step-up feels punitive",d:"Renew membership; receive Data Dividend; accept risk-adjusted premium",g:"Long-tenure premium cap; Data Dividend distribution; continued access to care system",t:"Premium may step up if risk markers worsened without mitigation; may feel penalised for non-compliance",a:"amber",v:"Premium step-up disclosed at Day 1 and on every nudge. 'Through her own numbers, not through our policy.' Dividend weighted by tenure + participation. (Summary p15)"},
+pa:{k:"Must frame premium positively",d:"Present renewal terms; show member's health trajectory; explain premium rationale",g:"Retention; demonstrated longitudinal value",t:"Must frame premium changes positively or trust erodes",a:"amber",v:"Transparent communication through member's own data and numbers"},
+ch:{k:"Aligned",d:"Not primary actor in renewal",g:"Member retention means continued relationship",t:"No tension",a:"green",v:"N/A"},
+ce:{k:"No PMPM benchmark exists",d:"Set PMPM transfer price to Allianz; manage intervention budget; retire failed interventions on 18-month loop",g:"Sustainable economics; demonstrated gate performance",t:"Transfer price is politically constructed, not market-discovered. No external PMPM benchmark for AI-first integrated care in India.",a:"red",v:"Cost-plus pass-through with published margin, proactively disclosed to IRDAI. (PD)"},
+al:{k:"Actuary freezes catalogue",d:"Calculate renewal premium; manage combined ratio; approve intervention catalogue for next cycle",g:"Predictable loss ratio; growing premium book",t:"Actuary freezes catalogue without claims-cost elasticity data. Dynamic intervention catalogue cannot exist under traditional actuarial methods.",a:"red",v:"Risk corridor. 6-month catalogue cadence with pre-declared assumptions. Failed interventions retired on 18-month loop. Proactive IRDAI disclosure. (PD)"},
+nm:{k:"Aligned",d:"Not primary actor in renewal",g:"Retained member = continued dispensing volume",t:"No tension",a:"green",v:"N/A"},
+ho:{k:"Aligned",d:"Not primary actor in renewal",g:"Retained member = continued capitated volume",t:"No tension",a:"green",v:"N/A"},
+rg:{k:"Outcome promises = misleading ads",d:"IRDAI reviews premium structure, bundling, commission structure",g:"Market integrity; consumer protection",t:"'IRDAI flags outcome promises as misleading advertising' — must strip clinical-outcome language from consumer comms (Summary p8)",a:"amber",v:"Frame as process-of-care, not outcome guarantee. Clearance on every creative before launch. (Summary p8)"},
+rt:{k:"Dividend must not be token/opaque",d:"Publish annual Data Dividend audit; distribute licensing revenue to members",g:"Credibility maintained; civilizational contract honoured",t:"If Dividend is 'token/late/opaque' the civilizational contract unwinds",a:"amber",v:"Public annual dividend audit (member-level + aggregate). No sample export, no identity re-linking, no raw data sale — preserved in charter."}
+},
+10:{
+mf:{k:"Aligned — consent control",d:"Exercise consent rights; view data usage in app; revoke consent if desired",g:"Control over personal data; transparency; trust maintained",t:"May not understand consent granularity or exercise rights proactively",a:"green",v:"Consent visible in app at all times. Revocable. Two-key re-identification. (Summary p4-5)"},
+pa:{k:"Privacy arch is load-bearing",d:"Maintain consent ledger; log every data flow; enforce privacy-by-architecture (PII on device, Clinical AI stateless)",g:"Trust infrastructure; compliance foundation",t:"Privacy architecture is load-bearing: 'if it breaks, everything above it breaks'",a:"amber",v:"PII never leaves device without logged consent event. Clinical AI cache ephemeral by design. (Summary p5)"},
+ch:{k:"Protocol monitoring = surveillance?",d:"Follow protocol; maintain audit trail for visits and data collection",g:"Clear operating guidelines; reduced personal liability",t:"Protocol adherence monitoring may feel like surveillance",a:"amber",v:"Protocol transparency. Career ladder linked to adherence track record."},
+ce:{k:"Three P&Ls, one impossible org",d:"Run governance across three P&Ls; coordinate bilateral regulator engagement; manage Trust relationship; report to apex group at gates",g:"Organisational survival; demonstrated regulatory compliance",t:"Three P&Ls (Care Entity + Allianz JV + Research Trust) — operationally hard as independent units; legally impossible as one",a:"red",v:"Single owner of operating system reporting into MDA's office. Proactive regulatory disclosure. (PD, Summary p8)"},
+al:{k:"Global audit committee watches",d:"Maintain IRDAI compliance; submit proactive disclosures on AI-in-loop, consent, bundling, transfer pricing",g:"Regulatory standing; licence protection",t:"Allianz global audit committee watches JV as single line in EM portfolio — surprises are existential",a:"amber",v:"Proactive IRDAI disclosure — not waiting for enforcement. External benchmarking of all intra-group contracts. (Summary p8)"},
+nm:{k:"Must prove no tying",d:"Comply with tying regulations; maintain no-revenue-share audit trail",g:"Regulatory clean bill of health; continued Jio Arogya integration",t:"Must demonstrate visible choice and no tying, even though integration is the value proposition",a:"amber",v:"Annual audit of flows between Netmeds and Care Entity on Arogya Rx. Written filing to IRDAI. (PD)"},
+ho:{k:"May resist quality clawback",d:"Comply with contractual quality standards; participate in quality scorecard; share data per agreement",g:"Preferred status; guaranteed volume; joint investment in CoEs",t:"May resist data sharing or quality clawback provisions",a:"amber",v:"NABH-linked scorecard. Capitation clawback below threshold. CoE joint investment. (Summary escalation matrix)"},
+rg:{k:"Four bodies, any one can block",d:"Review proactive filings; evaluate sandbox applications; assess AI safety, consent, bundling frameworks",g:"Political cover from proactive disclosure; co-publication opportunities",t:"Four bodies (IRDAI, NMC, ICMR, DPDP) independently cautious. 'Career-safe default is freeze.' Single CHW plasma draw touches all four simultaneously. Any one can block; no coordination mechanism exists.",a:"red",v:"Bilateral engagement, not a four-party summit. Same framework, four separate meetings. Political sponsor at PMO/NITI Aayog level. International precedent (FDA SaMD, MHRA, Singapore sandbox). (PD, Summary p8)"},
+rt:{k:"Reliance-controlled = credibility dead",d:"Publish quarterly governance report; maintain majority-independent board; enforce charter (no sample export, no raw data sale, no identity re-linking)",g:"Pharma buyer credibility; DPDP compliance; civilizational contract integrity",t:"Reliance-controlled-Trust-in-practice kills pharma credibility and DPDP treats it as data-controller extension",a:"red",v:"Section 8 company with majority-independent board. Member representation on protocol committee. Public governance report. Data Dividend audit published annually. (PD, SM)"}
+}
+};
+
+var RNAMES={0:"Member & Family",1:"AI Systems",2:"Reliance-Controlled",3:"External Counterparties"};
+var RCOL={0:"var(--r0)",1:"var(--r1)",2:"var(--r2)",3:"var(--r3)"};
+var RBGCOL={0:"var(--r0bg)",1:"var(--r1bg)",2:"var(--r2bg)",3:"var(--r3bg)"};
+
+function setMode(m){
+  document.body.className=m;
+  document.getElementById("btn-ov").className=m==="overview"?"primary":"";
+  document.getElementById("btn-dt").className=m==="detail"?"primary":"";
+}
+
+// Health score (0-100): green=1, amber=0.5, red=0. Maps to dominant tint.
+function healthPct(sc){var n=sc.g+sc.a+sc.r;return n?Math.round(100*(sc.g+sc.a*0.5)/n):0}
+function domClass(sc){var h=healthPct(sc);return h>=65?"dom-green":h>=40?"dom-amber":"dom-red"}
+function scoreMarkup(sc){var h=healthPct(sc);return "<span class='scoreline'><span class='sg'>"+sc.g+"</span><span class='sep'>·</span><span class='sa'>"+sc.a+"</span><span class='sep'>·</span><span class='sr'>"+sc.r+"</span></span><span class='hpct'>"+h+"% health</span>"}
+
+function render(){
+  var th=document.getElementById("th"),tb=document.getElementById("tb"),tf=document.getElementById("tf");
+
+  // Compute summary scores per step and per actor
+  var stepScores={};
+  STEPS.forEach(function(s){stepScores[s.id]={g:0,a:0,r:0}});
+  var actorScores={};
+  ACTORS.forEach(function(ac){actorScores[ac.id]={g:0,a:0,r:0}});
+  var total={g:0,a:0,r:0};
+  STEPS.forEach(function(s){
+    ACTORS.forEach(function(ac){
+      var al=M[s.id][ac.id].a;
+      stepScores[s.id][al.charAt(0)]++;
+      actorScores[ac.id][al.charAt(0)]++;
+      total[al.charAt(0)]++;
+    });
+  });
+
+  // State-of-system strip
+  var N=total.g+total.a+total.r;
+  var overallHealth=healthPct(total);
+  document.getElementById("sos").innerHTML=
+    "<span class='sos-title'>State of system</span>"+
+    "<span class='pill g'><span class='num'>"+total.g+"</span> Aligned <span class='pct'>"+Math.round(100*total.g/N)+"%</span></span>"+
+    "<span class='pill a'><span class='num'>"+total.a+"</span> Needs work <span class='pct'>"+Math.round(100*total.a/N)+"%</span></span>"+
+    "<span class='pill r'><span class='num'>"+total.r+"</span> Tensions <span class='pct'>"+Math.round(100*total.r/N)+"%</span></span>"+
+    "<span class='health'>Health score <strong>"+overallHealth+"%</strong></span>";
+
+  // Header row + summary column header (step headers carry title attr with description)
+  th.innerHTML="<tr><th style='text-align:left;min-width:170px'>Actor / Ring</th>"+STEPS.map(function(s){return"<th data-step='"+s.id+"' title='"+s.d.replace(/'/g,"\\'")+"'>"+s.id+". "+s.t+"</th>"}).join("")+"<th class='sum-head'>Score</th></tr>";
+
+  // Body rows
+  tb.innerHTML="";
+  var prevR=-1;
+  ACTORS.forEach(function(ac){
+    if(ac.r!==prevR){
+      prevR=ac.r;
+      var rr=document.createElement("tr");
+      var rc=document.createElement("td");
+      rc.colSpan=STEPS.length+2;
+      rc.className="rh";
+      rc.style.borderLeftColor=RCOL[ac.r];
+      rc.textContent="Ring "+ac.r+" — "+RNAMES[ac.r];
+      rr.appendChild(rc);
+      rr.dataset.ring=ac.r;rr.dataset.rh="1";
+      tb.appendChild(rr);
+    }
+    var row=document.createElement("tr");
+    row.dataset.ring=ac.r;
+    var nc=document.createElement("td");
+    nc.className="aname";
+    nc.dataset.actor=ac.id;
+    nc.innerHTML="<span class='rtag' style='background:"+RBGCOL[ac.r]+";color:"+RCOL[ac.r]+";border:1px solid "+RCOL[ac.r]+"'>R"+ac.r+"</span><br><strong>"+ac.n+"</strong>";
+    row.appendChild(nc);
+
+    STEPS.forEach(function(s){
+      var cd=M[s.id][ac.id];
+      var td=document.createElement("td");
+      td.className="c "+cd.a;
+      td.dataset.align=cd.a;
+      td.dataset.step=s.id;
+      td.dataset.actor=ac.id;
+      // Tooltip text stored on element; shown via a single floating tooltip (fixes scroll-container clipping)
+      td.dataset.tipTitle=ac.n+" @ Step "+s.id+" — "+s.t;
+      td.dataset.tipBody=cd.d.substring(0,160)+(cd.d.length>160?"…":"");
+      td.dataset.tipFoot=cd.t&&cd.a!=="green"?"⚠ "+cd.t.substring(0,120)+(cd.t.length>120?"…":""):"";
+      var kwHtml="<div class='kw'>"+cd.k+"</div>";
+      var detHtml="<div class='d'>"+cd.d.substring(0,90)+(cd.d.length>90?"…":"")+"</div><div class='i'>Gets: "+cd.g.substring(0,70)+(cd.g.length>70?"…":"")+"</div>"+(cd.t&&cd.a!=="green"?"<div class='t'>⚠ "+cd.t.substring(0,80)+(cd.t.length>80?"…":"")+"</div>":"");
+      td.innerHTML=kwHtml+detHtml;
+      td.onclick=function(){oM(s,ac,cd)};
+      row.appendChild(td);
+    });
+
+    // Actor summary column (tinted by dominant alignment)
+    var sc=actorScores[ac.id];
+    var sumTd=document.createElement("td");
+    sumTd.className="sum-actor "+domClass(sc);
+    sumTd.innerHTML=scoreMarkup(sc);
+    row.appendChild(sumTd);
+    tb.appendChild(row);
+  });
+
+  // Footer summary row (per-step scores, tinted by dominant alignment)
+  tf.innerHTML="";
+  var frow=document.createElement("tr");
+  var flabel=document.createElement("td");
+  flabel.className="sum";
+  flabel.style.textAlign="right";
+  flabel.style.fontWeight="700";
+  flabel.innerHTML="<span style='color:var(--ink3);font-size:9px;text-transform:uppercase;letter-spacing:.06em'>Per-step</span>";
+  frow.appendChild(flabel);
+  STEPS.forEach(function(s){
+    var sc=stepScores[s.id];
+    var ftd=document.createElement("td");
+    ftd.className="sum "+domClass(sc);
+    ftd.innerHTML=scoreMarkup(sc);
+    frow.appendChild(ftd);
+  });
+  var corner=document.createElement("td");
+  corner.className="sum "+domClass(total);
+  corner.innerHTML=scoreMarkup(total);
+  frow.appendChild(corner);
+  tf.appendChild(frow);
+
+  bindHover();
+}
+
+// Cross-highlight on cell hover + floating tooltip
+function bindHover(){
+  var tip=document.getElementById("fltip");
+  document.querySelectorAll("#tb td.c").forEach(function(td){
+    td.addEventListener("mouseenter",function(e){
+      var step=td.dataset.step,actor=td.dataset.actor;
+      var thEl=document.querySelector("#th th[data-step='"+step+"']");
+      if(thEl)thEl.classList.add("hl");
+      var anEl=document.querySelector("#tb td.aname[data-actor='"+actor+"']");
+      if(anEl)anEl.classList.add("hl");
+      if(document.body.classList.contains("overview")){
+        tip.innerHTML="<strong>"+td.dataset.tipTitle+"</strong>"+td.dataset.tipBody+(td.dataset.tipFoot?"<br><em>"+td.dataset.tipFoot+"</em>":"");
+        tip.style.display="block";
+      }
+    });
+    td.addEventListener("mousemove",function(e){
+      if(tip.style.display!=="block")return;
+      var x=e.clientX+14,y=e.clientY+14;
+      var tw=tip.offsetWidth,th=tip.offsetHeight;
+      if(x+tw>window.innerWidth-8)x=e.clientX-tw-14;
+      if(y+th>window.innerHeight-8)y=e.clientY-th-14;
+      tip.style.left=x+"px";tip.style.top=y+"px";
+    });
+    td.addEventListener("mouseleave",function(){
+      document.querySelectorAll("#th th.hl,#tb td.aname.hl").forEach(function(el){el.classList.remove("hl")});
+      tip.style.display="none";
+    });
+  });
+}
+
+function oM(s,ac,d){
+  document.getElementById("ms").textContent="Step "+s.id+" — "+s.t;
+  document.getElementById("ma").textContent=ac.n;
+  document.getElementById("mb").innerHTML=
+    "<h4>Step Context</h4><div class='bx' style='background:#f8fafc'>"+s.d+"</div>"+
+    "<h4>What This Actor Must Do</h4><div class='bx' style='background:#f8fafc'>"+d.d+"</div>"+
+    "<h4>What They Get (Incentive)</h4><div class='bx' style='background:var(--gbg)'>"+d.g+"</div>"+
+    (d.t?"<h4>Tension / Misalignment</h4><div class='bx' style='background:var(--rbg);border-left:4px solid var(--r)'>"+d.t+"</div>":"")+
+    "<h4>Designed Value Exchange</h4><div class='bx' style='background:var(--gbg);border-left:4px solid var(--g)'>"+d.v+"</div>"+
+    "<div style='margin-top:24px;padding:12px;background:#f1f5f9;font-size:11px;color:var(--ink3);border-radius:4px'>Sources: final shared Jio Arogya Summary (22 Apr 2026), 260421_Strategic_Memo, 260421_Data_Strategy, 260421_Principles_Decisions_Op_Model, speaking-notes.</div>";
+  document.getElementById("M").style.display="flex";
+}
+function cM(){document.getElementById("M").style.display="none"}
+
+function fRing(r,el){
+  document.querySelectorAll(".chip").forEach(function(c){if(c.onclick&&c.onclick.toString().indexOf("fRing")>-1)c.classList.remove("on")});
+  el.classList.add("on");
+  document.querySelectorAll("#tb tr").forEach(function(tr){
+    if(r==="all"){tr.style.display=""}
+    else{tr.style.display=tr.dataset.ring==r?"":"none"}
+  });
+}
+
+function fAlign(a,el){
+  document.querySelectorAll(".chip").forEach(function(c){if(c.onclick&&c.onclick.toString().indexOf("fAlign")>-1)c.classList.remove("on")});
+  el.classList.add("on");
+  document.querySelectorAll("#tb tr").forEach(function(tr){
+    if(tr.dataset.rh)return;
+    if(a==="all"){tr.style.display="";tr.querySelectorAll(".c").forEach(function(c){c.style.opacity=""});return}
+    tr.querySelectorAll(".c").forEach(function(c){c.style.opacity=c.dataset.align===a?"1":"0.12"});
+  });
+}
+
+function resetAll(){
+  document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on")});
+  document.querySelectorAll(".chip").forEach(function(c,i){if(i===0||i===6)c.classList.add("on")});
+  document.querySelectorAll("#tb tr").forEach(function(tr){tr.style.display=""});
+  document.querySelectorAll(".c").forEach(function(c){c.style.opacity=""});
+  setMode("overview");
+}
+
+document.addEventListener("keydown",function(e){if(e.key==="Escape")cM()});
+window.onload=render;
+</script>
+</body>
+</html>
