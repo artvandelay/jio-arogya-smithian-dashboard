@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>Jio Arogya — Incentive Alignment Dashboard</title>
 <style>
 :root {
@@ -135,6 +136,17 @@ th.hl{background:#475569!important}
 </style>
 </head>
 <body class="overview">
+<div id="_gate" style="display:none;position:fixed;inset:0;z-index:9999;background:#fbfaf7;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
+<div style="text-align:center;max-width:340px;padding:24px">
+<div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#64748b;font-weight:700;margin-bottom:12px">Jio Arogya · Smithian Analysis</div>
+<div style="font-size:15px;color:#334155;margin-bottom:20px">This site is access-restricted.<br>Please enter the password to continue.</div>
+<input id="_pw" type="password" placeholder="Password" autofocus style="width:100%;padding:12px 14px;border:1px solid #cbd5e1;font-size:15px;font-family:inherit;margin-bottom:10px;outline:none">
+<button id="_go" style="width:100%;padding:12px;background:#0f172a;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Enter</button>
+<div id="_err" style="display:none;color:#b91c1c;font-size:12px;margin-top:10px">Incorrect password. Try again.</div>
+</div>
+</div>
+<noscript><div style="padding:40px;text-align:center;font-family:sans-serif">JavaScript is required to view this site.</div></noscript>
+<div id="_content" style="display:none">
 <nav class="site-nav">
   <a href="../">← Home</a>
 </nav>
@@ -522,5 +534,7 @@ function resetAll(){
 document.addEventListener("keydown",function(e){if(e.key==="Escape")cM()});
 window.onload=render;
 </script>
+</div>
+<script src="../auth.js"></script>
 </body>
 </html>

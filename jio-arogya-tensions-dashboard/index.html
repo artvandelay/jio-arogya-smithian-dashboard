@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>Jio Arogya — Strategic Tensions Explorer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -194,6 +195,17 @@ h1{font-family:'Fraunces',Georgia,serif;font-size:30px;line-height:1.04;letter-s
 </style>
 </head>
 <body>
+<div id="_gate" style="display:none;position:fixed;inset:0;z-index:9999;background:#f7f7f5;align-items:center;justify-content:center;font-family:'DM Sans',system-ui,sans-serif">
+<div style="text-align:center;max-width:340px;padding:24px">
+<div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#73798a;font-weight:700;margin-bottom:12px">Jio Arogya · Smithian Analysis</div>
+<div style="font-size:15px;color:#2a3040;margin-bottom:20px">This site is access-restricted.<br>Please enter the password to continue.</div>
+<input id="_pw" type="password" placeholder="Password" autofocus style="width:100%;padding:12px 14px;border:1px solid #c9ced8;font-size:15px;font-family:inherit;margin-bottom:10px;outline:none">
+<button id="_go" style="width:100%;padding:12px;background:#0a0f1a;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Enter</button>
+<div id="_err" style="display:none;color:#8b1d1d;font-size:12px;margin-top:10px">Incorrect password. Try again.</div>
+</div>
+</div>
+<noscript><div style="padding:40px;text-align:center;font-family:sans-serif">JavaScript is required to view this site.</div></noscript>
+<div id="_content" style="display:none">
 <nav class="site-nav">
   <a href="../">← Home</a>
 </nav>
@@ -448,5 +460,7 @@ function closeModal(){ document.getElementById("modal").style.display = "none"; 
 document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
 window.onload = init;
 </script>
+</div>
+<script src="../auth.js"></script>
 </body>
 </html>
