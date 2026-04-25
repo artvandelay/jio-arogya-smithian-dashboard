@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jio Arogya — Strategic Tensions Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0f1a;--ink2:#2a3040;--muted:#73798a;
+  --paper:#f7f7f5;--warm:#f9f9f7;--card:#ffffff;
+  --rule:#14192a;--line:#c9ced8;--lineLight:#e2e5ea;
+  --green:#0e5c35;--greenBg:#e2f3e9;--greenLine:#6dbd8e;
+  --amber:#8a5a00;--amberBg:#fef0d0;--amberLine:#d4a94c;
+  --red:#8b1d1d;--redBg:#fbe3e0;--redLine:#d08580;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1520px;margin:0 auto;padding:32px 28px 72px}
+
+/* ── Header ── */
+header{
+  border-bottom:2px solid var(--rule);padding-bottom:22px;margin-bottom:22px;
+  animation:fadeUp .6s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.22em;color:var(--muted);font-weight:700;margin-bottom:8px}
+h1{font-family:'Fraunces',Georgia,serif;font-size:30px;line-height:1.04;letter-spacing:-.03em;font-weight:700;font-optical-sizing:auto}
+.sub{margin-top:10px;max-width:800px;color:var(--ink2);font-size:13.5px;line-height:1.55}
+
+/* ── Scenarios + Score ── */
+.topbar{display:grid;grid-template-columns:1fr 260px;gap:14px;margin-bottom:20px}
+.scenario-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px;background:var(--card);border:1px solid var(--line)}
+.scenario{
+  border:1px solid var(--line);background:#fff;padding:7px 11px;font-size:10.5px;font-weight:700;
+  color:var(--ink2);cursor:pointer;transition:.2s ease;letter-spacing:.01em;
+}
+.scenario:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(10,15,26,.1)}
+.scenario.active{background:var(--rule);border-color:var(--rule);color:#fff}
+.scenario-intended{border-color:var(--rule);font-weight:700}
+.scenario-deadOnArrival{border-color:var(--redLine);color:var(--red);background:var(--redBg)}
+.scenario-deadOnArrival.active{background:var(--red);border-color:var(--red);color:#fff}
+.reset-button{margin-left:auto;color:var(--muted)}
+.custom-indicator{
+  border:1px solid var(--line);background:var(--warm);color:var(--muted);padding:7px 10px;
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+}
+.score-box{
+  background:var(--rule);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:6px 6px 0 rgba(10,15,26,.08);
+}
+.score-box .s-label{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#8891a5;font-weight:700}
+.score-box .s-desc{font-size:13px;margin-top:2px}
+.score-box .s-num{font-family:'Fraunces',Georgia,serif;font-size:46px;line-height:1;font-weight:900}
+.score-box .s-num small{font-size:18px;color:#8891a5}
+
+/* ── Lever Cards ── */
+.lever-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.lever{
+  border:1px solid var(--line);background:var(--card);min-height:260px;padding:18px 16px 76px;
+  position:relative;overflow:hidden;transition:.25s ease;
+}
+.lever::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--green);transition:.3s ease}
+.lever.moderate::before{background:var(--amber)}
+.lever.degraded::before{background:var(--red)}
+.lever:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(10,15,26,.1)}
+.lever-num{font-size:8px;color:#9aa1af;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.lever-title{font-family:'Fraunces',Georgia,serif;font-size:19px;line-height:1.08;letter-spacing:-.02em;margin-bottom:8px;font-weight:700}
+.lever-thesis{font-size:11.5px;color:var(--ink2);margin-bottom:14px;line-height:1.45}
+.state-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 10px;font-size:9.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--greenLine);background:var(--greenBg);color:var(--green);
+  transition:.2s ease;
+}
+.lever.moderate .state-pill{border-color:var(--amberLine);background:var(--amberBg);color:var(--amber)}
+.lever.degraded .state-pill{border-color:var(--redLine);background:var(--redBg);color:var(--red)}
+.state-detail{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+.lever-toggle{position:absolute;bottom:14px;left:16px;right:16px;display:flex;border:1px solid var(--line);background:#fff}
+.toggle-btn{
+  flex:1;border:0;border-right:1px solid var(--line);background:#fff;color:var(--muted);
+  padding:8px 6px;font-family:inherit;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  cursor:pointer;transition:.18s ease;
+}
+.toggle-btn:last-child{border-right:0}
+.toggle-btn:hover{background:var(--warm);color:var(--ink)}
+.toggle-btn.active.proposed{background:var(--green);color:#fff}
+.toggle-btn.active.moderate{background:var(--amber);color:#fff}
+.toggle-btn.active.degraded{background:var(--red);color:#fff}
+.print-state{display:none}
+
+/* ── System Matrix ── */
+.matrix{display:grid;grid-template-columns:280px 1fr;border:2px solid var(--rule);background:#fff}
+.matrix-head{display:contents}
+.matrix-head div{background:var(--rule);color:#fff;padding:11px 16px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;border-right:1px solid #2a3450}
+.layer-label{
+  padding:20px 18px;border-top:1px solid var(--lineLight);border-right:2px solid var(--line);
+  background:linear-gradient(90deg,var(--lcBg),var(--warm) 36%);position:relative;cursor:pointer;transition:.15s ease;
+}
+.layer-label:hover{filter:brightness(.985)}
+.layer-label::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--lc)}
+.layer-title{font-family:'Fraunces',Georgia,serif;font-size:18px;line-height:1.08;margin-bottom:5px;font-weight:700}
+.layer-q{font-size:10.5px;color:var(--muted);line-height:1.4}
+.layer-body{
+  padding:18px 20px;border-top:1px solid var(--lineLight);background:#fff;cursor:pointer;
+  transition:background .35s ease,border-color .35s ease,opacity .15s ease;
+}
+.layer-body.fading{opacity:0}
+.layer-body.green{background:linear-gradient(100deg,var(--greenBg) 0%,#fff 32%)}
+.layer-body.amber{background:linear-gradient(100deg,var(--amberBg) 0%,#fff 32%)}
+.layer-body.red{background:linear-gradient(100deg,var(--redBg) 0%,#fff 32%)}
+.row-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.status-pill{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;border:1px solid var(--line);background:#fff;
+  transition:.25s ease;flex-shrink:0;
+}
+.status-pill.green{color:var(--green);border-color:var(--greenLine);background:var(--greenBg)}
+.status-pill.amber{color:var(--amber);border-color:var(--amberLine);background:var(--amberBg)}
+.status-pill.red{color:var(--red);border-color:var(--redLine);background:var(--redBg)}
+.layer-headline{font-family:'Fraunces',Georgia,serif;font-size:18px;line-height:1.12;font-weight:700;letter-spacing:-.015em;margin-bottom:4px}
+.metric{font-size:11.5px;color:var(--ink2);font-weight:700;margin-bottom:6px}
+.body-text{font-size:12px;color:#404a5a;max-width:940px;line-height:1.55}
+.impact-list{display:grid;gap:6px;margin-top:12px}
+.impact{
+  border-left:3px solid var(--line);padding:8px 12px;background:rgba(255,255,255,.65);
+  cursor:pointer;transition:.18s ease;
+}
+.impact:hover{transform:translateX(3px);box-shadow:0 2px 10px rgba(10,15,26,.07)}
+.impact.green{border-color:var(--green)}
+.impact.amber{border-color:var(--amber)}
+.impact.red{border-color:var(--red)}
+.impact .i-title{font-size:11.5px;font-weight:700}
+.impact .i-meta{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* ── Panels ── */
+.panels{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{border:1px solid var(--line);background:var(--card);padding:20px}
+.panel h3{font-family:'Fraunces',Georgia,serif;font-size:20px;margin-bottom:10px;font-weight:700}
+.panel p{font-size:12.5px;color:var(--ink2);margin-bottom:8px;line-height:1.55}
+.panel ul{padding-left:18px;color:var(--ink2);font-size:12px}
+.panel li{margin:5px 0;line-height:1.5}
+.panel li strong{color:var(--ink)}
+
+/* ── Modal ── */
+.modal{position:fixed;inset:0;background:rgba(10,15,26,.68);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(2px)}
+.modal-card{background:var(--card);border:3px solid var(--rule);width:min(860px,92vw);max-height:90vh;overflow:auto;box-shadow:14px 14px 0 rgba(0,0,0,.18)}
+.modal-head{position:sticky;top:0;background:var(--card);border-bottom:2px solid var(--rule);padding:20px 24px;display:flex;justify-content:space-between;gap:16px;z-index:2}
+.modal-kicker{font-size:9px;text-transform:uppercase;letter-spacing:.16em;font-weight:700;color:var(--muted);margin-bottom:6px}
+.modal-title{font-family:'Fraunces',Georgia,serif;font-size:24px;line-height:1.08;font-weight:700}
+.close-btn{border:none;background:none;font-size:28px;line-height:1;cursor:pointer;color:var(--muted)}
+.close-btn:hover{color:var(--ink)}
+.modal-body{padding:24px}
+.modal-body h4{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700;margin:20px 0 8px}
+.modal-body h4:first-child{margin-top:0}
+.box{padding:16px;border:1px solid var(--line);background:#fff;margin-bottom:10px;font-size:13px;line-height:1.55}
+.box strong{display:block;margin-bottom:4px}
+.box.green{background:var(--greenBg);border-color:var(--greenLine)}
+.box.amber{background:var(--amberBg);border-color:var(--amberLine)}
+.box.red{background:var(--redBg);border-color:var(--redLine)}
+.source-line{font-size:10.5px;color:var(--muted);padding:10px 12px;background:#eee8db;border:1px solid var(--line);margin-top:16px}
+
+.footer{margin-top:36px;text-align:center;font-size:9.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;letter-spacing:.02em}
+
+@media(max-width:1100px){
+  header,.topbar,.panels{grid-template-columns:1fr}
+  .lever-grid{grid-template-columns:1fr 1fr}
+  .matrix{grid-template-columns:220px 1fr}
+}
+@media(max-width:760px){
+  .lever-grid{grid-template-columns:1fr}
+  .matrix{display:block}
+  .matrix-head{display:none}
+  .layer-label,.layer-body{border-right:none}
+}
+@media print{
+  @page{size:A3 landscape;margin:10mm}
+  .scenario-bar,.lever-toggle,.modal{display:none!important}
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .lever,.layer-body,.box,.score-box,.status-pill,.state-pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-state{display:block;margin-top:8px;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Jio Arogya</div>
+      <h1>Strategic Tensions Explorer</h1>
+      <div class="sub">Four structural levers. Five operating layers. Move a lever to see what changes.</div>
+    </div>
+  </header>
+
+  <div class="topbar">
+    <div class="scenario-bar" id="scenarioBar"></div>
+    <div class="score-box" id="scoreBox"></div>
+  </div>
+
+  <section class="lever-grid" id="leverGrid"></section>
+
+  <section class="matrix" id="matrix">
+    <div class="matrix-head"><div>Operating Layer</div><div>Consequence Under Selected Architecture</div></div>
+  </section>
+
+  <section class="panels">
+    <div class="panel" id="readerPanel"></div>
+    <div class="panel">
+      <h3>How to Read This</h3>
+      <p>Start with the full architecture. Then move one lever at a time, or select a preset scenario above. Each row shows how the selected configuration changes an operating layer.</p>
+      <ul>
+        <li><strong>Green</strong> — the layer continues to compound.</li>
+        <li><strong>Amber</strong> — the layer still functions but loses strategic advantage.</li>
+        <li><strong>Red</strong> — the mechanism that makes the model economic or defensible breaks.</li>
+      </ul>
+      <p style="margin-top:10px;font-size:11px;color:var(--muted)">Each lever shows three concrete choices, from full architecture to constrained versions. Click any operating layer or consequence card for detail.</p>
+    </div>
+  </section>
+
+  <div class="footer">Strategic Tensions Explorer · Jio Arogya · Sources: final shared bundle, speaking notes, Shumeet question set · Apr 2026</div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div><div class="modal-kicker" id="modalKicker"></div><div class="modal-title" id="modalTitle"></div></div>
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const leverStates = {};
+LEVERS.forEach(l => leverStates[l.id] = "proposed");
+let matrixFadeTimer = null;
+
+function init(){
+  renderScenarios(); renderLevers(); renderMatrix(false); renderReader();
+}
+
+function renderScenarios(){
+  const scenarios = SCENARIOS.map(s => ({ scenario:s, match:scenarioMatch(s) }));
+  const isCustom = !scenarios.some(x => x.match);
+  document.getElementById("scenarioBar").innerHTML = `
+    ${isCustom ? `<span class="custom-indicator">Custom</span>` : ""}
+    ${scenarios.map(({scenario:s, match}) => `
+      <button class="scenario scenario-${s.id}${match?" active":""}" onclick="applyScenario('${s.id}')" title="${s.description}">${s.label}</button>
+    `).join("")}
+    <button class="scenario reset-button" onclick="resetLevers()">Reset</button>`;
+}
+function scenarioMatch(s){
+  const exp = s.activeLevers || {};
+  for(const l of LEVERS){
+    const want = exp[l.id] || "proposed";
+    if(leverStates[l.id] !== want) return false;
+  }
+  return true;
+}
+function applyScenario(id){
+  const s = SCENARIOS.find(x=>x.id===id);
+  LEVERS.forEach(l => leverStates[l.id] = (s.activeLevers||{})[l.id] || "proposed");
+  refresh();
+}
+function resetLevers(){
+  LEVERS.forEach(l => leverStates[l.id] = "proposed");
+  refresh();
+}
+function setLever(id, state){
+  leverStates[id] = state;
+  refresh();
+}
+function refresh(){
+  renderScenarios(); renderLevers(); renderMatrix(); renderReader();
+}
+
+function renderLevers(){
+  document.getElementById("leverGrid").innerHTML = LEVERS.map(l => {
+    const st = leverStates[l.id];
+    const info = l.states[st];
+    const buttons = ["proposed","moderate","degraded"].map(state => `
+      <button type="button" class="toggle-btn ${state}${st===state?" active":""}" onclick="setLever('${l.id}','${state}')">${l.states[state].button || LEVER_STATES[state].label}</button>
+    `).join("");
+    return `
+      <article class="lever ${st}">
+        <div class="lever-num">Lever ${l.number}</div>
+        <div class="lever-title">${l.title}</div>
+        <div class="lever-thesis">${l.thesis}</div>
+        <span class="state-pill">${info.label}</span>
+        <div class="state-detail">${info.short}</div>
+        <span class="print-state">State: ${info.button || info.label}</span>
+        <div class="lever-toggle">${buttons}</div>
+      </article>`;
+  }).join("");
+}
+
+function layerState(layerId){
+  const impacts = [];
+  LEVERS.forEach(l => {
+    const st = leverStates[l.id];
+    if(st !== "proposed" && l.impacts[st] && l.impacts[st][layerId]){
+      impacts.push({ lever:l, state:st, impact:l.impacts[st][layerId] });
+    }
+  });
+  if(!impacts.length) return { base:BASELINE[layerId], status:"green", impacts:[] };
+  let worst = "green";
+  impacts.forEach(x => { if(STATUS[x.impact.status].score < STATUS[worst].score) worst = x.impact.status; });
+  return { base:BASELINE[layerId], status:worst, impacts };
+}
+
+function renderMatrix(animate = true){
+  const m = document.getElementById("matrix");
+  clearTimeout(matrixFadeTimer);
+  if(animate && m.querySelector(".layer-body")){
+    m.querySelectorAll(".layer-body").forEach(n => n.classList.add("fading"));
+    matrixFadeTimer = setTimeout(() => paintMatrix(m), 150);
+    renderScore();
+    return;
+  }
+  paintMatrix(m);
+}
+function paintMatrix(m){
+  m.querySelectorAll(".layer-label,.layer-body").forEach(n=>n.remove());
+  LAYER_ORDER.forEach(lid => {
+    const layer = LAYERS[lid];
+    const st = layerState(lid);
+    const main = st.impacts.length ? pickWorst(st.impacts).impact : st.base;
+    const lbl = document.createElement("div");
+    lbl.className = "layer-label";
+    lbl.style.setProperty("--lc", layer.color);
+    lbl.style.setProperty("--lcBg", hexToRgba(layer.color, .08));
+    lbl.innerHTML = `<div class="layer-title">${layer.label}</div><div class="layer-q">${layer.question}</div>`;
+    lbl.onclick = () => openLayerModal(lid);
+    const body = document.createElement("div");
+    body.className = `layer-body ${st.status}`;
+    body.onclick = () => openLayerModal(lid);
+    body.innerHTML = `
+      <div class="row-top">
+        <div>
+          <div class="layer-headline">${main.headline}</div>
+          <div class="metric">${main.metric}</div>
+          <div class="body-text">${main.text}</div>
+        </div>
+        <span class="status-pill ${st.status}">${STATUS[st.status].label}</span>
+      </div>
+      ${impactListHTML(st.impacts)}`;
+    m.appendChild(lbl); m.appendChild(body);
+  });
+  renderScore();
+}
+function hexToRgba(hex, alpha){
+  const value = hex.replace("#","");
+  const num = parseInt(value, 16);
+  const r = (num >> 16) & 255;
+  const g = (num >> 8) & 255;
+  const b = num & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function pickWorst(arr){ return arr.slice().sort((a,b)=>STATUS[a.impact.status].score - STATUS[b.impact.status].score)[0]; }
+function impactListHTML(arr){
+  if(!arr.length) return "";
+  return `<div class="impact-list">${arr.map(x=>`
+    <div class="impact ${x.impact.status}" onclick="event.stopPropagation();openImpactModal('${x.lever.id}','${x.state}','${findLayer(x)}')">
+      <div class="i-title">${x.lever.title} (${LEVER_STATES[x.state].label}): ${x.impact.headline}</div>
+      <div class="i-meta">${x.impact.metric}</div>
+    </div>`).join("")}</div>`;
+}
+function findLayer(x){ return LAYER_ORDER.find(lid => x.lever.impacts[x.state] && x.lever.impacts[x.state][lid] === x.impact); }
+
+function renderScore(){
+  const states = LAYER_ORDER.map(layerState);
+  const total = states.reduce((s,x)=>s+STATUS[x.status].score,0);
+  const pct = Math.round(total/(LAYER_ORDER.length*3)*100);
+  const reds = states.filter(s=>s.status==="red").length;
+  const ambers = states.filter(s=>s.status==="amber").length;
+  const desc = reds ? `${reds} broken layer${reds>1?"s":""}` : ambers ? `${ambers} degraded` : "Architecture intact";
+  document.getElementById("scoreBox").innerHTML = `
+    <div><div class="s-label">System Integrity</div><div class="s-desc">${desc}</div></div>
+    <div class="s-num">${pct}<small>%</small></div>`;
+}
+
+function renderReader(){
+  const p = document.getElementById("readerPanel");
+  const anyActive = LEVERS.some(l => leverStates[l.id] !== "proposed");
+  if(!anyActive){
+    p.innerHTML = `<h3>Full Architecture</h3><p>All four levers are at their full target state.</p><p>The matrix shows the baseline operating state across insurance, engagement, navigation, data, and science.</p>`;
+    return;
+  }
+  const moved = LEVERS.filter(l=>leverStates[l.id]!=="proposed").map(l=>`${l.title} → ${LEVER_STATES[leverStates[l.id]].label}`);
+  const broken = LAYER_ORDER.filter(lid=>layerState(lid).status==="red").map(lid=>LAYERS[lid].short);
+  const degraded = LAYER_ORDER.filter(lid=>layerState(lid).status==="amber").map(lid=>LAYERS[lid].short);
+  p.innerHTML = `<h3>Current Scenario</h3>
+    <p><strong>Moved levers:</strong> ${moved.join(" · ")}</p>
+    ${broken.length?`<p><strong>Broken:</strong> ${broken.join(", ")}</p>`:""}
+    ${degraded.length?`<p><strong>Degraded:</strong> ${degraded.join(", ")}</p>`:""}
+    <p style="margin-top:8px">The matrix reflects the current lever configuration. Click any row for the underlying consequence text and source.</p>`;
+}
+
+function openLayerModal(lid){
+  const layer = LAYERS[lid]; const st = layerState(lid);
+  document.getElementById("modalKicker").textContent = `${layer.label} — ${STATUS[st.status].label}`;
+  document.getElementById("modalTitle").textContent = st.impacts.length ? "Consequences under selected architecture" : "Full architecture state";
+  let h = `<h4>Baseline (Full Architecture)</h4><div class="box green"><strong>${st.base.headline}</strong>${st.base.text}<br><br><strong>${st.base.metric}</strong></div>`;
+  if(st.impacts.length){
+    h += `<h4>Active Consequences</h4>`;
+    st.impacts.forEach(x => {
+      h += `<div class="box ${x.impact.status}"><strong>${x.lever.title} (${LEVER_STATES[x.state].label}): ${x.impact.headline}</strong>${x.impact.text}<br><br><strong>${x.impact.metric}</strong><div class="source-line">Source: ${x.impact.source}</div></div>`;
+    });
+  }
+  h += `<div class="source-line">Baseline source: ${st.base.source}</div>`;
+  document.getElementById("modalBody").innerHTML = h;
+  document.getElementById("modal").style.display = "flex";
+}
+
+function openImpactModal(leverId, state, layerId){
+  const lever = LEVERS.find(l=>l.id===leverId);
+  const impact = lever.impacts[state][layerId];
+  const layer = LAYERS[layerId];
+  document.getElementById("modalKicker").textContent = `${lever.title} → ${layer.label}`;
+  document.getElementById("modalTitle").textContent = impact.headline;
+  document.getElementById("modalBody").innerHTML = `
+    <h4>The ${LEVER_STATES[state].label} Choice</h4>
+    <div class="box ${state==="degraded"?"red":"amber"}"><strong>${lever.states[state].label}</strong>${lever.states[state].short}</div>
+    <h4>Structural Consequence</h4>
+    <div class="box ${impact.status}">${impact.text}<br><br><strong>${impact.metric}</strong></div>
+    <h4>What the Full Architecture Preserves</h4>
+    <div class="box green"><strong>${lever.states.proposed.label}</strong>${lever.states.proposed.short}</div>
+    <div class="source-line">Source: ${impact.source}</div>`;
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal(){ document.getElementById("modal").style.display = "none"; }
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+window.onload = init;
+</script>
+</body>
+</html>
