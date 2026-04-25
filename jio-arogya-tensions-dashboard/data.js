@@ -2,7 +2,7 @@
 // Jio Arogya Strategic Tensions Explorer — Data Model v2
 // Three-state levers: proposed | moderate | degraded
 // Sources: 260421 Strategic Memo, Principles/Decisions/Op Model,
-// Data Strategy, Shumeet-MDA Verbal Brief, Shumeet Questions.
+// Data Strategy, Verbal Brief, Shumeet Questions.
 // ============================================================
 
 const LAYERS = {
@@ -192,6 +192,6 @@ const SOURCE_DOCUMENTS = [
   "260421_Strategic_Memo.md",
   "260421_Principles_Decisions_Op_Model.md",
   "260421_Data_Strategy.md",
-  "Shumeet-MDA-Verbal-Brief.md",
+  "Verbal-Brief.md",
   "Shumeet-questions after read through in meeting.md"
 ];

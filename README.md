@@ -14,11 +14,11 @@ Three interactive dashboards and seven source documents applying Smithian analys
 
 All under `docs/`:
 
-- **Jio-Bio-Care Proposal Memo** — MDA Note, 20 Apr 2026
+- **Jio-Bio-Care Proposal Memo** — 20 Apr 2026
 - **Strategic Memo** — A Strategic View, 21 Apr 2026
 - **Principles, Decisions & Operating Model** — Pre-Investment Validation
 - **Data Strategy** — Pre-Investment Validation, Data
-- **MDA Verbal Brief** — Speaker prep for MDA-2 pitch
+- **Verbal Brief** — Speaker prep
 - **Strategic Decision Layers** — JioCare, 90-day sprint
 - **Smithian Actor-Chain Analysis** — Self-Interest, Layer by Layer
 

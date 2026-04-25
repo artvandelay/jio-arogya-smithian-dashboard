@@ -321,14 +321,14 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
       <thead><tr><th>Document</th><th>What it does</th><th>When to read it</th></tr></thead>
       <tbody>
         <tr>
-          <td><a href="docs/MDA-Note_200426" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">MDA Note_200426.md</a></td>
+          <td><a href="docs/MDA-Note_200426" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Proposal Memo_200426.md</a></td>
           <td class="role">The master business plan. Six components: daily engagement, navigation, intervention-budget engine, biobank, Research Trust, insurance interface. Four-tier hospital architecture. CHW cadre at 1:1000. Privacy-by-architecture. Data Dividend as civilizational contract.</td>
           <td class="when">Start here if you haven't read the plan. This is the system being analysed.</td>
         </tr>
         <tr>
           <td><a href="docs/260421_Strategic_Memo" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Strategic_Memo.md</a></td>
-          <td class="role">The two-page strategic pre-read sent to the apex group. Frames the opportunity (cardiometabolic claims, biobank economics, AI clinical quality), the six-component operating system, and why only Reliance can build it.</td>
-          <td class="when">Read before the MDA Note if you want the 5-minute framing before the 45-minute detail.</td>
+          <td class="role">The two-page strategic pre-read. Frames the opportunity (cardiometabolic claims, biobank economics, AI clinical quality), the six-component operating system, and why only Reliance can build it.</td>
+          <td class="when">Read before the Proposal Memo if you want the 5-minute framing before the 45-minute detail.</td>
         </tr>
         <tr>
           <td><a href="docs/260421_Data_Strategy" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Data_Strategy.md</a></td>
@@ -346,9 +346,9 @@ a.dcat:hover .num { opacity: 1; color: #fff; }
           <td class="when">Read the full document when a joint's detail panel raises a question the summary doesn't answer. Each joint has a §-reference (e.g. §2.1, §3.2) pointing to the relevant section.</td>
         </tr>
         <tr>
-          <td><a href="docs/Shumeet-MDA-Verbal-Brief" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Shumeet-MDA-Verbal-Brief.md</a></td>
-          <td class="role">The verbal brief and Q-index prepared for the MDA meeting. Anticipatory Q&amp;A mapped to the plan's weak points.</td>
-          <td class="when">Read before presenting to the apex group. The Q-index maps to the dashboard's load-bearing joints.</td>
+          <td><a href="docs/Shumeet-MDA-Verbal-Brief" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">Verbal-Brief.md</a></td>
+          <td class="role">The verbal brief and Q-index. Anticipatory Q&amp;A mapped to the plan's weak points.</td>
+          <td class="when">The Q-index maps to the dashboard's load-bearing joints.</td>
         </tr>
         <tr>
           <td><a href="docs/260421_Principles_Decisions_Op_Model" target="_blank" style="color:var(--ink);text-decoration:none;border-bottom:1px dashed var(--line)">260421_Principles_Decisions_Op_Model.md</a></td>
@@ -533,7 +533,7 @@ const ACTORS = {
     ring: 1,
     dataTouches: [6, 7, 5],
     individual: "No individual inside the Agent — engineer (ships features), PM (ships adoption), applied scientist (ships accuracy), red-teamer (ships safety; structurally pessimistic), ops engineer (ships uptime). Each wakes up thinking about something different.",
-    layerAbove: "Product leadership → Care Entity → Reliance consolidated. Each step trades nuance for speed. Top layer optimises for EBITDA and MDA visibility.",
+    layerAbove: "Product leadership → Care Entity → Reliance consolidated. Each step trades nuance for speed. Top layer optimises for EBITDA and capital efficiency.",
     orgObjective: "Four competing objectives with NO natural equilibrium: Deflection (CFO, insurer), Satisfaction (product), Safety (CMO, legal), Data capture (Research Trust). Default winner without governance = deflection-heavy.",
     aiIntersection: "The Agent IS the AI. Most powerful actor in the system — holds all PII, orchestrates every downstream call, daily touchpoint with member. What IT optimises for is what the SYSTEM optimises for, regardless of org chart. <em>Build risk: voice-first, 8 Indian languages, on a JioPhone (KaiOS) or Jio Bharat device, intermittent connectivity, on-device PII, legally novel consent ledger — largest build in the plan.</em>",
     escalationBoundary: "The member. Agent has no contract, no regulation, no payment to hold the member. Only trust. Earned through many small right answers; lost in one large wrong answer or one unexpected data disclosure.",
@@ -587,12 +587,12 @@ const ACTORS = {
     name: "Care Entity (Jio Arogya Care Services)",
     ring: 2,
     dataTouches: [1, 2, 3, 4, 5, 6, 7],
-    individual: "The CEO. Reports into Reliance consolidated; stands in front of apex group at 12/24/36-month gates. Wants: a credible plan at the first gate (missing any ends the project); organisational integrity across three P&Ls; single owner of the operating system reporting into MDA's office; time for first 5 hires.",
-    layerAbove: "Reliance consolidated / apex group — EBITDA, capital efficiency, strategic optionality, MDA visibility. Care Entity is ONE of many bets. Political survival depends on demonstrating at each gate that it is uniquely positioned AND on track.",
+    individual: "The CEO. Reports into Reliance consolidated; stands in front of review gates at 12/24/36 months. Wants: a credible plan at the first gate (missing any ends the project); organisational integrity across three P&Ls; single owner of the operating system; time for first 5 hires.",
+    layerAbove: "Reliance consolidated — EBITDA, capital efficiency, strategic optionality. Care Entity is ONE of many bets. Survival depends on demonstrating at each gate that it is uniquely positioned AND on track.",
     orgObjective: "Run Care Entity + Allianz JV + Research Trust as three P&Ls — operationally hard as independent units; legally impossible as one.",
     aiIntersection: "Care Entity is the CUSTOMER not OWNER of Clinical AI (sits in Jio Brain). Horizontal (Jio Brain platform with SLAs to Care Entity — client, quality negotiated) or vertical (Care Entity product licensing Jio Brain infra — accountability, applied-science staffing)? Both-at-once is not defensible. Two tempos (ship fast vs ship safe) — default is ship fast and privately document safety debt.",
     escalationBoundary: "Allianz. Care Entity's revenue IS Allianz's cost. No external PMPM benchmark for AI-first integrated care in India. Whatever transfer price lands is defensible only internally. Care Entity wins → Allianz loss ratio suffers → IRDAI reclassifies. Allianz wins → Care Entity starved → cadre can't deliver.",
-    designedValueExchange: "<strong>Cost-plus pass-through with published margin, proactively disclosed to IRDAI</strong> — primary mechanism (not 'independent actuary': the Institute of Actuaries of India has approximately 650 Fellows as of April 2025; the subset qualified to price novel AI-first care products is a handful, most employed by existing insurers; 'independent' is aspirational). Explicit ownership commitment on Clinical AI in writing. Declared care-vs-data time allocation (x% CHW minutes for sample logistics/biobank/dietary recall; y% for clinical delivery). Single owner of the operating system reporting into MDA's office."
+    designedValueExchange: "<strong>Cost-plus pass-through with published margin, proactively disclosed to IRDAI</strong> — primary mechanism (not 'independent actuary': the Institute of Actuaries of India has approximately 650 Fellows as of April 2025; the subset qualified to price novel AI-first care products is a handful, most employed by existing insurers; 'independent' is aspirational). Explicit ownership commitment on Clinical AI in writing. Declared care-vs-data time allocation (x% CHW minutes for sample logistics/biobank/dietary recall; y% for clinical delivery). Single owner of the operating system with direct reporting line."
   },
   allianz: {
     name: "Allianz JV",
@@ -678,21 +678,21 @@ const ACTORS = {
    and related companion documents
 ═══════════════════════════════════════════════════════════════ */
 const SECTION_REFS = {
-  1:  { smithian: "§2.1, §2.2, §6", related: "MDA Note (Personal Agent specification), Strategic Decision Layers §2 (data/tech)" },
-  2:  { smithian: "§2.2, §3.2, §6", related: "MDA Note (navigation layer), Strategic Decision Layers §2 (data/tech)" },
-  3:  { smithian: "§2.3, §4.3, §6", related: "Data Strategy §1.1 (longitudinal data thesis), MDA Note (Research Trust charter)" },
-  4:  { smithian: "§3.1, §6", related: "MDA Note (CHW cadre specification), Strategic Decision Layers §1 (care model)" },
-  5:  { smithian: "§3.1, §4.1, §6", related: "MDA Note (four-tier hospital architecture)" },
-  6:  { smithian: "§3.2, §4.1, §4.2, §6", related: "MDA Note (four-tier contract architecture), Principles_Decisions_Op_Model (capitation)" },
+  1:  { smithian: "§2.1, §2.2, §6", related: "Proposal Memo (Personal Agent specification), Strategic Decision Layers §2 (data/tech)" },
+  2:  { smithian: "§2.2, §3.2, §6", related: "Proposal Memo (navigation layer), Strategic Decision Layers §2 (data/tech)" },
+  3:  { smithian: "§2.3, §4.3, §6", related: "Data Strategy §1.1 (longitudinal data thesis), Proposal Memo (Research Trust charter)" },
+  4:  { smithian: "§3.1, §6", related: "Proposal Memo (CHW cadre specification), Strategic Decision Layers §1 (care model)" },
+  5:  { smithian: "§3.1, §4.1, §6", related: "Proposal Memo (four-tier hospital architecture)" },
+  6:  { smithian: "§3.2, §4.1, §4.2, §6", related: "Proposal Memo (four-tier contract architecture), Principles_Decisions_Op_Model (capitation)" },
   7:  { smithian: "§3.3, §6", related: "Principles_Decisions_Op_Model (transfer pricing, org design)" },
   8:  { smithian: "§3.3, §6", related: "Strategic Decision Layers §2 (Clinical AI ownership), Principles_Decisions_Op_Model (org design)" },
-  9:  { smithian: "§3.4, §6", related: "MDA Note (intervention-budget engine), Principles_Decisions_Op_Model (JV structure)" },
-  10: { smithian: "§3.5, §6", related: "MDA Note (Netmeds integration), Strategic Decision Layers §5 (Netmeds)" },
-  11: { smithian: "§4.4, §6", related: "MDA Note (regulatory framework), Strategic Decision Layers §7 (regulatory engagement)" },
-  12: { smithian: "§4.5, §6", related: "Data Strategy §3 (governance), MDA Note (Research Trust independence)" },
-  13: { smithian: "§4.6, §6", related: "MDA Note (ASHA integration), Strategic Decision Layers §8 (state partnerships)" },
-  14: { smithian: "§5, §6", related: "MDA Note (family decision-making, enrolment design)" },
-  15: { smithian: "§4.7, §6", related: "Strategic Memo (competitive positioning), MDA Note (data moat thesis)" }
+  9:  { smithian: "§3.4, §6", related: "Proposal Memo (intervention-budget engine), Principles_Decisions_Op_Model (JV structure)" },
+  10: { smithian: "§3.5, §6", related: "Proposal Memo (Netmeds integration), Strategic Decision Layers §5 (Netmeds)" },
+  11: { smithian: "§4.4, §6", related: "Proposal Memo (regulatory framework), Strategic Decision Layers §7 (regulatory engagement)" },
+  12: { smithian: "§4.5, §6", related: "Data Strategy §3 (governance), Proposal Memo (Research Trust independence)" },
+  13: { smithian: "§4.6, §6", related: "Proposal Memo (ASHA integration), Strategic Decision Layers §8 (state partnerships)" },
+  14: { smithian: "§5, §6", related: "Proposal Memo (family decision-making, enrolment design)" },
+  15: { smithian: "§4.7, §6", related: "Strategic Memo (competitive positioning), Proposal Memo (data moat thesis)" }
 };
 
 /* ═══════════════════════════════════════════════════════════════

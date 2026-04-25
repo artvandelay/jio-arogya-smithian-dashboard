@@ -1,6 +1,6 @@
 # Jio Arogya Strategic Tensions Explorer
 
-This dashboard is an apex-facing decision artifact for MDA / Manoj Modi.
+This dashboard is a decision artifact for senior leadership.
 
 It is not a claim register, FAQ table, or operating checklist. It models four load-bearing strategic levers and shows the consequences of degrading any one of them across the five Jio Arogya operating layers.
 
@@ -59,7 +59,7 @@ This artifact is sourced from:
 - `260421_Strategic_Memo.md`
 - `260421_Principles_Decisions_Op_Model.md`
 - `260421_Data_Strategy.md`
-- `Shumeet-MDA-Verbal-Brief.md`
+- `Verbal-Brief.md`
 - `Shumeet-questions after read through in meeting.md`
 
 The early AI Clinic Execution Plan was used as context only; the dashboard is framed around the final shared bundle.
