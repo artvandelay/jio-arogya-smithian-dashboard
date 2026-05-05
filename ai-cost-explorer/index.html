@@ -7,71 +7,98 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-K04E80T8P0"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-K04E80T8P0');</script>
 <title>JioCare AI Investment Decision Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg-primary: #0f1419;
-  --bg-secondary: #1a2332;
-  --bg-card: #1e2a3a;
-  --bg-card-hover: #243447;
-  --text-primary: #e8edf3;
-  --text-secondary: #8899aa;
-  --text-muted: #5a6b7c;
-  --border: #2a3a4a;
-  --rent-color: #00d4aa;
-  --rent-bg: rgba(0, 212, 170, 0.1);
-  --build-color: #4da6ff;
-  --build-bg: rgba(77, 166, 255, 0.1);
-  --delayed-color: #ff8c42;
-  --delayed-bg: rgba(255, 140, 66, 0.1);
-  --accent: #6366f1;
-  --warning: #f59e0b;
-  --success: #10b981;
-  --danger: #ef4444;
+  --bg-primary: #fbfaf7;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --rule: #1f2937;
+  --rent-color: #0e5c35;
+  --rent-bg: rgba(14, 92, 53, 0.06);
+  --build-color: #1e40af;
+  --build-bg: rgba(30, 64, 175, 0.06);
+  --delayed-color: #92400e;
+  --delayed-bg: rgba(146, 64, 14, 0.06);
+  --accent: #1e40af;
+  --warning: #92400e;
+  --success: #0e5c35;
+  --danger: #991b1b;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
 }
 
+.site-nav {
+  background: var(--rule);
+  padding: 0.5rem 1.5rem;
+  font-size: 0.8rem;
+}
+.site-nav a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 500;
+}
+.site-nav a:hover { color: #fff; }
+
 .container {
-  max-width: 1600px;
+  max-width: 1520px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 28px 28px 64px;
 }
 
 header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.2rem;
+  border-top: 3px solid var(--rule);
   border-bottom: 1px solid var(--border);
 }
 
+header .eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
 header h1 {
-  font-size: 2.2rem;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.8rem;
   font-weight: 700;
   letter-spacing: -0.5px;
-  margin-bottom: 0.4rem;
-  background: linear-gradient(135deg, #e8edf3, #8899aa);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.3rem;
+  color: var(--text-primary);
 }
 
 header p {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .members-strip {
   background: var(--bg-secondary);
-  border-radius: 12px;
+  border-radius: 2px;
   padding: 1.2rem 1.5rem;
   margin-bottom: 2rem;
   border: 1px solid var(--border);
@@ -111,9 +138,9 @@ header p {
   align-items: center;
   gap: 0.25rem;
   padding: 0.12rem 0.45rem;
-  border-radius: 999px;
+  border-radius: 2px;
   border: 1px solid var(--border);
-  background: rgba(42, 58, 74, 0.22);
+  background: #f8fafc;
   color: var(--text-muted);
   font-size: 0.66rem;
   font-weight: 700;
@@ -123,8 +150,8 @@ header p {
 
 .status-pill.custom {
   color: var(--warning);
-  border-color: rgba(245, 158, 11, 0.35);
-  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(146, 64, 14, 0.35);
+  background: rgba(146, 64, 14, 0.06);
 }
 
 .members-table {
@@ -138,19 +165,17 @@ header p {
   text-align: center;
   padding: 0.55rem 0.35rem 0.6rem;
   background: var(--bg-card);
-  border-radius: 8px;
+  border-radius: 2px;
   border: 1px solid var(--border);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s;
 }
 
 .member-cell.custom {
-  border-color: rgba(245, 158, 11, 0.42);
-  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.18);
+  border-color: rgba(146, 64, 14, 0.42);
 }
 
 .member-cell.invalid {
-  border-color: rgba(239, 68, 68, 0.45);
-  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.18);
+  border-color: rgba(153, 27, 27, 0.45);
 }
 
 .member-cell .year-label {
@@ -162,7 +187,7 @@ header p {
 .member-cell .member-count {
   width: 100%;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 2px;
   padding: 0.28rem 0.22rem;
   font-size: 0.85rem;
   font-weight: 700;
@@ -174,8 +199,8 @@ header p {
 
 .member-cell .member-count:focus {
   outline: none;
-  border-color: rgba(99, 102, 241, 0.65);
-  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(30, 64, 175, 0.5);
+  background: rgba(30, 64, 175, 0.04);
 }
 
 .cell-badge {
@@ -184,8 +209,8 @@ header p {
   right: 0.32rem;
   display: none;
   padding: 0.08rem 0.28rem;
-  border-radius: 999px;
-  background: rgba(245, 158, 11, 0.14);
+  border-radius: 2px;
+  background: rgba(146, 64, 14, 0.08);
   color: var(--warning);
   font-size: 0.56rem;
   font-weight: 700;
@@ -211,15 +236,14 @@ header p {
 
 .posture-card {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: 2px;
   padding: 1.8rem;
   border: 1px solid var(--border);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: box-shadow 0.2s;
 }
 
 .posture-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .posture-card.rent { border-top: 3px solid var(--rent-color); }
@@ -237,7 +261,7 @@ header p {
 .metric-section {
   margin-top: 0.8rem;
   padding-top: 0.8rem;
-  border-top: 1px solid rgba(42, 58, 74, 0.7);
+  border-top: 1px solid var(--border);
   color: var(--text-primary);
   font-size: 0.72rem;
   font-weight: 700;
@@ -259,9 +283,9 @@ header p {
   transform: translateX(-50%);
   width: 260px;
   padding: 10px 12px;
-  background: #1a2332;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  border-radius: 2px;
   color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 400;
@@ -271,7 +295,7 @@ header p {
   z-index: 100;
   pointer-events: none;
   transition: opacity 0.15s;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 .info-tip:hover .tip-text {
   visibility: visible;
@@ -283,7 +307,7 @@ header p {
   justify-content: space-between;
   align-items: baseline;
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(42, 58, 74, 0.5);
+  border-bottom: 1px solid var(--border);
 }
 
 .metric-row:last-child { border-bottom: none; }
@@ -301,7 +325,7 @@ header p {
 
 .controls-section {
   background: var(--bg-secondary);
-  border-radius: 16px;
+  border-radius: 2px;
   padding: 2rem;
   margin-bottom: 2.5rem;
   border: 1px solid var(--border);
@@ -355,9 +379,9 @@ header p {
 .slider-note {
   font-size: 0.75rem;
   color: var(--warning);
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  border-radius: 6px;
+  background: rgba(146, 64, 14, 0.04);
+  border: 1px solid rgba(146, 64, 14, 0.15);
+  border-radius: 2px;
   padding: 0.5rem 0.7rem;
   margin-top: 0.3rem;
   line-height: 1.4;
@@ -367,29 +391,29 @@ input[type="range"] {
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--border);
+  height: 4px;
+  border-radius: 2px;
+  background: #cbd5e1;
   outline: none;
   cursor: pointer;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--bg-primary);
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  background: var(--rule);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--bg-primary);
+  background: var(--rule);
+  border: 2px solid #ffffff;
 }
 
 .presets-section {
@@ -412,9 +436,9 @@ input[type="range"]::-moz-range-thumb {
 
 .preset-btn {
   padding: 0.5rem 1.1rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
+  border-radius: 2px;
+  border: 1px solid var(--border-medium);
+  background: #ffffff;
   color: var(--text-primary);
   font-size: 0.85rem;
   font-weight: 500;
@@ -423,14 +447,13 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .preset-btn:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--accent);
+  border-color: var(--rule);
 }
 
 .preset-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+  background: var(--rule);
+  border-color: var(--rule);
+  color: #ffffff;
 }
 
 .charts-grid {
@@ -442,7 +465,7 @@ input[type="range"]::-moz-range-thumb {
 
 .chart-container {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: 2px;
   padding: 1.5rem;
   border: 1px solid var(--border);
 }
@@ -468,8 +491,8 @@ input[type="range"]::-moz-range-thumb {
 
 .toggle-btn {
   padding: 0.35rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid var(--border);
+  border-radius: 2px;
+  border: 1px solid var(--border-medium);
   background: transparent;
   color: var(--text-secondary);
   font-size: 0.75rem;
@@ -478,9 +501,9 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .toggle-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+  background: var(--rule);
+  border-color: var(--rule);
+  color: #ffffff;
 }
 
 .chart-wrapper {
@@ -490,7 +513,7 @@ input[type="range"]::-moz-range-thumb {
 
 .cost-table-section {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: 2px;
   padding: 1.5rem;
   border: 1px solid var(--border);
   margin-bottom: 2.5rem;
@@ -518,8 +541,9 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .cost-table th {
-  color: var(--text-muted);
-  font-weight: 500;
+  color: #ffffff;
+  background: var(--rule);
+  font-weight: 600;
   font-size: 0.75rem;
 }
 
@@ -538,7 +562,7 @@ input[type="range"]::-moz-range-thumb {
 
 .insights-section {
   background: var(--bg-secondary);
-  border-radius: 16px;
+  border-radius: 2px;
   padding: 2rem;
   border: 1px solid var(--border);
   margin-bottom: 2rem;
@@ -558,8 +582,9 @@ input[type="range"]::-moz-range-thumb {
 
 .insight-card {
   background: var(--bg-card);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 1.2rem;
+  border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
 }
 
@@ -602,7 +627,7 @@ input[type="range"]::-moz-range-thumb {
 
 .ref-panel {
   background: var(--bg-card);
-  border-radius: 12px;
+  border-radius: 2px;
   border: 1px solid var(--border);
   margin-bottom: 1rem;
   overflow: hidden;
@@ -633,8 +658,8 @@ input[type="range"]::-moz-range-thumb {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--accent);
-  background: rgba(99, 102, 241, 0.12);
-  border-radius: 4px;
+  background: rgba(30, 64, 175, 0.08);
+  border-radius: 2px;
   padding: 0.15rem 0.5rem;
   margin-right: 0.7rem;
   font-variant-numeric: tabular-nums;
@@ -700,7 +725,7 @@ input[type="range"]::-moz-range-thumb {
 
 .ref-table th, .ref-table td {
   padding: 0.4rem 0.6rem;
-  border-bottom: 1px solid rgba(42, 58, 74, 0.4);
+  border-bottom: 1px solid var(--border);
   text-align: left;
   vertical-align: top;
 }
@@ -711,7 +736,7 @@ input[type="range"]::-moz-range-thumb {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  background: rgba(42, 58, 74, 0.2);
+  background: #f8fafc;
   position: sticky;
   top: 0;
 }
@@ -721,11 +746,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .ref-table tbody tr:nth-child(even) {
-  background: rgba(42, 58, 74, 0.08);
+  background: #f8fafc;
 }
 
 .ref-table tbody tr:hover {
-  background: rgba(42, 58, 74, 0.18);
+  background: #f1f5f9;
 }
 
 .ref-table td.num, .ref-table th.num {
@@ -760,7 +785,7 @@ input[type="range"]::-moz-range-thumb {
 
 .data-asset-section {
   background: var(--bg-secondary);
-  border-radius: 16px;
+  border-radius: 2px;
   padding: 2rem;
   margin-bottom: 2.5rem;
   border: 1px solid var(--border);
@@ -791,8 +816,8 @@ input[type="range"]::-moz-range-thumb {
   color: var(--text-muted);
   margin-top: 0.6rem;
   padding: 0.5rem 0.7rem;
-  background: rgba(42, 58, 74, 0.2);
-  border-radius: 6px;
+  background: #f8fafc;
+  border-radius: 2px;
   line-height: 1.4;
 }
 
@@ -815,19 +840,21 @@ input[type="range"]::-moz-range-thumb {
 </style>
 </head>
 <body>
-<div id="_gate" style="display:none;position:fixed;inset:0;z-index:9999;background:#0f1419;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+<div id="_gate" style="display:none;position:fixed;inset:0;z-index:9999;background:#fbfaf7;align-items:center;justify-content:center;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
 <div style="text-align:center;max-width:340px;padding:24px">
-<div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#8899aa;font-weight:700;margin-bottom:12px">Jio Arogya · AI Cost Explorer</div>
-<div style="font-size:15px;color:#e8edf3;margin-bottom:20px">This site is access-restricted.<br>Please enter the password to continue.</div>
-<input id="_pw" type="password" placeholder="Password" autofocus style="width:100%;padding:12px 14px;border:1px solid #2a3a4a;background:#1a2332;color:#e8edf3;font-size:15px;font-family:inherit;margin-bottom:10px;outline:none">
-<button id="_go" style="width:100%;padding:12px;background:#6366f1;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Enter</button>
-<div id="_err" style="display:none;color:#ef4444;font-size:12px;margin-top:10px">Incorrect password. Try again.</div>
+<div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#64748b;font-weight:700;margin-bottom:12px">Jio Arogya · AI Cost Explorer</div>
+<div style="font-size:15px;color:#0f172a;margin-bottom:20px">This site is access-restricted.<br>Please enter the password to continue.</div>
+<input id="_pw" type="password" placeholder="Password" autofocus style="width:100%;padding:12px 14px;border:1px solid #cbd5e1;background:#ffffff;color:#0f172a;font-size:15px;font-family:inherit;margin-bottom:10px;outline:none;border-radius:2px">
+<button id="_go" style="width:100%;padding:12px;background:#1f2937;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border-radius:2px">Enter</button>
+<div id="_err" style="display:none;color:#991b1b;font-size:12px;margin-top:10px">Incorrect password. Try again.</div>
 </div>
 </div>
 <noscript><div style="padding:40px;text-align:center;font-family:sans-serif;color:#e8edf3">JavaScript is required to view this site.</div></noscript>
 <div id="_content" style="display:none">
+<div class="site-nav"><a href="../">← Home</a></div>
 <div class="container">
   <header>
+    <div class="eyebrow">Jio Arogya · AI Cost Model</div>
     <h1>JioCare AI Investment Decision Explorer</h1>
     <p>Interactive cost analysis: Rent vs Build postures | Confidential — May 2026</p>
   </header>
@@ -1821,8 +1848,8 @@ function getChartAData(data) {
   return {
     labels: YEARS,
     datasets: [
-      { label: 'RENT', data: data.rent[key], backgroundColor: 'rgba(0,212,170,0.7)', borderColor: 'var(--rent-color)', borderWidth: 2 },
-      { label: getBuildName(params.delay), data: data.build[key], backgroundColor: 'rgba(77,166,255,0.7)', borderColor: 'var(--build-color)', borderWidth: 2 }
+      { label: 'RENT', data: data.rent[key], backgroundColor: 'rgba(14,92,53,0.35)', borderColor: '#0e5c35', borderWidth: 2 },
+      { label: getBuildName(params.delay), data: data.build[key], backgroundColor: 'rgba(30,64,175,0.35)', borderColor: '#1e40af', borderWidth: 2 }
     ]
   };
 }
@@ -1832,12 +1859,12 @@ const chartOptions = {
   maintainAspectRatio: false,
   animation: { duration: 300 },
   plugins: {
-    legend: { labels: { color: '#8899aa', font: { size: 11 } } },
+    legend: { labels: { color: '#334155', font: { size: 11 } } },
     tooltip: {
-      backgroundColor: '#1e2a3a',
-      titleColor: '#e8edf3',
-      bodyColor: '#8899aa',
-      borderColor: '#2a3a4a',
+      backgroundColor: '#ffffff',
+      titleColor: '#0f172a',
+      bodyColor: '#334155',
+      borderColor: '#cbd5e1',
       borderWidth: 1,
       callbacks: {
         label: ctx => ` ${ctx.dataset.label}: ${fmtPrecise(ctx.parsed.y)}`
@@ -1845,8 +1872,8 @@ const chartOptions = {
     }
   },
   scales: {
-    x: { ticks: { color: '#5a6b7c' }, grid: { color: 'rgba(42,58,74,0.3)' } },
-    y: { ticks: { color: '#5a6b7c', callback: value => fmt(value) }, grid: { color: 'rgba(42,58,74,0.3)' } }
+    x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(226,232,240,0.7)' } },
+    y: { ticks: { color: '#64748b', callback: value => fmt(value) }, grid: { color: 'rgba(226,232,240,0.7)' } }
   }
 };
 
@@ -1855,10 +1882,10 @@ function getChartDData(data) {
   return {
     labels: YEARS,
     datasets: [
-      { label: 'RENT Capex', data: data.rent.capex, backgroundColor: 'rgba(0,212,170,0.28)', stack: 'rent' },
-      { label: 'RENT Inference OpEx', data: data.rent.opex, backgroundColor: 'rgba(0,212,170,0.72)', stack: 'rent' },
-      { label: `${getBuildName(params.delay)} Capex`, data: data.build.capex, backgroundColor: 'rgba(77,166,255,0.28)', stack: 'build' },
-      { label: `${getBuildName(params.delay)} Inference OpEx`, data: data.build.opex, backgroundColor: 'rgba(77,166,255,0.72)', stack: 'build' }
+      { label: 'RENT Capex', data: data.rent.capex, backgroundColor: 'rgba(14,92,53,0.2)', stack: 'rent' },
+      { label: 'RENT Inference OpEx', data: data.rent.opex, backgroundColor: 'rgba(14,92,53,0.5)', stack: 'rent' },
+      { label: `${getBuildName(params.delay)} Capex`, data: data.build.capex, backgroundColor: 'rgba(30,64,175,0.2)', stack: 'build' },
+      { label: `${getBuildName(params.delay)} Inference OpEx`, data: data.build.opex, backgroundColor: 'rgba(30,64,175,0.5)', stack: 'build' }
     ]
   };
 }
@@ -1878,8 +1905,8 @@ function initCharts(data) {
     data: {
       labels: YEARS,
       datasets: [
-        { label: 'RENT', data: cumulative(data.rent.total), borderColor: '#00d4aa', backgroundColor: 'rgba(0,212,170,0.05)', fill: true, tension: 0.3 },
-        { label: getBuildName(params.delay), data: cumulative(data.build.total), borderColor: '#4da6ff', backgroundColor: 'rgba(77,166,255,0.05)', fill: true, tension: 0.3 }
+        { label: 'RENT', data: cumulative(data.rent.total), borderColor: '#0e5c35', backgroundColor: 'rgba(14,92,53,0.05)', fill: true, tension: 0.3 },
+        { label: getBuildName(params.delay), data: cumulative(data.build.total), borderColor: '#1e40af', backgroundColor: 'rgba(30,64,175,0.05)', fill: true, tension: 0.3 }
       ]
     },
     options: { ...chartOptions }
@@ -1890,15 +1917,15 @@ function initCharts(data) {
     data: {
       labels: YEARS,
       datasets: [
-        { label: 'RENT', data: data.rent.perMember, borderColor: '#00d4aa', tension: 0.3, pointRadius: 4 },
-        { label: getBuildName(params.delay), data: data.build.perMember, borderColor: '#4da6ff', tension: 0.3, pointRadius: 4 }
+        { label: 'RENT', data: data.rent.perMember, borderColor: '#0e5c35', tension: 0.3, pointRadius: 4 },
+        { label: getBuildName(params.delay), data: data.build.perMember, borderColor: '#1e40af', tension: 0.3, pointRadius: 4 }
       ]
     },
     options: {
       ...chartOptions,
       scales: {
         ...chartOptions.scales,
-        y: { ...chartOptions.scales.y, ticks: { color: '#5a6b7c', callback: value => '$' + value.toFixed(1) } }
+        y: { ...chartOptions.scales.y, ticks: { color: '#64748b', callback: value => '$' + value.toFixed(1) } }
       }
     }
   });
@@ -1908,7 +1935,7 @@ function initCharts(data) {
     data: getChartDData(data),
     options: {
       ...chartOptions,
-      plugins: { ...chartOptions.plugins, legend: { labels: { color: '#8899aa' } } },
+      plugins: { ...chartOptions.plugins, legend: { labels: { color: '#334155' } } },
       scales: {
         ...chartOptions.scales,
         x: { ...chartOptions.scales.x, stacked: true },
@@ -2189,13 +2216,13 @@ document.addEventListener('keydown', event => {
 
 // ─── Data Asset Accumulation ─────────────────────────────────────────────────
 const DATA_ASSET_SOURCES = [
-  { name: 'Agent conversations', tokPerEvent: 1200, eventsPerMember: 496, color: 'rgba(99,102,241,0.75)', border: '#6366f1' },
-  { name: 'Doctor consults', tokPerEvent: 24000, eventsPerMember: 13, color: 'rgba(0,212,170,0.75)', border: '#00d4aa' },
-  { name: 'Specialist/hospital', tokPerEvent: 67000, eventsPerMember: 2.15, color: 'rgba(255,140,66,0.75)', border: '#ff8c42' },
-  { name: 'Pharmacy/Rx', tokPerEvent: 7500, eventsPerMember: 12, color: 'rgba(245,158,11,0.75)', border: '#f59e0b' },
-  { name: 'CHW visit records', tokPerEvent: 13000, eventsPerMember: 5, color: 'rgba(77,166,255,0.75)', border: '#4da6ff' },
-  { name: 'OCR documents', tokPerEvent: 1000, eventsPerMember: 64, color: 'rgba(239,68,68,0.75)', border: '#ef4444' },
-  { name: 'Voice (ASR)', tokPerEvent: 150, eventsPerMember: 213, color: 'rgba(16,185,129,0.75)', border: '#10b981' }
+  { name: 'Agent conversations', tokPerEvent: 1200, eventsPerMember: 496, color: 'rgba(30,64,175,0.55)', border: '#1e40af' },
+  { name: 'Doctor consults', tokPerEvent: 24000, eventsPerMember: 13, color: 'rgba(14,92,53,0.55)', border: '#0e5c35' },
+  { name: 'Specialist/hospital', tokPerEvent: 67000, eventsPerMember: 2.15, color: 'rgba(146,64,14,0.55)', border: '#92400e' },
+  { name: 'Pharmacy/Rx', tokPerEvent: 7500, eventsPerMember: 12, color: 'rgba(180,83,9,0.45)', border: '#b45309' },
+  { name: 'CHW visit records', tokPerEvent: 13000, eventsPerMember: 5, color: 'rgba(71,85,105,0.5)', border: '#475569' },
+  { name: 'OCR documents', tokPerEvent: 1000, eventsPerMember: 64, color: 'rgba(153,27,27,0.45)', border: '#991b1b' },
+  { name: 'Voice (ASR)', tokPerEvent: 150, eventsPerMember: 213, color: 'rgba(5,150,105,0.45)', border: '#059669' }
 ];
 
 const TOKENS_PER_MEMBER = 2560000;
@@ -2252,23 +2279,23 @@ function getDataCumChartData(da) {
       {
         label: 'Raw data exhaust (cumulative)',
         data: da.cumRaw,
-        borderColor: '#6366f1',
-        backgroundColor: 'rgba(99,102,241,0.15)',
+        borderColor: '#1e40af',
+        backgroundColor: 'rgba(30,64,175,0.08)',
         fill: true,
         tension: 0.3,
         pointRadius: 5,
-        pointBackgroundColor: '#6366f1',
+        pointBackgroundColor: '#1e40af',
         order: 1
       },
       {
         label: 'Training-usable corpus (~18% survival)',
         data: da.cumUsable,
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16,185,129,0.25)',
+        borderColor: '#0e5c35',
+        backgroundColor: 'rgba(14,92,53,0.1)',
         fill: true,
         tension: 0.3,
         pointRadius: 5,
-        pointBackgroundColor: '#10b981',
+        pointBackgroundColor: '#0e5c35',
         order: 2
       }
     ]
@@ -2298,7 +2325,7 @@ const dataCumPlugins = [{
       ctx.save();
       ctx.beginPath();
       ctx.setLineDash([3, 3]);
-      ctx.strokeStyle = 'rgba(136,153,170,0.3)';
+      ctx.strokeStyle = 'rgba(100,116,139,0.3)';
       ctx.lineWidth = 1;
       ctx.moveTo(x, yAxis.top);
       ctx.lineTo(x, yAxis.bottom);
@@ -2316,8 +2343,8 @@ const dataCumPlugins = [{
     const members = dataAssetCache.members;
 
     ctx.save();
-    ctx.font = '10px -apple-system, BlinkMacSystemFont, sans-serif';
-    ctx.fillStyle = '#5a6b7c';
+    ctx.font = '10px Inter, -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#64748b';
     ctx.textAlign = 'center';
     YEARS.forEach((_, i) => {
       const x = xScale.getPixelForValue(i);
@@ -2338,7 +2365,7 @@ const dataCumPlugins = [{
 
       ctx.beginPath();
       ctx.setLineDash([3, 3]);
-      ctx.strokeStyle = 'rgba(99,102,241,0.3)';
+      ctx.strokeStyle = 'rgba(30,64,175,0.3)';
       ctx.lineWidth = 1;
       ctx.moveTo(x, yScale.bottom);
       ctx.lineTo(x, y);
@@ -2346,12 +2373,12 @@ const dataCumPlugins = [{
       ctx.setLineDash([]);
 
       const labelY = Math.max(y - 28, yScale.top + 10);
-      ctx.font = 'bold 10px -apple-system, BlinkMacSystemFont, sans-serif';
-      ctx.fillStyle = '#e8edf3';
+      ctx.font = 'bold 10px Inter, -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = '#0f172a';
       ctx.textAlign = 'center';
       ctx.fillText(m.text, x, labelY);
-      ctx.font = '9px -apple-system, BlinkMacSystemFont, sans-serif';
-      ctx.fillStyle = '#8899aa';
+      ctx.font = '9px Inter, -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = '#64748b';
       ctx.fillText(m.sub, x, labelY + 12);
     });
 
@@ -2374,13 +2401,13 @@ function initDataAssetCharts(data) {
       layout: { padding: { bottom: 22 } },
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#8899aa', font: { size: 11 } } },
+        legend: { labels: { color: '#334155', font: { size: 11 } } },
         tooltip: {
-          backgroundColor: '#1a2332',
-          titleColor: '#e8edf3',
-          bodyColor: '#8899aa',
-          footerColor: '#5a6b7c',
-          borderColor: '#2a3a4a',
+          backgroundColor: '#ffffff',
+          titleColor: '#0f172a',
+          bodyColor: '#334155',
+          footerColor: '#64748b',
+          borderColor: '#cbd5e1',
           borderWidth: 1,
           padding: 14,
           bodySpacing: 4,
@@ -2422,15 +2449,15 @@ function initDataAssetCharts(data) {
       },
       scales: {
         x: {
-          ticks: { color: '#5a6b7c' },
-          grid: { color: 'rgba(42,58,74,0.3)' }
+          ticks: { color: '#64748b' },
+          grid: { color: 'rgba(226,232,240,0.7)' }
         },
         y: {
           ticks: {
-            color: '#5a6b7c',
+            color: '#64748b',
             callback: v => formatTokensShort(v)
           },
-          grid: { color: 'rgba(42,58,74,0.3)' }
+          grid: { color: 'rgba(226,232,240,0.7)' }
         }
       }
     },
@@ -2447,14 +2474,14 @@ function initDataAssetCharts(data) {
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: {
-          labels: { color: '#8899aa', font: { size: 10 }, boxWidth: 12 },
+          labels: { color: '#334155', font: { size: 10 }, boxWidth: 12 },
           position: 'bottom'
         },
         tooltip: {
-          backgroundColor: '#1a2332',
-          titleColor: '#e8edf3',
-          bodyColor: '#8899aa',
-          borderColor: '#2a3a4a',
+          backgroundColor: '#ffffff',
+          titleColor: '#0f172a',
+          bodyColor: '#334155',
+          borderColor: '#cbd5e1',
           borderWidth: 1,
           padding: 12,
           bodyFont: { size: 11 },
@@ -2479,16 +2506,16 @@ function initDataAssetCharts(data) {
       scales: {
         x: {
           stacked: true,
-          ticks: { color: '#5a6b7c' },
-          grid: { color: 'rgba(42,58,74,0.3)' }
+          ticks: { color: '#64748b' },
+          grid: { color: 'rgba(226,232,240,0.7)' }
         },
         y: {
           stacked: true,
           ticks: {
-            color: '#5a6b7c',
+            color: '#64748b',
             callback: v => formatTokensShort(v)
           },
-          grid: { color: 'rgba(42,58,74,0.3)' }
+          grid: { color: 'rgba(226,232,240,0.7)' }
         }
       }
     }
@@ -2507,8 +2534,8 @@ function updateDataAssetCharts(data) {
   chartDataComp.update('none');
 }
 
-Chart.defaults.color = '#8899aa';
-Chart.defaults.borderColor = 'rgba(42,58,74,0.3)';
+Chart.defaults.color = '#334155';
+Chart.defaults.borderColor = 'rgba(226,232,240,0.7)';
 const initialData = computeData(getSliders());
 renderMembersStrip(initialData.members);
 renderEngagementStrip(initialData.engagementByYear);
