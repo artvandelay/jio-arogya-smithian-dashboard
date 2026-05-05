@@ -1748,6 +1748,14 @@ function renderDashboard(data) {
         <span class="metric-value">${fmtPrecise(sum7(data[posture.key].total))}</span>
       </div>
       <div class="metric-row">
+        <span class="metric-label">Y5 per-year cost</span>
+        <span class="metric-value">${fmtPrecise(data[posture.key].total[4])}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Y7 per-year cost</span>
+        <span class="metric-value">${fmtPrecise(data[posture.key].total[6])}</span>
+      </div>
+      <div class="metric-row">
         <span class="metric-label">Y7 $/member</span>
         <span class="metric-value">$${data[posture.key].perMember[6].toFixed(2)}</span>
       </div>
