@@ -234,6 +234,17 @@ header p {
 .posture-card.rent h3 { color: var(--rent-color); }
 .posture-card.build h3 { color: var(--build-color); }
 
+.metric-section {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(42, 58, 74, 0.7);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .metric-row {
   display: flex;
   justify-content: space-between;
@@ -1724,44 +1735,44 @@ function renderDashboard(data) {
       key: 'rent',
       name: 'RENT',
       cls: 'rent',
-      ownAI: 'Never — API only',
-      capex: fmtPrecise(sum7(data.rent.capex))
+      ownAI: 'Never — API only'
     },
     {
       key: 'build',
       name: getBuildName(params.delay),
       cls: 'build',
-      ownAI: getOwnAiTiming(params.delay),
-      capex: fmtPrecise(sum7(data.build.capex))
+      ownAI: getOwnAiTiming(params.delay)
     }
   ];
 
   document.getElementById('dashboard').innerHTML = postures.map(posture => `
     <div class="posture-card ${posture.cls}">
       <h3>${posture.name}</h3>
+      <div class="metric-section">At Year 5</div>
       <div class="metric-row">
-        <span class="metric-label">5-Year Total</span>
-        <span class="metric-value">${fmtPrecise(sum5(data[posture.key].total))}</span>
+        <span class="metric-label">Cumulative OpEx</span>
+        <span class="metric-value">${fmtPrecise(sum5(data[posture.key].opex))}</span>
       </div>
       <div class="metric-row">
-        <span class="metric-label">7-Year Total</span>
-        <span class="metric-value">${fmtPrecise(sum7(data[posture.key].total))}</span>
+        <span class="metric-label">$/member/year</span>
+        <span class="metric-value">$${data[posture.key].perMember[4].toFixed(2)}</span>
       </div>
       <div class="metric-row">
-        <span class="metric-label">Y5 per-year cost</span>
-        <span class="metric-value">${fmtPrecise(data[posture.key].total[4])}</span>
+        <span class="metric-label">Cumulative Capex</span>
+        <span class="metric-value">${fmtPrecise(sum5(data[posture.key].capex))}</span>
+      </div>
+      <div class="metric-section">At Year 7</div>
+      <div class="metric-row">
+        <span class="metric-label">Cumulative OpEx</span>
+        <span class="metric-value">${fmtPrecise(sum7(data[posture.key].opex))}</span>
       </div>
       <div class="metric-row">
-        <span class="metric-label">Y7 per-year cost</span>
-        <span class="metric-value">${fmtPrecise(data[posture.key].total[6])}</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">Y7 $/member</span>
+        <span class="metric-label">$/member/year</span>
         <span class="metric-value">$${data[posture.key].perMember[6].toFixed(2)}</span>
       </div>
       <div class="metric-row">
-        <span class="metric-label">Total Capex (7yr)</span>
-        <span class="metric-value">${posture.capex}</span>
+        <span class="metric-label">Cumulative Capex</span>
+        <span class="metric-value">${fmtPrecise(sum7(data[posture.key].capex))}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Own clinical AI timing</span>
