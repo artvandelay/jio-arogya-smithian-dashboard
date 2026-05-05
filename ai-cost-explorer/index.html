@@ -245,6 +245,39 @@ header p {
   text-transform: uppercase;
 }
 
+.info-tip {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dashed var(--text-muted);
+}
+.info-tip .tip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  padding: 10px 12px;
+  background: #1a2332;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-transform: none;
+  letter-spacing: 0;
+  z-index: 100;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.info-tip:hover .tip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 .metric-row {
   display: flex;
   justify-content: space-between;
@@ -901,7 +934,7 @@ input[type="range"]::-moz-range-thumb {
       <div class="chart-wrapper"><canvas id="chartC"></canvas></div>
     </div>
     <div class="chart-container">
-      <h3>Capex vs OpEx Breakdown</h3>
+      <h3><span class="info-tip">Capex<span class="tip-text">RENT capex: PII gate, safety pipeline, STT/TTS, orchestration, R&amp;D team. BUILD capex adds training compute, GPU cluster, corpus, annotation, distillation, eval infra.</span></span> vs OpEx Breakdown</h3>
       <p class="chart-subtitle">Investment structure by year — Rent vs Build grouped stacked view ($M)</p>
       <div class="chart-wrapper"><canvas id="chartD"></canvas></div>
     </div>
@@ -1735,13 +1768,15 @@ function renderDashboard(data) {
       key: 'rent',
       name: 'RENT',
       cls: 'rent',
-      ownAI: 'Never — API only'
+      ownAI: 'Never — API only',
+      capexDef: 'PII gate, safety pipeline, STT/TTS integration, orchestration layer, prompt-engineering &amp; integration R&amp;D team. No training compute or GPU cluster.'
     },
     {
       key: 'build',
       name: getBuildName(params.delay),
       cls: 'build',
-      ownAI: getOwnAiTiming(params.delay)
+      ownAI: getOwnAiTiming(params.delay),
+      capexDef: 'Training compute (Phases 0–3), GPU cluster (768 H100/H200), corpus construction, annotation, synthetic data, distillation, eval &amp; safety infra, PII gate, R&amp;D team (45→95).'
     }
   ];
 
@@ -1758,7 +1793,7 @@ function renderDashboard(data) {
         <span class="metric-value">$${data[posture.key].perMember[4].toFixed(2)}</span>
       </div>
       <div class="metric-row">
-        <span class="metric-label">Cumulative Capex</span>
+        <span class="metric-label"><span class="info-tip">Cumulative Capex<span class="tip-text">${posture.capexDef}</span></span></span>
         <span class="metric-value">${fmtPrecise(sum5(data[posture.key].capex))}</span>
       </div>
       <div class="metric-section">At Year 7</div>
@@ -1771,7 +1806,7 @@ function renderDashboard(data) {
         <span class="metric-value">$${data[posture.key].perMember[6].toFixed(2)}</span>
       </div>
       <div class="metric-row">
-        <span class="metric-label">Cumulative Capex</span>
+        <span class="metric-label"><span class="info-tip">Cumulative Capex<span class="tip-text">${posture.capexDef}</span></span></span>
         <span class="metric-value">${fmtPrecise(sum7(data[posture.key].capex))}</span>
       </div>
       <div class="metric-row">
@@ -1890,6 +1925,10 @@ function renderCostTable(data) {
   const members = data.members;
   const sum5 = arr => arr.slice(0, 5).reduce((a, b) => a + b, 0);
   const sum7 = arr => arr.reduce((a, b) => a + b, 0);
+  const capexDefs = {
+    rent: 'PII gate, safety pipeline, STT/TTS integration, orchestration layer, prompt-engineering & integration R&D team. No training compute or GPU cluster.',
+    build: 'Training compute (Phases 0–3), GPU cluster (768 H100/H200), corpus construction, annotation, synthetic data, distillation, eval & safety infra, PII gate, R&D team (45→95).'
+  };
   const postures = [
     { key: 'rent', name: 'RENT', cls: 'rent-row' },
     { key: 'build', name: getBuildName(params.delay), cls: 'build-row' }
@@ -1912,7 +1951,7 @@ function renderCostTable(data) {
     data[posture.key].total.forEach(value => { html += `<td>${value.toFixed(1)}</td>`; });
     html += `<td>${sum5(data[posture.key].total).toFixed(0)}</td><td>${sum7(data[posture.key].total).toFixed(0)}</td></tr>`;
 
-    html += `<tr class="${posture.cls}"><td>&nbsp;&nbsp;↳ Capex</td>`;
+    html += `<tr class="${posture.cls}"><td>&nbsp;&nbsp;↳ <span class="info-tip">Capex<span class="tip-text">${capexDefs[posture.key]}</span></span></td>`;
     data[posture.key].capex.forEach(value => { html += `<td>${value.toFixed(1)}</td>`; });
     html += `<td>${sum5(data[posture.key].capex).toFixed(0)}</td><td>${sum7(data[posture.key].capex).toFixed(0)}</td></tr>`;
 
