@@ -866,7 +866,7 @@ input[type="range"]::-moz-range-thumb {
     <div class="sliders-grid">
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-label">Usage Growth Speed</span>
+          <span class="slider-label"><span class="info-tip">Usage Growth Speed<span class="tip-text">Scales all member counts linearly. At 0.5x, Y5 = 25M members; at 1.0x = 50M; at 2.0x = 100M. Higher growth amplifies OpEx for both postures but amortises Build capex faster.</span></span></span>
           <span class="slider-value" id="growth-val">1.0x</span>
         </div>
         <input type="range" id="growth-slider" min="0.5" max="2.0" step="0.1" value="1.0">
@@ -874,7 +874,7 @@ input[type="range"]::-moz-range-thumb {
       </div>
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-label">API Price Decline Rate (per year)</span>
+          <span class="slider-label"><span class="info-tip">API Price Decline Rate (per year)<span class="tip-text">Models year-over-year compression of frontier API prices (GPT-4.5, Opus, Sonnet, Flash). At 30%/yr, Y5 API cost drops to ~24% of today. Directly reduces Rent OpEx; also reduces Build's residual API spend.</span></span></span>
           <span class="slider-value" id="decline-val">0%</span>
         </div>
         <input type="range" id="decline-slider" min="0" max="70" step="5" value="0">
@@ -883,7 +883,7 @@ input[type="range"]::-moz-range-thumb {
       </div>
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-label">Build Start Year</span>
+          <span class="slider-label"><span class="info-tip">Build Start Year<span class="tip-text">When proprietary model investment begins. Y1 = day-zero anchor (highest early capex, earliest crossover). Y3 = default delayed-build. Y5 = late start — Rent-like spend early, compressed build window later.</span></span></span>
           <span class="slider-value" id="delay-val">Y3</span>
         </div>
         <input type="range" id="delay-slider" min="1" max="5" step="1" value="3">
@@ -891,7 +891,7 @@ input[type="range"]::-moz-range-thumb {
       </div>
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-label">Engagement Intensity</span>
+          <span class="slider-label"><span class="info-tip">Engagement Intensity<span class="tip-text">Scales the baseline ~496 AI events/member/year. At 0.25x = ~124 events (light use); at 3.0x = ~1,488 events (power users). Directly multiplies per-member inference cost for both postures.</span></span></span>
           <span class="slider-value" id="engage-val">1.0x · 496 ev/yr</span>
         </div>
         <input type="range" id="engage-slider" min="0.25" max="3.0" step="0.05" value="1.0">
