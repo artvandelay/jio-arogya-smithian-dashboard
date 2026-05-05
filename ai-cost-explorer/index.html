@@ -1,4 +1,19 @@
 <!DOCTYPE html>
+<!--
+  JioCare AI Investment Decision Explorer
+  ────────────────────────────────────────
+  Source documents (all in AI Cost Model/ folder):
+    1_Usage_and_Inference_Demand.md  — engagement events, segments, overhead multiplier
+    2_AI_Light_Rent.md              — API pricing, rent-posture capex/opex
+    3_AI_Full_Build.md              — build investment, training phases, self-hosted pricing
+    4_AI-Build-Posture_Full-Context.md — master document, member ramp, 7-year comparison
+
+  Supporting scripts:
+    compute_demand.py               — demand calculations
+    full_build_cost.py              — build cost model
+
+  Last updated: May 2026
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -999,12 +1014,13 @@ input[type="range"]::-moz-range-thumb {
        ═══════════════════════════════════════════════════════════════ -->
   <div class="reference-section">
     <h2>Reference: Definitions, Assumptions &amp; Methodology</h2>
-    <p class="ref-subtitle">These panels describe the baseline assumptions behind the model. Controls above test alternate scenarios without changing the underlying source definitions. All figures are Y2+ steady-state unless noted. Source: AI Cost Model v4, May 2026.</p>
+    <p class="ref-subtitle">These panels describe the baseline assumptions behind the model. Controls above test alternate scenarios without changing the underlying source definitions. All figures are Y2+ steady-state unless noted.</p>
+    <p class="ref-subtitle" style="margin-top:4px;font-size:10px;color:var(--text-muted)">Source documents: <em>1_Usage_and_Inference_Demand.md</em> · <em>2_AI_Light_Rent.md</em> · <em>3_AI_Full_Build.md</em> · <em>4_AI-Build-Posture_Full-Context.md</em> — AI Cost Model, May 2026.</p>
 
     <!-- PANEL 1: Engagement Breakdown -->
     <div class="ref-panel open" id="panel-engagement">
       <div class="ref-panel-header" onclick="this.parentElement.classList.toggle('open')">
-        <div><span class="panel-number">1</span><h3 style="display:inline">What Drives These Costs: Per-Member AI Engagement Breakdown</h3></div>
+        <div><span class="panel-number">1</span><h3 style="display:inline">What Drives These Costs: Per-Member AI Engagement Breakdown</h3> <span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:6px">← 1_Usage_and_Inference_Demand.md</span></div>
         <span class="chevron">&#9660;</span>
       </div>
       <div class="ref-panel-body">
@@ -1173,7 +1189,7 @@ input[type="range"]::-moz-range-thumb {
     <!-- PANEL 2: User Segments -->
     <div class="ref-panel" id="panel-segments">
       <div class="ref-panel-header" onclick="this.parentElement.classList.toggle('open')">
-        <div><span class="panel-number">2</span><h3 style="display:inline">User Segments: Who Uses What</h3></div>
+        <div><span class="panel-number">2</span><h3 style="display:inline">User Segments: Who Uses What</h3> <span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:6px">← 1_Usage_and_Inference_Demand.md</span></div>
         <span class="chevron">&#9660;</span>
       </div>
       <div class="ref-panel-body">
@@ -1221,7 +1237,7 @@ input[type="range"]::-moz-range-thumb {
     <!-- PANEL 3: Pricing Assumptions -->
     <div class="ref-panel" id="panel-pricing">
       <div class="ref-panel-header" onclick="this.parentElement.classList.toggle('open')">
-        <div><span class="panel-number">3</span><h3 style="display:inline">Pricing Assumptions: API &amp; Self-Hosted Rates</h3></div>
+        <div><span class="panel-number">3</span><h3 style="display:inline">Pricing Assumptions: API &amp; Self-Hosted Rates</h3> <span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:6px">← 2_AI_Light_Rent.md · 3_AI_Full_Build.md</span></div>
         <span class="chevron">&#9660;</span>
       </div>
       <div class="ref-panel-body">
@@ -1318,7 +1334,7 @@ input[type="range"]::-moz-range-thumb {
     <!-- PANEL 4: Build Investment Breakdown -->
     <div class="ref-panel" id="panel-capex">
       <div class="ref-panel-header" onclick="this.parentElement.classList.toggle('open')">
-        <div><span class="panel-number">4</span><h3 style="display:inline">Build Investment Breakdown: Where the Capex Goes</h3></div>
+        <div><span class="panel-number">4</span><h3 style="display:inline">Build Investment Breakdown: Where the Capex Goes</h3> <span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:6px">← 3_AI_Full_Build.md</span></div>
         <span class="chevron">&#9660;</span>
       </div>
       <div class="ref-panel-body">
@@ -1424,7 +1440,7 @@ input[type="range"]::-moz-range-thumb {
     <!-- PANEL 5: Overhead Multiplier -->
     <div class="ref-panel" id="panel-overhead">
       <div class="ref-panel-header" onclick="this.parentElement.classList.toggle('open')">
-        <div><span class="panel-number">5</span><h3 style="display:inline">Overhead Multiplier: Why Raw Demand × 1.4</h3></div>
+        <div><span class="panel-number">5</span><h3 style="display:inline">Overhead Multiplier: Why Raw Demand × 1.4</h3> <span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:6px">← 1_Usage_and_Inference_Demand.md</span></div>
         <span class="chevron">&#9660;</span>
       </div>
       <div class="ref-panel-body">
@@ -1471,7 +1487,7 @@ input[type="range"]::-moz-range-thumb {
     <!-- PANEL 6: Member Ramp -->
     <div class="ref-panel" id="panel-ramp">
       <div class="ref-panel-header" onclick="this.parentElement.classList.toggle('open')">
-        <div><span class="panel-number">6</span><h3 style="display:inline">Member Ramp with Context</h3></div>
+        <div><span class="panel-number">6</span><h3 style="display:inline">Member Ramp with Context</h3> <span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:6px">← 4_AI-Build-Posture_Full-Context.md</span></div>
         <span class="chevron">&#9660;</span>
       </div>
       <div class="ref-panel-body">
