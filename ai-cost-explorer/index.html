@@ -924,7 +924,7 @@ input[type="range"]::-moz-range-thumb {
       </div>
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-label"><span class="info-tip">Build Start Year<span class="tip-text">The year proprietary model training begins. Before this year, the Build posture runs on rented APIs.</span></span></span>
+          <span class="slider-label"><span class="info-tip">Build Start Year<span class="tip-text">The year proprietary model training begins. Before this year, the Build posture runs on rented APIs and accumulates consented, de-identified usage data that can lower later annotation and corpus construction costs.</span></span></span>
           <span class="slider-value" id="delay-val">Y3</span>
         </div>
         <input type="range" id="delay-slider" min="1" max="5" step="1" value="3">
@@ -1015,7 +1015,7 @@ input[type="range"]::-moz-range-thumb {
   <div class="reference-section">
     <h2>Reference: Definitions, Assumptions &amp; Methodology</h2>
     <p class="ref-subtitle">These panels describe the baseline assumptions behind the model. Controls above test alternate scenarios without changing the underlying source definitions. All figures are Y2+ steady-state unless noted.</p>
-    <p class="ref-subtitle" style="margin-top:4px;font-size:10px;color:var(--text-muted)">Source documents: <em>1_Usage_and_Inference_Demand.md</em> · <em>2_AI_Light_Rent.md</em> · <em>3_AI_Full_Build.md</em> · <em>4_AI-Build-Posture_Full-Context.md</em> — AI Cost Model, May 2026.</p>
+    <p class="ref-subtitle" style="margin-top:4px;font-size:10px;color:var(--text-muted)">Source documents: <em>1_Usage_and_Inference_Demand.md</em> · <em>2_AI_Light_Rent.md</em> · <em>3_AI_Full_Build.md</em> (incl. Data Dividend for Delayed Build Starts) · <em>4_AI-Build-Posture_Full-Context.md</em> — AI Cost Model, May 2026.</p>
 
     <!-- PANEL 1: Engagement Breakdown -->
     <div class="ref-panel open" id="panel-engagement">
@@ -1434,6 +1434,30 @@ input[type="range"]::-moz-range-thumb {
             </tr>
           </tbody>
         </table>
+
+        <div class="sub-heading">Data Dividend for Delayed Build Starts</div>
+        <p>When Build starts after Y1, the platform has already accumulated consented usage data. The model credits only the portion that survives consent, de-ID, clinical relevance, and quality filters, reducing annotation and corpus construction costs while leaving training compute, GPU cluster, synthetic data, safety, distillation, and team costs unchanged.</p>
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Build Start</th>
+              <th class="num">Clean Data</th>
+              <th class="num">Clinical Annotation Pool</th>
+              <th class="num">Annotation Discount</th>
+              <th class="num">Annotation Cost</th>
+              <th class="num">Corpus Discount</th>
+              <th class="num">Corpus Cost</th>
+              <th class="num">Data-Creation Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Y1</td><td class="num">0.0B</td><td class="num">0.0B</td><td class="num">0.0%</td><td class="num">$30.1M</td><td class="num">0.0%</td><td class="num">$22.0M</td><td class="num">$0.0M</td></tr>
+            <tr><td>Y2</td><td class="num">6.4B</td><td class="num">1.2B</td><td class="num">2.0%</td><td class="num">$29.5M</td><td class="num">1.6%</td><td class="num">$21.6M</td><td class="num">$1.0M</td></tr>
+            <tr><td>Y3</td><td class="num">60.1B</td><td class="num">10.8B</td><td class="num">18.6%</td><td class="num">$24.5M</td><td class="num">15.0%</td><td class="num">$18.7M</td><td class="num">$8.9M</td></tr>
+            <tr><td>Y4</td><td class="num">1,824.1B</td><td class="num">328.3B</td><td class="num">55.0%</td><td class="num">$13.5M</td><td class="num">25.0%</td><td class="num">$16.5M</td><td class="num">$22.1M</td></tr>
+            <tr><td>Y5</td><td class="num">20,548.1B</td><td class="num">3,698.7B</td><td class="num">55.0%</td><td class="num">$13.5M</td><td class="num">25.0%</td><td class="num">$16.5M</td><td class="num">$22.1M</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -1550,13 +1574,41 @@ const BASE_DATA = {
     perMember: [7.32, 9.53, 5.25, 2.64, 1.33, 0.83, 0.51]
   },
   buildY3: {
-    capex: [6.6, 5.9, 83.5, 121.6, 241.2, 41.7, 41.7],
+    // Y3 is pre-dividend; applyDataDividendToBuildScenario subtracts the $6.9M data dividend.
+    capex: [6.6, 5.9, 87.15, 119.25, 239.9, 41.7, 41.7],
     opex: [0.1, 0.6, 19.4, 144.6, 205.8, 92.5, 51.6],
     perMember: [7.32, 12.18, 12.96, 9.64, 4.12, 1.85, 1.03]
   }
 };
 
 const YEARS = ['Y1','Y2','Y3','Y4','Y5','Y6','Y7'];
+const DATA_DIVIDEND_INPUTS = {
+  platformDataSurvivalRate: 0.50,
+  annotationClinicalRelevanceFilter: 0.18,
+  annotationTargetTokensB: 64,
+  realDataLabelingCostReduction: 0.55,
+  realDataQualityMultiplier: 2.0,
+  annotationDiscountCap: 0.55,
+  corpusTargetTokensB: 165,
+  corpusRelevanceFilter: 0.75,
+  corpusProcessingOffset: 0.45,
+  corpusDiscountCap: 0.25,
+  annotationBaseCost: 30.1,
+  corpusBaseCost: 22.0
+};
+const DATA_DIVIDEND_BY_START = {
+  1: { cleanTokensB: 0.0, clinicalTokensB: 0.0, annotationDiscount: 0.000, corpusDiscount: 0.000 },
+  2: { cleanTokensB: 6.4, clinicalTokensB: 1.2, annotationDiscount: 0.020, corpusDiscount: 0.016 },
+  3: { cleanTokensB: 60.1, clinicalTokensB: 10.8, annotationDiscount: 0.186, corpusDiscount: 0.150 },
+  4: { cleanTokensB: 1824.1, clinicalTokensB: 328.3, annotationDiscount: 0.550, corpusDiscount: 0.250 },
+  5: { cleanTokensB: 20548.1, clinicalTokensB: 3698.7, annotationDiscount: 0.550, corpusDiscount: 0.250 }
+};
+const DATA_CREATION_BASELINE = {
+  annotationCost: DATA_DIVIDEND_INPUTS.annotationBaseCost,
+  corpusCost: DATA_DIVIDEND_INPUTS.corpusBaseCost,
+  total: DATA_DIVIDEND_INPUTS.annotationBaseCost + DATA_DIVIDEND_INPUTS.corpusBaseCost,
+  delayedY3ImplicitTotal: 50.1
+};
 const BUILD_API_SHARE_BY_START = {
   1: [0.50, 0.50, 0.20, 0.05, 0.05, 0.05, 0.05],
   2: [0.55, 0.42, 0.22, 0.07, 0.05, 0.05, 0.05],
@@ -1656,6 +1708,50 @@ function getBuildName(delay) {
   return `BUILD FROM Y${delay}`;
 }
 
+function getDataDividend(delay) {
+  const assumptions = DATA_DIVIDEND_INPUTS;
+  const values = DATA_DIVIDEND_BY_START[delay] || DATA_DIVIDEND_BY_START[3];
+  const annotationDiscount = Math.min(values.annotationDiscount, assumptions.annotationDiscountCap);
+  const corpusDiscount = Math.min(values.corpusDiscount, assumptions.corpusDiscountCap);
+  const annotationCost = assumptions.annotationBaseCost * (1 - annotationDiscount);
+  const corpusCost = assumptions.corpusBaseCost * (1 - corpusDiscount);
+  const dataCreationCost = annotationCost + corpusCost;
+
+  return {
+    ...values,
+    annotationDiscount,
+    corpusDiscount,
+    annotationCost: Number(annotationCost.toFixed(1)),
+    corpusCost: Number(corpusCost.toFixed(1)),
+    dataCreationCost: Number(dataCreationCost.toFixed(1)),
+    savings: Number((DATA_CREATION_BASELINE.total - dataCreationCost).toFixed(1))
+  };
+}
+
+function getBuildDataCreationBaseline(delay) {
+  return delay === 3 ? DATA_CREATION_BASELINE.delayedY3ImplicitTotal : DATA_CREATION_BASELINE.total;
+}
+
+function applyDataDividendToBuildScenario(scenario, delay) {
+  const dividend = getDataDividend(delay);
+  scenario.dataDividend = { ...dividend, capexSavingsApplied: 0, capexYear: YEARS[Math.max(delay - 1, 0)] };
+  if (delay === 1) return scenario;
+
+  const buildStartIndex = delay - 1;
+  const capexSavingsApplied = getBuildDataCreationBaseline(delay) - dividend.dataCreationCost;
+  scenario.capex[buildStartIndex] = Math.max(0, scenario.capex[buildStartIndex] - capexSavingsApplied);
+  scenario.dataDividend.capexSavingsApplied = Number(capexSavingsApplied.toFixed(1));
+  return scenario;
+}
+
+function getBuildCapexDefinition(delay) {
+  const base = 'Training compute (Phases 0–3), GPU cluster (768 H100/H200), corpus construction, annotation, synthetic data, distillation, eval &amp; safety infra, PII gate, R&amp;D team (45→95).';
+  if (delay === 1) return base;
+
+  const dividend = getDataDividend(delay);
+  return `${base} Data dividend at Y${delay}: accumulated usage data lowers annotation to $${dividend.annotationCost.toFixed(1)}M and corpus to $${dividend.corpusCost.toFixed(1)}M after consent, de-ID, survival, relevance, and quality filters.`;
+}
+
 function getOwnAiTiming(delay) {
   const timingMap = {
     1: '~24 months from start (Y2)',
@@ -1668,8 +1764,8 @@ function getOwnAiTiming(delay) {
 }
 
 function generateBuildBase(delay) {
-  if (delay === 1) return cloneScenario(BASE_DATA.buildY1);
-  if (delay === 3) return cloneScenario(BASE_DATA.buildY3);
+  if (delay === 1) return applyDataDividendToBuildScenario(cloneScenario(BASE_DATA.buildY1), delay);
+  if (delay === 3) return applyDataDividendToBuildScenario(cloneScenario(BASE_DATA.buildY3), delay);
 
   if (delay === 2) {
     const capex = YEARS.map((_, i) => (
@@ -1681,7 +1777,7 @@ function generateBuildBase(delay) {
     const opex = YEARS.map((_, i) => (
       i === 0 ? BASE_DATA.rent.opex[i] : (perMember[i] * BASE_MEMBERS[i]) / 1e6
     ));
-    return { capex, perMember, opex };
+    return applyDataDividendToBuildScenario({ capex, perMember, opex }, delay);
   }
 
   const capex = [];
@@ -1708,7 +1804,7 @@ function generateBuildBase(delay) {
     perMember.push(perMemberValue);
   }
 
-  return { capex, perMember, opex };
+  return applyDataDividendToBuildScenario({ capex, perMember, opex }, delay);
 }
 
 function getBuildApiShare(delay, yearIndex) {
@@ -1817,7 +1913,7 @@ function renderDashboard(data) {
       name: getBuildName(params.delay),
       cls: 'build',
       ownAI: getOwnAiTiming(params.delay),
-      capexDef: 'Training compute (Phases 0–3), GPU cluster (768 H100/H200), corpus construction, annotation, synthetic data, distillation, eval &amp; safety infra, PII gate, R&amp;D team (45→95).'
+      capexDef: getBuildCapexDefinition(params.delay)
     }
   ];
 
@@ -1968,7 +2064,7 @@ function renderCostTable(data) {
   const sum7 = arr => arr.reduce((a, b) => a + b, 0);
   const capexDefs = {
     rent: 'PII gate, safety pipeline, STT/TTS integration, orchestration layer, prompt-engineering & integration R&D team. No training compute or GPU cluster.',
-    build: 'Training compute (Phases 0–3), GPU cluster (768 H100/H200), corpus construction, annotation, synthetic data, distillation, eval & safety infra, PII gate, R&D team (45→95).'
+    build: getBuildCapexDefinition(params.delay)
   };
   const postures = [
     { key: 'rent', name: 'RENT', cls: 'rent-row' },
@@ -2084,6 +2180,14 @@ function renderInsights(data) {
     insights.push({
       cls: 'warning',
       text: `With ${(params.decline * 100).toFixed(0)}%/year API decline, <strong>Rent becomes significantly more competitive</strong> — monitor frontier pricing closely.`
+    });
+  }
+
+  if (params.delay > 1) {
+    const dividend = getDataDividend(params.delay);
+    insights.push({
+      cls: 'success',
+      text: `Data dividend at Y${params.delay}: accumulated usage data reduces later annotation to <strong>$${dividend.annotationCost.toFixed(1)}M</strong> and corpus construction to <strong>$${dividend.corpusCost.toFixed(1)}M</strong> after consent, de-ID, and quality filtering. Not all usage data is training-grade.`
     });
   }
 
